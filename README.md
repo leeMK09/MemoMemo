@@ -13,3 +13,9 @@
 🧠 [프로그래밍 원칙]
 
 - [🧠 SPR 와 액터는 어떻게 정의해야하는가.md](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/SRP%20%EC%99%80%20%EC%95%A1%ED%84%B0%EB%8A%94%20%EC%96%B4%EB%96%BB%EA%B2%8C%20%EC%A0%95%EC%9D%98%ED%95%B4%EC%95%BC%ED%95%98%EB%8A%94%EA%B0%80.md)
+
+</br>
+
+💣 [멀티스레드]
+
+- 💣 [JAVA] [JAVA] synchronized 키워드는 왜 현업에서 큰 성능 저하를 일으킬 수 있을까
