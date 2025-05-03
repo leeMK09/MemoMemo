@@ -6,7 +6,7 @@
 
 💾 [DB]
 
-- [💾 DB/MVCC가 있으면 S Lock은 필요없는걸까.md](https://github.com/leeMK09/MemoMemo/blob/9b896cde90fbce3522e7a4522a6e45a99609e2f2/%F0%9F%92%BE%20DB/MVCC%EA%B0%80%20%EC%9E%88%EC%9C%BC%EB%A9%B4%20S%20Lock%EC%9D%80%20%ED%95%84%EC%9A%94%EC%97%86%EB%8A%94%EA%B1%B8%EA%B9%8C.md)
+- [💾 MVCC가 있으면 S Lock은 필요없는걸까.md](https://github.com/leeMK09/MemoMemo/blob/9b896cde90fbce3522e7a4522a6e45a99609e2f2/%F0%9F%92%BE%20DB/MVCC%EA%B0%80%20%EC%9E%88%EC%9C%BC%EB%A9%B4%20S%20Lock%EC%9D%80%20%ED%95%84%EC%9A%94%EC%97%86%EB%8A%94%EA%B1%B8%EA%B9%8C.md)
 - [💾 갭락 (Gap Lock) 이 실제로 어떻게 작동하는가.md](<https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EA%B0%AD%EB%9D%BD%20(Gap%20Lock)%20%EC%9D%B4%20%EC%8B%A4%EC%A0%9C%EB%A1%9C%20%EC%96%B4%EB%96%BB%EA%B2%8C%20%EC%9E%91%EB%8F%99%ED%95%98%EB%8A%94%EA%B0%80.md>)
 
 </br>
