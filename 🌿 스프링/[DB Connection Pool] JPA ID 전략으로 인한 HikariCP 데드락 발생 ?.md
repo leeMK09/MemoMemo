@@ -75,3 +75,7 @@ MySQL FOR UPDATE (X Lock) 쿼리는 조회한 ROW 에 Lock 을 걸어 현재 트
 그렇기 때문에 최적의 Pool Size 를 설정하기 위해서는 **Dead Lock 을 피할 수 있는 pool 개수 + a** 가 되어야 한다
 
 이에 대한 방법으로는 성능 테스트를 수행하면서 최적의 Pool Size 를 찾는 방법이 있을 것 같다.
+
+</br>
+
+참고: https://techblog.woowahan.com/2663/
