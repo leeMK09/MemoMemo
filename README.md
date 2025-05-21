@@ -67,3 +67,5 @@
 </br>
 
 ### 🌐 HTTP
+
+- 🌐 HTTP 헤더의 Cache-Control
