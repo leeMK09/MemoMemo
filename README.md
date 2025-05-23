@@ -25,6 +25,7 @@
 - [🧠 가능하면 적게 캡슐화하길 권장한다](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EA%B0%80%EB%8A%A5%ED%95%98%EB%A9%B4%20%EC%A0%81%EA%B2%8C%20%EC%BA%A1%EC%8A%90%ED%99%94%ED%95%98%EA%B8%B8%20%EA%B6%8C%EC%9E%A5%ED%95%9C%EB%8B%A4.md)
 - [🧠 역할과 추상](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EC%97%AD%ED%95%A0%EA%B3%BC%20%EC%B6%94%EC%83%81.md)
 - [🧠 이름짓기](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EC%9D%B4%EB%A6%84%EC%A7%93%EA%B8%B0.md)
+- 🧠 추상과 구체
 
 </br>
 </br>
