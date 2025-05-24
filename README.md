@@ -14,7 +14,7 @@
 - [💾 트랜잭션을 커밋하지 않아도 디스크에 데이터를 쓰는가 ?](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98%EC%9D%84%20%EC%BB%A4%EB%B0%8B%ED%95%98%EC%A7%80%20%EC%95%8A%EC%95%84%EB%8F%84%20%EB%94%94%EC%8A%A4%ED%81%AC%EC%97%90%20%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%A5%BC%20%EC%93%B0%EB%8A%94%EA%B0%80%20%3F.md)
 - [💾 BASE 이론](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/BASE%20%EC%9D%B4%EB%A1%A0.md)
 - [💾 MySQL에서 같은 컬럼에 대해 Update 와 Select 쿼리가 동시에 들어왔다면? (1)](<https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/MySQL%EC%97%90%EC%84%9C%20%EA%B0%99%EC%9D%80%20%EC%BB%AC%EB%9F%BC%EC%97%90%20%EB%8C%80%ED%95%B4%20Update%20%EC%99%80%20Select%20%EC%BF%BC%EB%A6%AC%EA%B0%80%20%EB%8F%99%EC%8B%9C%EC%97%90%20%EB%93%A4%EC%96%B4%EC%99%94%EB%8B%A4%EB%A9%B4%3F%20(1).md>)
-- 💾 MySQL에서 DDL, 암묵적 커밋 그리고 Lock timeout
+- [💾 MySQL에서 DDL, 암묵적 커밋 그리고 Lock timeout](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/MySQL%EC%97%90%EC%84%9C%20DDL%2C%20%EC%95%94%EB%AC%B5%EC%A0%81%20%EC%BB%A4%EB%B0%8B%20%EA%B7%B8%EB%A6%AC%EA%B3%A0%20Lock%20timeout.md)
 
 </br>
 </br>
