@@ -28,7 +28,7 @@
 - [🧠 역할과 추상](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EC%97%AD%ED%95%A0%EA%B3%BC%20%EC%B6%94%EC%83%81.md)
 - [🧠 이름짓기](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EC%9D%B4%EB%A6%84%EC%A7%93%EA%B8%B0.md)
 - [🧠 추상과 구체](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EC%B6%94%EC%83%81%EA%B3%BC%20%EA%B5%AC%EC%B2%B4.md)
-- 🧠 메서드와 함수의 차이점
+- [🧠 메서드와 함수의 차이점](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EB%A9%94%EC%84%9C%EB%93%9C%EC%99%80%20%ED%95%A8%EC%88%98%EC%9D%98%20%EC%B0%A8%EC%9D%B4%EC%A0%90.md)
 
 </br>
 </br>
