@@ -61,6 +61,7 @@
 
 - [☕ 컬렉션과 스트림의 연산 처리 방식](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/%EC%BB%AC%EB%A0%89%EC%85%98%EA%B3%BC%20%EC%8A%A4%ED%8A%B8%EB%A6%BC%EC%9D%98%20%EC%97%B0%EC%82%B0%20%EC%B2%98%EB%A6%AC%20%EB%B0%A9%EC%8B%9D.md)
 - [☕ 지연연산의 예시](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/%EC%A7%80%EC%97%B0%EC%97%B0%EC%82%B0%EC%9D%98%20%EC%98%88%EC%8B%9C.md)
+- ☕ 왜 지역변수는 변수 초기화를 지원하지않을까?
 
 </br>
 </br>
