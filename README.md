@@ -76,3 +76,4 @@
 ### 🌐 HTTP
 
 - [🌐 HTTP 헤더의 Cache-Control](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%90%20HTTP/HTTP%20%ED%97%A4%EB%8D%94%EC%9D%98%20Cache-Control.md)
+- 🌐 HTTP 헤더의 Connection
