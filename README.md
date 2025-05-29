@@ -17,6 +17,7 @@
 - [💾 MySQL에서 DDL, 암묵적 커밋 그리고 Lock timeout](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/MySQL%EC%97%90%EC%84%9C%20DDL%2C%20%EC%95%94%EB%AC%B5%EC%A0%81%20%EC%BB%A4%EB%B0%8B%20%EA%B7%B8%EB%A6%AC%EA%B3%A0%20Lock%20timeout.md)
 - [💾 캐시 전략 패턴 종류](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EC%BA%90%EC%8B%B1%20%EC%A0%84%EB%9E%B5%20%ED%8C%A8%ED%84%B4%20%EC%A2%85%EB%A5%98.md)
 - [💾 캐시 설계 시 고려해야하는 전략들](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EC%BA%90%EC%8B%9C%20%EC%84%A4%EA%B3%84%20%EC%8B%9C%20%EA%B3%A0%EB%A0%A4%ED%95%B4%EC%95%BC%ED%95%98%EB%8A%94%20%EC%A0%84%EB%9E%B5%EB%93%A4.md)
+- 💾 READ-COMMITED를 사용하는 이유는?
 
 </br>
 </br>
