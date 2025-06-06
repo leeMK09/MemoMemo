@@ -69,6 +69,7 @@
 - [☕ 지연연산의 예시](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/%EC%A7%80%EC%97%B0%EC%97%B0%EC%82%B0%EC%9D%98%20%EC%98%88%EC%8B%9C.md)
 - [☕ 왜 지역변수는 변수 초기화를 지원하지않을까?](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/%EC%99%9C%20%EC%A7%80%EC%97%AD%EB%B3%80%EC%88%98%EB%8A%94%20%EB%B3%80%EC%88%98%20%EC%B4%88%EA%B8%B0%ED%99%94%EB%A5%BC%20%EC%A7%80%EC%9B%90%ED%95%98%EC%A7%80%EC%95%8A%EC%9D%84%EA%B9%8C%3F.md)
 - [☕ 인터페이스와 추상클래스의 차이](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4%EC%99%80%20%EC%B6%94%EC%83%81%ED%81%B4%EB%9E%98%EC%8A%A4%EC%9D%98%20%EC%B0%A8%EC%9D%B4.md)
+- ☕ Object.equals(), hashcode()
 
 </br>
 </br>
