@@ -71,6 +71,7 @@
 - [☕ 인터페이스와 추상클래스의 차이](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4%EC%99%80%20%EC%B6%94%EC%83%81%ED%81%B4%EB%9E%98%EC%8A%A4%EC%9D%98%20%EC%B0%A8%EC%9D%B4.md)
 - [☕ Object.equals(), hashcode()](<https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/Object.equals()%2C%20hashcode().md>)
 - [☕ 지역 내부 클래스는 왜 final 인 지역 변수만 참조 가능한걸까?](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/%EC%A7%80%EC%97%AD%20%EB%82%B4%EB%B6%80%20%ED%81%B4%EB%9E%98%EC%8A%A4%EB%8A%94%20%EC%99%9C%20final%20%EC%9D%B8%20%EC%A7%80%EC%97%AD%20%EB%B3%80%EC%88%98%EB%A7%8C%20%EC%B0%B8%EC%A1%B0%20%EA%B0%80%EB%8A%A5%ED%95%9C%EA%B1%B8%EA%B9%8C%3F.md)
+- ☕ 제네릭 - 타입 이레이저
 
 </br>
 </br>
