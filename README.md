@@ -35,6 +35,7 @@
 - [🧠 메서드와 함수의 차이점](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EB%A9%94%EC%84%9C%EB%93%9C%EC%99%80%20%ED%95%A8%EC%88%98%EC%9D%98%20%EC%B0%A8%EC%9D%B4%EC%A0%90.md)
 - [🧠 객체지향적](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EA%B0%9D%EC%B2%B4%EC%A7%80%ED%96%A5%EC%A0%81.md)
 - [🧠 행동 중심의 설계](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%ED%96%89%EB%8F%99%20%EC%A4%91%EC%8B%AC%EC%9D%98%20%EC%84%A4%EA%B3%84.md)
+- 🧠 메서드와 추상화
 
 </br>
 </br>
