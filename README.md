@@ -37,7 +37,7 @@
 - [🧠 객체지향적](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EA%B0%9D%EC%B2%B4%EC%A7%80%ED%96%A5%EC%A0%81.md)
 - [🧠 행동 중심의 설계](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%ED%96%89%EB%8F%99%20%EC%A4%91%EC%8B%AC%EC%9D%98%20%EC%84%A4%EA%B3%84.md)
 - [🧠 메서드와 추상화](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EB%A9%94%EC%84%9C%EB%93%9C%EC%99%80%20%EC%B6%94%EC%83%81%ED%99%94.md)
-- 🧠 역할, 책임, 협력
+- [🧠 역할, 책임, 협력](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EC%97%AD%ED%95%A0%2C%20%EC%B1%85%EC%9E%84%2C%20%ED%98%91%EB%A0%A5.md)
 
 </br>
 </br>
