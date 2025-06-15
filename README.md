@@ -77,7 +77,7 @@
 - [☕ 제네릭 - 타입 이레이저](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/%EC%A0%9C%EB%84%A4%EB%A6%AD%20-%20%ED%83%80%EC%9E%85%20%EC%9D%B4%EB%A0%88%EC%9D%B4%EC%A0%80.md)
 - [☕ StringBuilder vs StringBuffer](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/StringBuilder%20vs%20StringBuffer.md)
 - [☕ EnumMap 과 HashMap](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/EnumMap%20%EA%B3%BC%20HashMap.md)
-- ☕ 제네릭 - PECS
+- [☕ 제네릭 - PECS](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/%EC%A0%9C%EB%84%A4%EB%A6%AD%20-%20PECS.md)
 
 </br>
 </br>
