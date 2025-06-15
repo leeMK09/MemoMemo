@@ -135,19 +135,19 @@ animals.add(new Cat()); // 가능
 
 ### 정리
 
-| 문법                 | 설명                              | 읽기                 | 쓰기 |
-| -------------------- | --------------------------------- | -------------------- | ---- |
-| `<? extends Animal>` | Animal 또는 하위 타입 (읽기 전용) | ✅                   | ❌   |
-| `<? super Animal>`   | Animal 또는 상위 타입 (쓰기 전용) | ❌ (`Object`만 가능) | ✅   |
-| `<T extends Animal>` | T는 Animal 또는 하위 타입         | ✅                   | ✅   |
-| `<T super Animal>`   | ❌ 문법적으로 안 됨               | -                    | -    |
+| 문법                 | 설명                              | 읽기                | 쓰기 |
+| -------------------- | --------------------------------- | ------------------- | ---- |
+| `<? extends Animal>` | Animal 또는 하위 타입 (읽기 전용) | O                   | X    |
+| `<? super Animal>`   | Animal 또는 상위 타입 (쓰기 전용) | X (`Object`만 가능) | O    |
+| `<T extends Animal>` | T는 Animal 또는 하위 타입         | O                   | O    |
+| `<T super Animal>`   | X 문법적으로 안 됨                | -                   | -    |
 
 </br>
 </br>
 
 | 코드                                         | 가능 여부 | 설명                          |
 | -------------------------------------------- | --------- | ----------------------------- |
-| `List<? super Animal> animals;`              | ✅        | 하한 와일드카드로 선언 가능   |
-| `animals = new ArrayList<Animal>();`         | ✅        | Animal은 자신이니까 하한 OK   |
-| `animals = new ArrayList<Object>();`         | ✅        | Object는 Animal의 상위니까 OK |
-| `animals = new ArrayList<? super Animal>();` | ❌        | 구체적인 타입 아님, 생성 불가 |
+| `List<? super Animal> animals;`              | O         | 하한 와일드카드로 선언 가능   |
+| `animals = new ArrayList<Animal>();`         | O         | Animal은 자신이니까 하한 OK   |
+| `animals = new ArrayList<Object>();`         | O         | Object는 Animal의 상위니까 OK |
+| `animals = new ArrayList<? super Animal>();` | X         | 구체적인 타입 아님, 생성 불가 |
