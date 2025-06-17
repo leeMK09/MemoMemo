@@ -56,6 +56,7 @@
 - [🌿 [DB Connection Pool] HikariCP에서 Dead lock 이 발생하는 경우는?](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%BF%20%EC%8A%A4%ED%94%84%EB%A7%81/%5BDB%20Connection%20Pool%5D%20HikariCP%EC%97%90%EC%84%9C%20Dead%20lock%20%EC%9D%B4%20%EB%B0%9C%EC%83%9D%ED%95%98%EB%8A%94%20%EA%B2%BD%EC%9A%B0%EB%8A%94%3F.md)
 - [🌿 [DB Connection Pool] JPA ID 전략으로 인한 HikariCP 데드락 발생 ?](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%BF%20%EC%8A%A4%ED%94%84%EB%A7%81/%5BDB%20Connection%20Pool%5D%20JPA%20ID%20%EC%A0%84%EB%9E%B5%EC%9C%BC%EB%A1%9C%20%EC%9D%B8%ED%95%9C%20HikariCP%20%EB%8D%B0%EB%93%9C%EB%9D%BD%20%EB%B0%9C%EC%83%9D%20%3F.md)
 - [🌿 웹 애플리케이션과 싱글톤](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%BF%20%EC%8A%A4%ED%94%84%EB%A7%81/%EC%9B%B9%20%EC%95%A0%ED%94%8C%EB%A6%AC%EC%BC%80%EC%9D%B4%EC%85%98%EA%B3%BC%20%EC%8B%B1%EA%B8%80%ED%86%A4.md)
+- 🌿 서블릿 컨테이너 초기화
 
 </br>
 </br>
