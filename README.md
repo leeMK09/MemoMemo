@@ -38,7 +38,7 @@
 - [🧠 행동 중심의 설계](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%ED%96%89%EB%8F%99%20%EC%A4%91%EC%8B%AC%EC%9D%98%20%EC%84%A4%EA%B3%84.md)
 - [🧠 메서드와 추상화](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EB%A9%94%EC%84%9C%EB%93%9C%EC%99%80%20%EC%B6%94%EC%83%81%ED%99%94.md)
 - [🧠 역할, 책임, 협력](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EC%97%AD%ED%95%A0%2C%20%EC%B1%85%EC%9E%84%2C%20%ED%98%91%EB%A0%A5.md)
-- 🧠 설계 품질과 트레이드 오프
+- [🧠 설계 품질과 트레이드 오프](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EC%84%A4%EA%B3%84%20%ED%92%88%EC%A7%88%EA%B3%BC%20%ED%8A%B8%EB%A0%88%EC%9D%B4%EB%93%9C%20%EC%98%A4%ED%94%84.md)
 
 </br>
 </br>
