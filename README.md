@@ -82,6 +82,7 @@
 - [☕ StringBuilder vs StringBuffer](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/StringBuilder%20vs%20StringBuffer.md)
 - [☕ EnumMap 과 HashMap](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/EnumMap%20%EA%B3%BC%20HashMap.md)
 - [☕ 제네릭 - PECS](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/%EC%A0%9C%EB%84%A4%EB%A6%AD%20-%20PECS.md)
+- ☕ 제네릭 - 타입 매개변수 제한
 
 </br>
 </br>
