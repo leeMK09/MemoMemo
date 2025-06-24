@@ -84,6 +84,7 @@
 - [☕ 제네릭 - PECS](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/%EC%A0%9C%EB%84%A4%EB%A6%AD%20-%20PECS.md)
 - [☕ 제네릭 - 타입 매개변수 제한](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/%EC%A0%9C%EB%84%A4%EB%A6%AD%20-%20%ED%83%80%EC%9E%85%20%EB%A7%A4%EA%B0%9C%EB%B3%80%EC%88%98%20%EC%A0%9C%ED%95%9C.md)
 - [☕ 제네릭 메서드](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/%EC%A0%9C%EB%84%A4%EB%A6%AD%20%EB%A9%94%EC%84%9C%EB%93%9C.md)
+- ☕ 문자열 리터럴, 문자열 풀
 
 </br>
 </br>
