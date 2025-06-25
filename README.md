@@ -85,6 +85,7 @@
 - [☕ 제네릭 - 타입 매개변수 제한](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/%EC%A0%9C%EB%84%A4%EB%A6%AD%20-%20%ED%83%80%EC%9E%85%20%EB%A7%A4%EA%B0%9C%EB%B3%80%EC%88%98%20%EC%A0%9C%ED%95%9C.md)
 - [☕ 제네릭 메서드](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/%EC%A0%9C%EB%84%A4%EB%A6%AD%20%EB%A9%94%EC%84%9C%EB%93%9C.md)
 - [☕ 문자열 리터럴, 문자열 풀](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/%EB%AC%B8%EC%9E%90%EC%97%B4%20%EB%A6%AC%ED%84%B0%EB%9F%B4%2C%20%EB%AC%B8%EC%9E%90%EC%97%B4%20%ED%92%80.md)
+- ☕ 제네릭 - 와일드카드
 
 </br>
 </br>
