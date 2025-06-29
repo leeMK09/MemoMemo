@@ -331,3 +331,84 @@ members: MutableList<Member>
 
 - Lombok 사용 시 `@ToString(exclude = ["team"])`, `@EqualsAndHashCode(exclude = [...])` 명시
 - DTO 분리 및 순환참조 제거
+
+</br>
+</br>
+
+1. JPA 는 리플렉션으로 엔티티를 생성한다는데, 그럼 CGLIB 으로 프록시를 생성하는 것과 뭐가 다른가?
+2. JPA 는 왜 프록시 객체를 사용하나?
+3. 리플렉션 VS 프록시(CGLIB) 는 각각 어떤 역할인가?
+
+개념 정리
+
+| 개념                         | 설명                                                                    | JPA에서의 사용 위치                    |
+| ---------------------------- | ----------------------------------------------------------------------- | -------------------------------------- |
+| **리플렉션 (Reflection)**    | 클래스의 생성자, 필드, 메서드 등에 런타임에 접근하고 인스턴스 생성 가능 | `newInstance()`로 엔티티 인스턴스 생성 |
+| **CGLIB / ByteBuddy 프록시** | 실제 클래스를 상속하여 프록시 서브클래스를 런타임에 생성                | Lazy 로딩, 변경 감지, 동적 위임 등     |
+
+</br>
+
+### 1. JPA 가 리플렉션을 사용하는 이유
+
+JPA 는 DB 에서 데이터를 조회해 객체로 매핑할 때 정확한 생성자 호출을 알 수 없기 때문에 기본생성자 + 리플렉션(`newInstance()`) 으로 인스턴스를 생성합니다
+
+```java
+// 내부적으로 이런 식
+Constructor<?> ctor = User.class.getDeclaredConstructor();
+ctor.setAccessible(true);
+Object user = ctor.newInstance();
+```
+
+조건
+
+- 기본 생성자(인자 없는 생성자) 필요
+- `private` 이면 `setAccessible(true)` 필요
+- JPA 스펙 상 `public` 또는 `protected` 기본 생성자 요구
+
+</br>
+
+### 2. CGLIB 프록시는 언제, 왜 사용되나?
+
+Hibernate(JPA 구현체) 는 Lazy Loading 이나 변경 감지(Dirty Checking)를 위해 프록시 객체를 생성합니다
+
+```java
+User user = entityManager.getReference(User.class, 1L);
+```
+
+이때 `User` 가 아니라
+
+```java
+class User$HibernateProxy extends User implements HibernateProxy {
+    // 내부적으로 DB 조회 로직이 지연되어 들어 있음
+}
+```
+
+- 프록시 객체는 실제 필드를 갖고 있지 않고, 필요한 시점에 DB 조회
+- 또는 값이 변경되었는지 추적할 수 있는 로직을 덧붙임
+
+| 구분      | 리플렉션                  | CGLIB/프록시                             |
+| --------- | ------------------------- | ---------------------------------------- |
+| 용도      | 엔티티 인스턴스 생성      | Lazy 로딩, 변경 감지, 가짜 객체          |
+| 언제 사용 | DB 조회 후 객체 생성할 때 | `getReference()`, 지연 로딩 시           |
+| 대상      | **진짜 엔티티**           | **프록시 서브클래스**                    |
+| 사용 기술 | Java Reflection API       | CGLIB, ByteBuddy 등 바이트코드 조작 기술 |
+
+</br>
+
+### 그럼 왜 프록시 객체를 써야 하는가? (JPA 의 목적)
+
+목적 1 - Lazy Loading (지연 로딩)
+
+- 연관 엔티티가 실제로 필요한 시점까지 DB 조회를 미룬다
+- 메모리 절약 + 성능 최적화
+
+```java
+Order order = em.find(Order.class, 1L);
+Member member = order.getMember(); // 아직 DB 조회 안됨
+member.getName(); // 이때 조회
+```
+
+목적 2 - Dirty Checking (변경 감지)
+
+- 프록시 객체 내부에 스냅샷 또는 추적 로직을 심어둠
+- 커밋 시점에 값이 바뀌었는지 자동 추적 → update 쿼리 생성
