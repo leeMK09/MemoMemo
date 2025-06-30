@@ -95,7 +95,7 @@
 
 ### 🦄 [Kotlin]
 
-- 🦄 data class
+- [🦄 data class](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A6%84%20Kotlin/data%20class.md)
 
 </br>
 </br>
