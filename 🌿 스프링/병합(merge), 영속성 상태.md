@@ -14,4 +14,13 @@
 ## merge: Detached -> Managed 
 
 User detachedUser = new User()
-detachedUser.setId
+detachedUser.setId(1L); // 이미 DB 에 존재 
+detachedUser.setName("Updated");
+
+em.merge(detachedUser); // select + update 
+
+-> 기존 DB 상태를 select
+
+
+
+
