@@ -62,7 +62,7 @@
 - [🌿 서블릿 컨테이너 초기화](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%BF%20%EC%8A%A4%ED%94%84%EB%A7%81/%EC%84%9C%EB%B8%94%EB%A6%BF%20%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%84%88%20%EC%B4%88%EA%B8%B0%ED%99%94.md)
 - [🌿 영속성 컨텍스트와 엔티티 매니저](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%BF%20%EC%8A%A4%ED%94%84%EB%A7%81/%EC%98%81%EC%86%8D%EC%84%B1%20%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8%EC%99%80%20%EC%97%94%ED%8B%B0%ED%8B%B0%20%EB%A7%A4%EB%8B%88%EC%A0%80.md)
 - [🌿 엔티티 매니저와 JPA](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%BF%20%EC%8A%A4%ED%94%84%EB%A7%81/%EC%97%94%ED%8B%B0%ED%8B%B0%20%EB%A7%A4%EB%8B%88%EC%A0%80%EC%99%80%20JPA.md)
-- 🌿 병합(merge), 영속성 상태
+- [🌿 병합(merge), 영속성 상태](<https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%BF%20%EC%8A%A4%ED%94%84%EB%A7%81/%EB%B3%91%ED%95%A9(merge)%2C%20%EC%98%81%EC%86%8D%EC%84%B1%20%EC%83%81%ED%83%9C.md>)
 
 </br>
 </br>
