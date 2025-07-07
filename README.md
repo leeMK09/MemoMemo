@@ -115,7 +115,7 @@
 - [🌐 HTTP 헤더의 Cache-Control](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%90%20HTTP/HTTP%20%ED%97%A4%EB%8D%94%EC%9D%98%20Cache-Control.md)
 - [🌐 HTTP 헤더의 Connection](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%90%20HTTP/HTTP%20%ED%97%A4%EB%8D%94%EC%9D%98%20Connection.md)
 - [🌐 커넥션 관리](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%90%20HTTP/%EC%BB%A4%EB%84%A5%EC%85%98%EA%B4%80%EB%A6%AC.md)
-- 🌐 HTTP 멱등성
+- [🌐 HTTP 멱등성](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%90%20HTTP/HTTP%20%EB%A9%B1%EB%93%B1%EC%84%B1.md)
 
 </br>
 
