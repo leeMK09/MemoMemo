@@ -100,6 +100,7 @@
 ### 🦄 [Kotlin]
 
 - [🦄 data class](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A6%84%20Kotlin/data%20class.md)
+- 🦄 코틀린에 대해(연산자, 논리식, 예외, 클래스 등)
 
 </br>
 </br>
