@@ -94,7 +94,7 @@
 - [☕ 제네릭 - 와일드카드](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/%EC%A0%9C%EB%84%A4%EB%A6%AD%20-%20%EC%99%80%EC%9D%BC%EB%93%9C%EC%B9%B4%EB%93%9C.md)
 - [☕ 람다](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/%EB%9E%8C%EB%8B%A4.md)
 - [☕ 오토박싱 & 언박싱](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/%EC%98%A4%ED%86%A0%EB%B0%95%EC%8B%B1%20%26%20%EC%96%B8%EB%B0%95%EC%8B%B1.md)
-- ☕ 스레드의 생명주기
+- [☕ 스레드의 생명주기](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/%EC%8A%A4%EB%A0%88%EB%93%9C%EC%9D%98%20%EC%83%9D%EB%AA%85%EC%A3%BC%EA%B8%B0.md)
 
 </br>
 </br>
