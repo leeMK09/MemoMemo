@@ -129,3 +129,9 @@
 ### 🕸️ Network
 
 - [🕸️ TCP 의 흐름제어와 혼잡제어](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%95%B8%EF%B8%8F%20Network/TCP%20%EC%9D%98%20%ED%9D%90%EB%A6%84%EC%A0%9C%EC%96%B4%EC%99%80%20%ED%98%BC%EC%9E%A1%EC%A0%9C%EC%96%B4.md)
+
+</br>
+
+### 🫀 시스템 디자인
+
+- 🫀 메시지 패턴 과 구축 사례
