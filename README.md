@@ -123,7 +123,7 @@
 - [🌐 HTTP 헤더의 Connection](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%90%20HTTP/HTTP%20%ED%97%A4%EB%8D%94%EC%9D%98%20Connection.md)
 - [🌐 커넥션 관리](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%90%20HTTP/%EC%BB%A4%EB%84%A5%EC%85%98%EA%B4%80%EB%A6%AC.md)
 - [🌐 HTTP 멱등성](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%90%20HTTP/HTTP%20%EB%A9%B1%EB%93%B1%EC%84%B1.md)
-- 🌐 HTTP 버전별 차이
+- [🌐 HTTP 버전별 차이](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%90%20HTTP/HTTP%20%EB%B2%84%EC%A0%84%EB%B3%84%20%EC%B0%A8%EC%9D%B4.md)
 
 </br>
 
