@@ -43,7 +43,7 @@
 - [🧠 추상 타입과 유연함](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EC%B6%94%EC%83%81%20%ED%83%80%EC%9E%85%EA%B3%BC%20%EC%9C%A0%EC%97%B0%ED%95%A8.md)
 - [🧠 은닉성과 캡슐화의 차이](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EC%9D%80%EB%8B%89%EC%84%B1%EA%B3%BC%20%EC%BA%A1%EC%8A%90%ED%99%94%EC%9D%98%20%EC%B0%A8%EC%9D%B4.md)
 - [🧠 상속의 단점](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EC%83%81%EC%86%8D%EC%9D%98%20%EB%8B%A8%EC%A0%90.md)
-- 🧠 SOLID
+- [🧠 SOLID](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/SOLID.md)
 
 </br>
 </br>
