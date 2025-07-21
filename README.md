@@ -21,7 +21,7 @@
 - [💾 READ-COMMITED를 사용하는 이유는?](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/READ-COMMITED%EB%A5%BC%20%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94%20%EC%9D%B4%EC%9C%A0%EB%8A%94%3F.md)
 - [💾 Join 의 특징 및 동작방식, 용어정리](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/Join%20%EC%9D%98%20%ED%8A%B9%EC%A7%95%20%EB%B0%8F%20%EB%8F%99%EC%9E%91%EB%B0%A9%EC%8B%9D%2C%20%EC%9A%A9%EC%96%B4%EC%A0%95%EB%A6%AC.md)
 - [💾 오브젝트 스캔](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EC%98%A4%EB%B8%8C%EC%A0%9D%ED%8A%B8%20%EC%8A%A4%EC%BA%94.md)
-- 💾 페이지 기준 목록 조회 대신 ID 기준 목록 조회 방식 사용하기
+- [💾 페이지 기준 목록 조회 대신 ID 기준 목록 조회 방식 사용하기](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%ED%8E%98%EC%9D%B4%EC%A7%80%20%EA%B8%B0%EC%A4%80%20%EB%AA%A9%EB%A1%9D%20%EC%A1%B0%ED%9A%8C%20%EB%8C%80%EC%8B%A0%20ID%20%EA%B8%B0%EC%A4%80%20%EB%AA%A9%EB%A1%9D%20%EC%A1%B0%ED%9A%8C%20%EB%B0%A9%EC%8B%9D%20%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0.md)
 
 </br>
 </br>
