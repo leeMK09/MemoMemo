@@ -73,7 +73,7 @@
 - [🌿 Dispatcher-Servlet](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%BF%20%EC%8A%A4%ED%94%84%EB%A7%81/Dispatcher-Servlet.md)
 - [🌿 [DB Connection Pool] 커넥션의 최대 연결 시간 설정이 없다는 것이 왜 DB 연결 불가로 이어지는가?](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%BF%20%EC%8A%A4%ED%94%84%EB%A7%81/%5BDB%20Connection%20Pool%5D%20%EC%BB%A4%EB%84%A5%EC%85%98%EC%9D%98%20%EC%B5%9C%EB%8C%80%20%EC%97%B0%EA%B2%B0%20%EC%8B%9C%EA%B0%84%20%EC%84%A4%EC%A0%95%EC%9D%B4%20%EC%97%86%EB%8B%A4%EB%8A%94%20%EA%B2%83%EC%9D%B4%20%EC%99%9C%20DB%20%EC%97%B0%EA%B2%B0%20%EB%B6%88%EA%B0%80%EB%A1%9C%20%EC%9D%B4%EC%96%B4%EC%A7%80%EB%8A%94%EA%B0%80%3F.md)
 - [🌿 외부 연동의 재시도](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%BF%20%EC%8A%A4%ED%94%84%EB%A7%81/%EC%99%B8%EB%B6%80%20%EC%97%B0%EB%8F%99%EC%9D%98%20%EC%9E%AC%EC%8B%9C%EB%8F%84.md)
-- 🌿 외부 연동시 트랜잭션과 커넥션 풀 처리
+- [🌿 외부 연동시 트랜잭션과 커넥션 풀 처리](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%BF%20%EC%8A%A4%ED%94%84%EB%A7%81/%EC%99%B8%EB%B6%80%20%EC%97%B0%EB%8F%99%EC%8B%9C%20%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98%EA%B3%BC%20%EC%BB%A4%EB%84%A5%EC%85%98%20%ED%92%80%20%EC%B2%98%EB%A6%AC.md)
 
 </br>
 </br>
