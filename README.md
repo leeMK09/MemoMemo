@@ -78,6 +78,7 @@
 - [🌿 비동기 방식 사례 - 메시징](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%BF%20%EC%8A%A4%ED%94%84%EB%A7%81/%EB%B9%84%EB%8F%99%EA%B8%B0%20%EB%B0%A9%EC%8B%9D%20%EC%82%AC%EB%A1%80%20-%20%EB%A9%94%EC%8B%9C%EC%A7%95.md)
 - [🌿 비동기 방식 사례 - 별도 스레드](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%BF%20%EC%8A%A4%ED%94%84%EB%A7%81/%EB%B9%84%EB%8F%99%EA%B8%B0%20%EB%B0%A9%EC%8B%9D%20%EC%82%AC%EB%A1%80%20-%20%EB%B3%84%EB%8F%84%20%EC%8A%A4%EB%A0%88%EB%93%9C.md)
 - [🌿 메시지 종류 - 이벤트와 커맨드](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%BF%20%EC%8A%A4%ED%94%84%EB%A7%81/%EB%A9%94%EC%8B%9C%EC%A7%80%20%EC%A2%85%EB%A5%98%20-%20%EC%9D%B4%EB%B2%A4%ED%8A%B8%EC%99%80%20%EC%BB%A4%EB%A7%A8%EB%93%9C.md)
+- 🌿 메시지 소비시 고려사항
 
 </br>
 </br>
