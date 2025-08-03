@@ -80,7 +80,7 @@
 - [🌿 메시지 종류 - 이벤트와 커맨드](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%BF%20%EC%8A%A4%ED%94%84%EB%A7%81/%EB%A9%94%EC%8B%9C%EC%A7%80%20%EC%A2%85%EB%A5%98%20-%20%EC%9D%B4%EB%B2%A4%ED%8A%B8%EC%99%80%20%EC%BB%A4%EB%A7%A8%EB%93%9C.md)
 - [🌿 메시지 소비시 고려사항](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%BF%20%EC%8A%A4%ED%94%84%EB%A7%81/%EB%A9%94%EC%8B%9C%EC%A7%80%20%EC%86%8C%EB%B9%84%EC%8B%9C%20%EA%B3%A0%EB%A0%A4%EC%82%AC%ED%95%AD.md)
 - [🌿 메시지 생성시 고려사항](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%BF%20%EC%8A%A4%ED%94%84%EB%A7%81/%EB%A9%94%EC%8B%9C%EC%A7%80%20%EC%83%9D%EC%84%B1%EC%8B%9C%20%EA%B3%A0%EB%A0%A4%EC%82%AC%ED%95%AD.md)
-- 🌿 성능 테스트의 종류
+- [🌿 성능 테스트의 종류](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%BF%20%EC%8A%A4%ED%94%84%EB%A7%81/%EC%84%B1%EB%8A%A5%20%ED%85%8C%EC%8A%A4%ED%8A%B8%EC%9D%98%20%EC%A2%85%EB%A5%98.md)
 
 </br>
 </br>
