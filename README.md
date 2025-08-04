@@ -112,6 +112,7 @@
 - [☕ 오토박싱 & 언박싱](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/%EC%98%A4%ED%86%A0%EB%B0%95%EC%8B%B1%20%26%20%EC%96%B8%EB%B0%95%EC%8B%B1.md)
 - [☕ 스레드의 생명주기](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/%EC%8A%A4%EB%A0%88%EB%93%9C%EC%9D%98%20%EC%83%9D%EB%AA%85%EC%A3%BC%EA%B8%B0.md)
 - [☕ 한 번에 대량으로 객체를 생성하는 것](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/%ED%95%9C%20%EB%B2%88%EC%97%90%20%EB%8C%80%EB%9F%89%EC%9C%BC%EB%A1%9C%20%EA%B0%9D%EC%B2%B4%EB%A5%BC%20%EC%83%9D%EC%84%B1%ED%95%98%EB%8A%94%20%EA%B2%83.md)
+- ☕ 인터럽트 처리시 고려할점
 
 </br>
 </br>
