@@ -55,7 +55,7 @@
 
 - [💣 [JAVA] synchronized 키워드는 왜 현업에서 큰 성능 저하를 일으킬 수 있을까](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%A3%20%EB%A9%80%ED%8B%B0%EC%8A%A4%EB%A0%88%EB%93%9C/%5BJAVA%5D%20synchronized%20%ED%82%A4%EC%9B%8C%EB%93%9C%EB%8A%94%20%EC%99%9C%20%ED%98%84%EC%97%85%EC%97%90%EC%84%9C%20%ED%81%B0%20%EC%84%B1%EB%8A%A5%20%EC%A0%80%ED%95%98%EB%A5%BC%20%EC%9D%BC%EC%9C%BC%ED%82%AC%20%EC%88%98%20%EC%9E%88%EC%9D%84%EA%B9%8C.md)
 - [💣 [JAVA] 왜 Runnable 에서는 Exception 을 던질 수 없는가](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%A3%20%EB%A9%80%ED%8B%B0%EC%8A%A4%EB%A0%88%EB%93%9C/%5BJAVA%5D%20%EC%99%9C%20Runnable%20%EC%97%90%EC%84%9C%EB%8A%94%20Exception%20%EC%9D%84%20%EB%8D%98%EC%A7%88%20%EC%88%98%20%EC%97%86%EB%8A%94%EA%B0%80.md)
-- 💣 [JAVA] 메모리 가시성 문제 와 volatile
+- [💣 [JAVA] 메모리 가시성 문제 와 volatile](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%A3%20%EB%A9%80%ED%8B%B0%EC%8A%A4%EB%A0%88%EB%93%9C/%5BJAVA%5D%20%EB%A9%94%EB%AA%A8%EB%A6%AC%20%EA%B0%80%EC%8B%9C%EC%84%B1%20%EB%AC%B8%EC%A0%9C%20%EC%99%80%20volatile.md)
 
 </br>
 </br>
