@@ -17,6 +17,7 @@
 ### 확장함수, 자바로 컴파일되면 어떻게 되는가?
 
 - 확장함수는 코틀린에서 보기엔 인스턴스 메서드처럼 보이지만, 실제로는 정적(static) 메서드로 컴파일됩니다
+- 확장함수는 "진짜 메서드 추가" 가 아닌 컴파일 시점에 `수신 객체(receiver)` 를 첫 번째 인자로 받는 "정적 (또는 멤버) 메서드" 로 바뀌는 방식이다
 
 ```kotlin
 // Kotlin 확장 함수
@@ -37,6 +38,85 @@ public final class StringKt {
 - 첫 번째 인자로 "수신 객체(this)" 를 전달합니다
 
 </br>
+
+**클래스/객체 안의 확장 함수 (멤버확장)**
+
+```kotlin
+class A {
+    fun String.shout() = uppercase()
+}
+```
+
+자바로는 A 의 인스턴스 메서드가 되고, 확장 수신은 첫 번째 인자를 받음
+
+```java
+public final class A {
+    public final String shout(@NotNull String $this) {
+        return $this.toUpperCase();
+    }
+}
+```
+
+- 자바에서 호출시 `new A().shout("hi");`
+
+</br>
+
+**`object` 혹은 `companion object` 안에서 사용할 경우 기본적으로 그 객체의 멤버함수가 된다 (메서드)**
+
+```kotlin
+object Util {
+    fun String.box() = "[$this]"
+}
+```
+
+자바
+
+```java
+public final class Util {
+    public static final Util INSTANCE = new Util();
+
+    public final String box(@NotNull String $this) {
+        return "[" + $this + "]";
+    }
+}
+
+// 사용 → Util.INSTANCE.box("x")
+```
+
+</br>
+
+**확장 프로퍼티**
+
+```kotlin
+val String.first: Char
+    get() = this[0]
+
+val String.tag: String
+    get() = "tag:$this"
+    set(v) {
+        // field 가 존재하지 않음 → backing field X
+        // 무언가를 기록하는 용도로 사용하기도 함
+    }
+```
+
+- 백킹 필드가 없다
+  - 단지 `getXxx(수신)` / `setXxx(수신, 값)` 메서드로만 컴파일된다
+- 자바에서 호출시
+  - `StringsKt.getFirst("abc")` / `StringsKt.setTag("abc", "t")`
+
+</br>
+
+**널 처리**
+
+- 수신 타입이 `String` (non-null) 이면 `Intrinsics.checkNotNullParameter` 가 들어가 **런타임에 null 체크**를 한다
+- 수신 타입이 `String?` 이면 파라미터 애노테이션이 `@Nullable` 이고 내부에서 직접 null 을 다뤄야 한다 (자동 체크 없음)
+
+</br>
+
+**디스패치 (바인딩) 성질**
+
+- 확장 함수는 정적으로 결정된다. 즉 가상 디스패치(오버라이드) 와 다르다
+- 즉 **컴파일 시점에 타입** 으로 어떤 확장을 부를지 결정하게 된다 → 코드상에서 타입이 중요하다, 타입을 통해 확장 함수를 호출 (정적 바인딩)
 
 **특징**
 
