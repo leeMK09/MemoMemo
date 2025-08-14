@@ -130,7 +130,7 @@
 - [🦄 접근제어자](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A6%84%20Kotlin/%EC%A0%91%EA%B7%BC%EC%A0%9C%EC%96%B4%EC%9E%90.md)
 - [🦄 object](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A6%84%20Kotlin/object.md)
 - [🦄 확장함수, inline 함수 등](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A6%84%20Kotlin/%ED%99%95%EC%9E%A5%ED%95%A8%EC%88%98%2C%20inline%20%ED%95%A8%EC%88%98%20%EB%93%B1.md)
-- 🦄 Sequence
+- [🦄 Sequence](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A6%84%20Kotlin/Sequence.md)
 
 </br>
 </br>
