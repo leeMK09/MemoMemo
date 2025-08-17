@@ -241,3 +241,5 @@ public class Main {
 자바는 `Lock` 인터페이스와 `ReentrantLock` 이라는 구현체로 이런 기능들을 이미 다 구현해 두었다
 
 `ReetrantLock` 은 `LockSupport` 를 활용해서 `synchronized` 의 단점을 극복하면서 매우 편리하게 임계 영역을 다룰 수 있는 다양한 기능을 제공한다
+
+참고: [☕ ReentrantLock](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/ReentrantLock.md)
