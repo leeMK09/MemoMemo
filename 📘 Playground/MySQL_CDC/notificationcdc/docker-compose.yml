@@ -1,0 +1,25 @@
+version: "3.9"
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: notification-mysql
+    ports:
+      - "33306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: notification
+      TZ: Asia/Seoul
+    command:
+      - "--server-id=101"
+      - "--log-bin=mysql-bin"
+      - "--binlog_format=ROW"
+      - "--binlog_row_image=FULL"
+      - "--gtid_mode=ON"
+      - "--enforce_gtid_consistency=ON"
+      - "--default-time-zone=Asia/Seoul"
+    healthcheck:
+      test: ["CMD-SHELL","mysqladmin ping -h 127.0.0.1 -uroot -ppassword || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
