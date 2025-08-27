@@ -51,7 +51,7 @@
 - [🧠 객체지향은 절차지향과 다른점이 뭘까? (1)](<https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EA%B0%9D%EC%B2%B4%EC%A7%80%ED%96%A5%EC%9D%80%20%EC%A0%88%EC%B0%A8%EC%A7%80%ED%96%A5%EA%B3%BC%20%EB%8B%A4%EB%A5%B8%EC%A0%90%EC%9D%B4%20%EB%AD%98%EA%B9%8C%3F%20(1).md>)
 - [🧠 객체지향은 절차지향과 다른점이 뭘까? (2)](<https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EA%B0%9D%EC%B2%B4%EC%A7%80%ED%96%A5%EC%9D%80%20%EC%A0%88%EC%B0%A8%EC%A7%80%ED%96%A5%EA%B3%BC%20%EB%8B%A4%EB%A5%B8%EC%A0%90%EC%9D%B4%20%EB%AD%98%EA%B9%8C%3F%20(2).md>)
 - [🧠 왜 객체에는 상태가 필요한가?](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EC%99%9C%20%EA%B0%9D%EC%B2%B4%EC%97%90%EB%8A%94%20%EC%83%81%ED%83%9C%EA%B0%80%20%ED%95%84%EC%9A%94%ED%95%9C%EA%B0%80%3F.md)
-- 🧠 타입 == 추상?
+- [🧠 타입 == 추상?](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%ED%83%80%EC%9E%85%20%3D%3D%20%EC%B6%94%EC%83%81%3F.md)
 
 </br>
 </br>
