@@ -12,7 +12,7 @@ class NotificationRequestedTest {
     @Test
     @DisplayName("getType() 실행 시 NOTIFICATION 타입을 반환한다")
     void getType() {
-        NotificationRequested notificationRequested = new NotificationRequested(Instant.now());
+        NotificationRequested notificationRequested = createNotificationRequested();
 
         IdempotencyKeyType result = notificationRequested.getType();
 
@@ -24,11 +24,19 @@ class NotificationRequestedTest {
     @DisplayName("getOccurredAt() 실행 시 발생한 시간을 반환한다")
     void getOccurredAt() {
         Instant startedAt = Instant.now();
-        NotificationRequested notificationRequested = new NotificationRequested(startedAt);
+        NotificationRequested notificationRequested = createNotificationRequested(startedAt);
 
         Instant occurredAt = notificationRequested.occurredAt();
 
         assertThat(occurredAt).isNotNull();
         assertThat(occurredAt).isEqualTo(startedAt);
+    }
+
+    private NotificationRequested createNotificationRequested() {
+        return new NotificationRequested(Instant.now(), null, null);
+    }
+
+    private NotificationRequested createNotificationRequested(Instant occurredAt) {
+        return new NotificationRequested(occurredAt, null, null);
     }
 }
