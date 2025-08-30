@@ -1,9 +1,15 @@
 package com.playground.notificationoutbox.outbox.domain;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@Table(name = "outbox")
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(
+        name = "outbox",
+        uniqueConstraints = @UniqueConstraint(name = "uk_outbox_idempotency_key", columnNames = "idempotency_key")
+)
 public class Outbox {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,5 +19,10 @@ public class Outbox {
     private String idempotencyKey;
 
     @Column(name = "attempt_count", nullable = false)
-    private Integer attemptCount;
+    private Integer attemptCount = 0;
+
+    public Outbox(String idempotencyKey) {
+        this.idempotencyKey = idempotencyKey;
+        this.attemptCount = 0;
+    }
 }
