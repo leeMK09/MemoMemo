@@ -1,4 +1,4 @@
-package com.playground.notificationoutbox.outbox;
+package com.playground.notificationoutbox.outbox.domain;
 
 import jakarta.persistence.*;
 

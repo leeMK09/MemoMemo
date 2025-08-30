@@ -1,8 +1,8 @@
 version: "3.9"
 services:
   mysql:
-    image: mysql:8.4
-    container_name: notification-mysql
+    image: mysql:latest
+    container_name: outbox-mysql
     ports:
       - "33308:3306"
     environment:
