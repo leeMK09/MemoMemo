@@ -1,5 +1,6 @@
 package com.playground.notificationoutbox.notification.domain;
 
+import com.playground.notificationoutbox.notification.service.NotificationKeyGenerator;
 import com.playground.notificationoutbox.outbox.domain.IdempotencyKeyType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

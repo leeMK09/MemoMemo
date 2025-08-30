@@ -1,6 +1,7 @@
-package com.playground.notificationoutbox.notification.domain;
+package com.playground.notificationoutbox.notification.service;
 
-import com.playground.notificationoutbox.outbox.domain.IdempotencyKeyGenerator;
+import com.playground.notificationoutbox.notification.domain.NotificationRequested;
+import com.playground.notificationoutbox.outbox.service.IdempotencyKeyGenerator;
 import com.playground.notificationoutbox.outbox.domain.IdempotencyKeyType;
 
 public class NotificationKeyGenerator implements IdempotencyKeyGenerator<NotificationRequested> {
