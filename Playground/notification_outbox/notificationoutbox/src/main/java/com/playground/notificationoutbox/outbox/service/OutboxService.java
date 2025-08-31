@@ -3,14 +3,16 @@ package com.playground.notificationoutbox.outbox.service;
 import com.playground.notificationoutbox.outbox.domain.IdempotencyKeyType;
 import com.playground.notificationoutbox.outbox.domain.IdempotencySubject;
 import com.playground.notificationoutbox.outbox.domain.Outbox;
+import com.playground.notificationoutbox.outbox.domain.OutboxStatus;
 import com.playground.notificationoutbox.outbox.repository.OutboxRepository;
-import com.playground.notificationoutbox.outbox.service.dto.OutboxResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -19,6 +21,9 @@ import java.util.List;
 public class OutboxService implements OutboxReader {
     private final IdempotencyKeyGeneratorResolver resolver;
     private final OutboxRepository outboxRepository;
+
+    @Value("${outbox.batch:200}")
+    private int batchSize;
 
     @Transactional
     public void create(IdempotencySubject subject, Integer maxAttempts) {
@@ -35,7 +40,14 @@ public class OutboxService implements OutboxReader {
     }
 
     @Override
-    public List<OutboxResult> findConsumableOutboxes() {
-        return List.of();
+    public List<Outbox> findConsumableOutboxes() {
+        LocalDateTime now = LocalDateTime.now();
+        List<OutboxStatus> statuses = OutboxStatus.getConsumableStatuses();
+        List<Outbox> outboxes = outboxRepository.findAllByStatusAndBeforeAttemptAtWithLock(
+                statuses,
+                now,
+                batchSize
+        );
+        return outboxes;
     }
 }

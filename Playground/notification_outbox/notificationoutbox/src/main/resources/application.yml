@@ -14,6 +14,9 @@ spring:
         format_sql: true
         show_sql: true
 
+outbox:
+  batch: 200
+
 logging:
   level:
     com.github.shyiko: INFO
