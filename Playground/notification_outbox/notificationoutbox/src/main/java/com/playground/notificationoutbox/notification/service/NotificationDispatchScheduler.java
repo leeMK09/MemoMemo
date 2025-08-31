@@ -11,8 +11,9 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class NotificationConsumerScheduler {
+public class NotificationDispatchScheduler {
     private final OutboxService outboxService;
+    private final NotificationDispatcher notificationDispatcher;
 
     @Value("${outbox.batch:50}")
     private int batchSize;
@@ -22,9 +23,6 @@ public class NotificationConsumerScheduler {
         List<Outbox> outboxes = outboxService.resolveConsumables(batchSize);
         if (outboxes.isEmpty()) return;
 
-        outboxes.forEach(outbox -> {
-            // 외부 알림 호출
-            // 비동기 처리, 다음 스케줄러가 돌기 전에 처리해야함
-        });
+        notificationDispatcher.dispatch(outboxes);
     }
 }

@@ -1,6 +1,5 @@
 package com.playground.notificationoutbox.notification.infrastructure;
 
-import com.playground.notificationoutbox.notification.service.NotificationSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
