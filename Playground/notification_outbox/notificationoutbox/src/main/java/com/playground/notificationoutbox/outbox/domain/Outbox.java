@@ -25,7 +25,7 @@ public class Outbox {
     private String idempotencyKey;
 
     @Column(name = "attempt_count", nullable = false)
-    private Integer attemptCount = 0;
+    private Integer attemptCount = 1;
 
     @Column(name = "max_attempts", nullable = false)
     private Integer maxAttempts;
@@ -41,7 +41,7 @@ public class Outbox {
         this.idempotencyKey = idempotencyKey;
         this.maxAttempts = maxAttempts;
         this.nextAttemptAt = LocalDateTime.now().plusSeconds(DEFAULT_OFFSET_ATTEMPT_AT);
-        this.attemptCount = 0;
+        this.attemptCount = 1;
         this.status = OutboxStatus.NEW;
     }
 
@@ -49,12 +49,12 @@ public class Outbox {
         this.idempotencyKey = idempotencyKey;
         this.maxAttempts = maxAttempts;
         this.nextAttemptAt = nextAttemptAt;
-        this.attemptCount = 0;
+        this.attemptCount = 1;
         this.status = OutboxStatus.NEW;
     }
 
     public void sent() {
-        this.status = OutboxStatus.SENT;
+        this.status = OutboxStatus.PROCESSING;
     }
 
     public void completed() {

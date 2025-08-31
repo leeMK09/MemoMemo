@@ -15,7 +15,23 @@ spring:
         show_sql: true
 
 outbox:
-  batch: 200
+  batch: 50
+
+notification:
+  http:
+    dummy: true
+    base-url: https://postman-echo.com
+    connect-timeout-ms: 2000
+    response-timeout-ms: 3000
+    read-timeout-ms: 3000
+    write-timeout-ms: 3000
+    max-in-memory-size: 1MB
+  async:
+    pool:
+      core: 8
+      max: 32
+      queue: 1000
+      keep-alive-seconds: 60
 
 logging:
   level:

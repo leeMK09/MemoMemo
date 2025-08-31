@@ -3,6 +3,7 @@ package com.playground.notificationoutbox.outbox.repository;
 import com.playground.notificationoutbox.outbox.domain.Outbox;
 import com.playground.notificationoutbox.outbox.domain.OutboxStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -25,4 +26,12 @@ public interface OutboxRepository extends JpaRepository<Outbox, Long> {
             @Param("now") LocalDateTime now,
             @Param("batchSize") int batchSize
     );
+
+    @Modifying
+    @Query("""
+        UPDATE Outbox o
+        SET o.status = :status
+        WHERE o.id IN :ids
+    """)
+    int updateAllStatusByIds(@Param("ids") List<Long> ids, OutboxStatus status);
 }

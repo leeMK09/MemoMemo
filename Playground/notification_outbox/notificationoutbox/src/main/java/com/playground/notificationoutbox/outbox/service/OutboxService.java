@@ -18,12 +18,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class OutboxService implements OutboxReader {
+public class OutboxService {
     private final IdempotencyKeyGeneratorResolver resolver;
     private final OutboxRepository outboxRepository;
-
-    @Value("${outbox.batch:200}")
-    private int batchSize;
 
     @Transactional
     public void create(IdempotencySubject subject, Integer maxAttempts) {
@@ -39,15 +36,22 @@ public class OutboxService implements OutboxReader {
         }
     }
 
-    @Override
-    public List<Outbox> findConsumableOutboxes() {
+    @Transactional
+    public List<Outbox> resolveConsumables(int batchSize) {
         LocalDateTime now = LocalDateTime.now();
-        List<OutboxStatus> statuses = OutboxStatus.getConsumableStatuses();
-        List<Outbox> outboxes = outboxRepository.findAllByStatusAndBeforeAttemptAtWithLock(
+        List<OutboxStatus> statuses = OutboxStatus.getConsumable();
+        List<Outbox> consumableOutboxes = outboxRepository.findAllByStatusAndBeforeAttemptAtWithLock(
                 statuses,
                 now,
                 batchSize
         );
-        return outboxes;
+
+        if (consumableOutboxes.isEmpty()) {
+            return List.of();
+        }
+
+        List<Long> outboxIds = consumableOutboxes.stream().map(Outbox::getId).toList();
+        outboxRepository.updateAllStatusByIds(outboxIds, OutboxStatus.PROCESSING);
+        return consumableOutboxes;
     }
 }
