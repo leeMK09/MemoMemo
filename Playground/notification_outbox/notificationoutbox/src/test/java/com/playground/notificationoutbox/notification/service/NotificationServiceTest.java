@@ -4,7 +4,6 @@ import com.playground.notificationoutbox.notification.domain.NotificationRequest
 import com.playground.notificationoutbox.notification.service.dto.NotificationCreation;
 import com.playground.notificationoutbox.outbox.domain.IdempotencySubject;
 import com.playground.notificationoutbox.outbox.service.OutboxService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +30,7 @@ class NotificationServiceTest {
 
         notificationService.create(creation);
 
-        verify(outboxService, times(1)).create(any(IdempotencySubject.class));
+        verify(outboxService, times(1)).create(any(IdempotencySubject.class), 5);
     }
 
     @Test
@@ -42,13 +41,13 @@ class NotificationServiceTest {
         notificationService.create(creation);
 
         ArgumentCaptor<IdempotencySubject> captor = ArgumentCaptor.forClass(IdempotencySubject.class);
-        verify(outboxService, times(1)).create(captor.capture());
+        verify(outboxService, times(1)).create(captor.capture(), 5);
 
         IdempotencySubject subject = captor.getValue();
         assertEquals(NotificationRequested.class, subject.getClass());
     }
 
     private NotificationCreation createNotificationCreation() {
-        return new NotificationCreation("123456789", "987654321");
+        return new NotificationCreation(1L, 1L);
     }
 }

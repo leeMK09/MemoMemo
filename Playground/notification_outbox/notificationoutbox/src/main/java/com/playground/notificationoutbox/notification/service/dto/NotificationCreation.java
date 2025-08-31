@@ -3,14 +3,15 @@ package com.playground.notificationoutbox.notification.service.dto;
 import java.time.Instant;
 
 public record NotificationCreation(
-        String employerPhoneNumber,
-        String workerPhoneNumber,
-        Instant occurredAt
+        Long employerId,
+        Long workerId,
+        Instant occurredAt,
+        Integer maxAttempts
 ) {
     public NotificationCreation(
-            String employerPhoneNumber,
-            String workerPhoneNumber
+            Long employerId,
+            Long workerId
     ) {
-        this(employerPhoneNumber, workerPhoneNumber, Instant.now());
+        this(employerId, workerId, Instant.now(), 5);
     }
 }
