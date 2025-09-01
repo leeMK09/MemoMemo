@@ -1,6 +1,7 @@
 package com.playground.notificationoutbox.notification.service;
 
 import com.playground.notificationoutbox.notification.infrastructure.NotificationSender;
+import com.playground.notificationoutbox.notification.service.dto.NotificationDispatchResult;
 import com.playground.notificationoutbox.outbox.domain.Outbox;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,20 +25,20 @@ public class NotificationDispatcher {
     public void dispatch(List<Outbox> outboxes) {
         if (outboxes.isEmpty()) return;
 
-        List<CompletableFuture<Result>> futures = asyncNotificationSender(outboxes);
+        List<CompletableFuture<NotificationDispatchResult>> futures = asyncNotificationSender(outboxes);
         applyResults(futures);
     }
 
-    private List<CompletableFuture<Result>> asyncNotificationSender(List<Outbox> outboxes) {
-        List<CompletableFuture<Result>> futures = new ArrayList<>(outboxes.size());
+    private List<CompletableFuture<NotificationDispatchResult>> asyncNotificationSender(List<Outbox> outboxes) {
+        List<CompletableFuture<NotificationDispatchResult>> futures = new ArrayList<>(outboxes.size());
         for (Outbox outbox : outboxes) {
-            CompletableFuture<Result> future = CompletableFuture.supplyAsync(() -> {
+            CompletableFuture<NotificationDispatchResult> future = CompletableFuture.supplyAsync(() -> {
                 try {
                     notificationSender.send();
-                    return Result.success(outbox.getId());
+                    return NotificationDispatchResult.success(outbox.getId());
                 } catch (Exception e) {
                     log.error("Failed to send notification", e);
-                    return Result.failure(outbox.getId());
+                    return NotificationDispatchResult.failure(outbox.getId(), RetryBackoff.nextAttemptAt(outbox.getAttemptCount()));
                 }
             }, notificationExecutor);
             futures.add(future);
@@ -47,36 +48,20 @@ public class NotificationDispatcher {
         return futures;
     }
 
-    private void applyResults(List<CompletableFuture<Result>> results) {
-        List<Long> successIds = new ArrayList<>();
-        List<Long> failureIds = new ArrayList<>();
+    private void applyResults(List<CompletableFuture<NotificationDispatchResult>> results) {
+        List<NotificationDispatchResult.Success> successes = new ArrayList<>();
+        List<NotificationDispatchResult.Failure> failures = new ArrayList<>();
 
-        for (CompletableFuture<Result> future : results) {
-            Result result = future.join();
+        for (CompletableFuture<NotificationDispatchResult> future : results) {
+            NotificationDispatchResult result = future.join();
 
-            if (result.isSuccess) {
-                successIds.add(result.outboxId);
+            if (NotificationDispatchResult.isSuccess(result)) {
+                successes.add((NotificationDispatchResult.Success) result);
             } else {
-                failureIds.add(result.outboxId);
+                failures.add((NotificationDispatchResult.Failure) result);
             }
         }
-    }
 
-    private static class Result {
-        boolean isSuccess;
-        Long outboxId;
-
-        public Result(boolean isSuccess, Long outboxId) {
-            this.isSuccess = isSuccess;
-            this.outboxId = outboxId;
-        }
-
-        public static Result success(Long outboxId) {
-            return new Result(true, outboxId);
-        }
-
-        public static Result failure(Long outboxId) {
-            return new Result(false, outboxId);
-        }
+        // 벌크 업데이트 [성공/실패]
     }
 }
