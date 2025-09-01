@@ -22,7 +22,7 @@ public interface OutboxRepository extends JpaRepository<Outbox, Long> {
             nativeQuery = true
     )
     List<Outbox> findAllByStatusAndBeforeAttemptAtWithLock(
-            @Param("statuses") List<OutboxStatus> statuses,
+            @Param("statuses") List<String> statuses,
             @Param("now") LocalDateTime now,
             @Param("batchSize") int batchSize
     );

@@ -7,7 +7,6 @@ import com.playground.notificationoutbox.outbox.domain.OutboxStatus;
 import com.playground.notificationoutbox.outbox.repository.OutboxRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +40,7 @@ public class OutboxService {
         LocalDateTime now = LocalDateTime.now();
         List<OutboxStatus> statuses = OutboxStatus.getConsumable();
         List<Outbox> consumableOutboxes = outboxRepository.findAllByStatusAndBeforeAttemptAtWithLock(
-                statuses,
+                statuses.stream().map(OutboxStatus::name).toList(),
                 now,
                 batchSize
         );
