@@ -172,5 +172,5 @@
 
 ### 📘 [Playground]
 
-- [📘 MySQL CDC 테스트](https://github.com/leeMK09/MemoMemo/tree/main/%F0%9F%93%98%20Playground/MySQL_CDC/notificationcdc)
+- [📘 MySQL CDC 테스트](https://github.com/leeMK09/MemoMemo/tree/main/Playground/MySQL_CDC/notificationcdc)
 - [📘 notification outbox 테스트](https://github.com/leeMK09/MemoMemo/tree/main/Playground/notification_outbox/notificationoutbox)
