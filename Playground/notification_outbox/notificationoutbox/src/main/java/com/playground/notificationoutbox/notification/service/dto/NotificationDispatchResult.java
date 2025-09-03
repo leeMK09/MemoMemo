@@ -1,17 +1,19 @@
 package com.playground.notificationoutbox.notification.service.dto;
 
+import com.playground.notificationoutbox.outbox.domain.OutboxStatus;
+
 import java.time.LocalDateTime;
 
 public sealed interface NotificationDispatchResult {
-    record Success(Long outboxId) implements NotificationDispatchResult {}
-    record Failure(Long outboxId, LocalDateTime nextAttemptAt) implements NotificationDispatchResult {}
+    record Success(Long outboxId, OutboxStatus status) implements NotificationDispatchResult {}
+    record Failure(Long outboxId, OutboxStatus status, LocalDateTime nextAttemptAt, Integer attemptCount) implements NotificationDispatchResult {}
 
-    static Success success(Long outboxId) {
-        return new Success(outboxId);
+    static Success success(Long outboxId, OutboxStatus status) {
+        return new Success(outboxId, status);
     }
 
-    static Failure failure(Long outboxId, LocalDateTime nextAttemptAt) {
-        return new Failure(outboxId, nextAttemptAt);
+    static Failure failure(Long outboxId, OutboxStatus status, LocalDateTime nextAttemptAt, Integer attemptCount) {
+        return new Failure(outboxId, status, nextAttemptAt, attemptCount);
     }
 
     static boolean isSuccess(NotificationDispatchResult result) {

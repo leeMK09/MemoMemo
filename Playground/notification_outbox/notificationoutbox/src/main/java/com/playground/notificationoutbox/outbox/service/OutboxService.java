@@ -1,9 +1,11 @@
 package com.playground.notificationoutbox.outbox.service;
 
+import com.playground.notificationoutbox.notification.service.dto.NotificationDispatchResult;
 import com.playground.notificationoutbox.outbox.domain.IdempotencyKeyType;
 import com.playground.notificationoutbox.outbox.domain.IdempotencySubject;
 import com.playground.notificationoutbox.outbox.domain.Outbox;
 import com.playground.notificationoutbox.outbox.domain.OutboxStatus;
+import com.playground.notificationoutbox.outbox.repository.OutboxJDBCRepository;
 import com.playground.notificationoutbox.outbox.repository.OutboxRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,7 @@ import java.util.List;
 public class OutboxService {
     private final IdempotencyKeyGeneratorResolver resolver;
     private final OutboxRepository outboxRepository;
+    private final OutboxJDBCRepository outboxJDBCRepository;
 
     @Transactional
     public void create(IdempotencySubject subject, Integer maxAttempts) {
@@ -52,5 +55,15 @@ public class OutboxService {
         List<Long> outboxIds = consumableOutboxes.stream().map(Outbox::getId).toList();
         outboxRepository.updateAllStatusByIds(outboxIds, OutboxStatus.PROCESSING);
         return consumableOutboxes;
+    }
+
+    @Transactional
+    public void failureAll(List<NotificationDispatchResult.Failure> failures) {
+        outboxJDBCRepository.failure(failures);
+    }
+
+    @Transactional
+    public void successAll(List<NotificationDispatchResult.Success> successes) {
+        outboxJDBCRepository.success(successes);
     }
 }

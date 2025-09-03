@@ -3,6 +3,7 @@ package com.playground.notificationoutbox.notification.service;
 import com.playground.notificationoutbox.notification.infrastructure.NotificationSender;
 import com.playground.notificationoutbox.notification.service.dto.NotificationDispatchResult;
 import com.playground.notificationoutbox.outbox.domain.Outbox;
+import com.playground.notificationoutbox.outbox.service.OutboxService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,6 +23,8 @@ public class NotificationDispatcher {
     @Qualifier("notificationExecutor")
     private final Executor notificationExecutor;
 
+    private final OutboxService outboxService;
+
     public void dispatch(List<Outbox> outboxes) {
         if (outboxes.isEmpty()) return;
 
@@ -35,10 +38,12 @@ public class NotificationDispatcher {
             CompletableFuture<NotificationDispatchResult> future = CompletableFuture.supplyAsync(() -> {
                 try {
                     notificationSender.send();
-                    return NotificationDispatchResult.success(outbox.getId());
+                    outbox.completed();
+                    return NotificationDispatchResult.success(outbox.getId(), outbox.getStatus());
                 } catch (Exception e) {
                     log.error("Failed to send notification", e);
-                    return NotificationDispatchResult.failure(outbox.getId(), RetryBackoff.nextAttemptAt(outbox.getAttemptCount()));
+                    outbox.failed();
+                    return NotificationDispatchResult.failure(outbox.getId(), outbox.getStatus(), RetryBackoff.nextAttemptAt(outbox.getAttemptCount()), outbox.getAttemptCount());
                 }
             }, notificationExecutor);
             futures.add(future);
@@ -62,6 +67,7 @@ public class NotificationDispatcher {
             }
         }
 
-        // 벌크 업데이트 [성공/실패]
+        outboxService.failureAll(failures);
+        outboxService.successAll(successes);
     }
 }
