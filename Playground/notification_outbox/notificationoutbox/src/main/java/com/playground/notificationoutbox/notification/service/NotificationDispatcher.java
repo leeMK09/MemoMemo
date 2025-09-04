@@ -37,6 +37,7 @@ public class NotificationDispatcher {
         for (Outbox outbox : outboxes) {
             CompletableFuture<NotificationDispatchResult> future = CompletableFuture.supplyAsync(() -> {
                 try {
+                    outbox.sent();
                     notificationSender.send();
                     outbox.completed();
                     return NotificationDispatchResult.success(outbox.getId(), outbox.getStatus());

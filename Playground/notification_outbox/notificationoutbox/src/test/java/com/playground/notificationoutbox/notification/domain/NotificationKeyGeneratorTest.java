@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
+import java.time.ZoneId;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,7 +22,7 @@ class NotificationKeyGeneratorTest {
     }
 
     @Test
-    @DisplayName("멱등키는 'employer 전화번호_worker 전화번호_발생시간' 형태로 만들어진다")
+    @DisplayName("멱등키는 'employer 전화번호_worker 전화번호_YYYY-MM-DD' 형태로 만들어진다")
     void generate() {
         String employerPhoneNumber = "123456789";
         String workerPhoneNumber = "987654321";
@@ -30,7 +31,8 @@ class NotificationKeyGeneratorTest {
 
         NotificationKeyGenerator generator = new NotificationKeyGenerator();
         String idempotencyKey = generator.generate(notificationRequested);
-        String expected = employerPhoneNumber + "_" + workerPhoneNumber + "_" + occurredAt.toString();
+        String yyyymmdd = occurredAt.atZone(ZoneId.systemDefault()).toLocalDate().toString();
+        String expected = employerPhoneNumber + "_" + workerPhoneNumber + "_" + yyyymmdd;
 
         assertNotNull(idempotencyKey);
         assertEquals(expected, idempotencyKey);

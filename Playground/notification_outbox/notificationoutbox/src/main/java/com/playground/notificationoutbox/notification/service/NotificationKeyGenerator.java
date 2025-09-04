@@ -5,6 +5,8 @@ import com.playground.notificationoutbox.outbox.service.IdempotencyKeyGenerator;
 import com.playground.notificationoutbox.outbox.domain.IdempotencyKeyType;
 import org.springframework.stereotype.Component;
 
+import java.time.ZoneId;
+
 @Component
 public class NotificationKeyGenerator implements IdempotencyKeyGenerator<NotificationRequested> {
     private final String delimiter = "_";
@@ -16,6 +18,10 @@ public class NotificationKeyGenerator implements IdempotencyKeyGenerator<Notific
 
     @Override
     public String generate(NotificationRequested subject) {
-        return subject.employerPhoneNumber() + delimiter + subject.workerPhoneNumber() + delimiter + subject.occurredAt();
+        String date = subject.occurredAt()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()
+                .toString();
+        return subject.employerPhoneNumber() + delimiter + subject.workerPhoneNumber() + delimiter + date;
     }
 }

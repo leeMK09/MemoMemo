@@ -41,7 +41,7 @@ public class Outbox {
         this.idempotencyKey = idempotencyKey;
         this.maxAttempts = maxAttempts;
         this.nextAttemptAt = LocalDateTime.now().plusSeconds(DEFAULT_OFFSET_ATTEMPT_AT);
-        this.attemptCount = 1;
+        this.attemptCount = 0;
         this.status = OutboxStatus.NEW;
     }
 
@@ -49,12 +49,13 @@ public class Outbox {
         this.idempotencyKey = idempotencyKey;
         this.maxAttempts = maxAttempts;
         this.nextAttemptAt = nextAttemptAt;
-        this.attemptCount = 1;
+        this.attemptCount = 0;
         this.status = OutboxStatus.NEW;
     }
 
     public void sent() {
         this.status = OutboxStatus.PROCESSING;
+        this.attemptCount++;
     }
 
     public void completed() {
@@ -63,7 +64,6 @@ public class Outbox {
 
     public void failed() {
         this.status = OutboxStatus.FAILED;
-        this.attemptCount++;
 
         if (this.isMaxReached()) {
             this.dead();
