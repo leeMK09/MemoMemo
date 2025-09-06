@@ -53,7 +53,7 @@
 - [🧠 왜 객체에는 상태가 필요한가?](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EC%99%9C%20%EA%B0%9D%EC%B2%B4%EC%97%90%EB%8A%94%20%EC%83%81%ED%83%9C%EA%B0%80%20%ED%95%84%EC%9A%94%ED%95%9C%EA%B0%80%3F.md)
 - [🧠 타입 == 추상?](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%ED%83%80%EC%9E%85%20%3D%3D%20%EC%B6%94%EC%83%81%3F.md)
 - [🧠 맥락속의 협력](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EB%A7%A5%EB%9D%BD%EC%86%8D%EC%9D%98%20%ED%98%91%EB%A0%A5.md)
-- 🧠 메시지
+- [🧠 메시지](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EB%A9%94%EC%8B%9C%EC%A7%80.md)
 
 </br>
 </br>
