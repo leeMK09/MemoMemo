@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,7 +28,7 @@ class NotificationKeyGeneratorTest {
     void generate() {
         String employerPhoneNumber = "123456789";
         String workerPhoneNumber = "987654321";
-        Instant occurredAt = Instant.now();
+        LocalDateTime occurredAt = LocalDateTime.now();
         Channel sms = Channel.SMS;
         NotificationRequested notificationRequested = new NotificationRequested(occurredAt, employerPhoneNumber, workerPhoneNumber, sms);
 

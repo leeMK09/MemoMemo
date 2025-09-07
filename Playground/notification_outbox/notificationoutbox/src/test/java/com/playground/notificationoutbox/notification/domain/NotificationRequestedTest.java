@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -24,20 +25,20 @@ class NotificationRequestedTest {
     @Test
     @DisplayName("getOccurredAt() 실행 시 발생한 시간을 반환한다")
     void getOccurredAt() {
-        Instant startedAt = Instant.now();
+        LocalDateTime startedAt = LocalDateTime.now();
         NotificationRequested notificationRequested = createNotificationRequested(startedAt);
 
-        Instant occurredAt = notificationRequested.occurredAt();
+        LocalDateTime occurredAt = notificationRequested.occurredAt();
 
         assertThat(occurredAt).isNotNull();
         assertThat(occurredAt).isEqualTo(startedAt);
     }
 
     private NotificationRequested createNotificationRequested() {
-        return new NotificationRequested(Instant.now(), null, null, Channel.SMS);
+        return new NotificationRequested(LocalDateTime.now(), null, null, Channel.SMS);
     }
 
-    private NotificationRequested createNotificationRequested(Instant occurredAt) {
+    private NotificationRequested createNotificationRequested(LocalDateTime occurredAt) {
         return new NotificationRequested(occurredAt, null, null, Channel.SMS);
     }
 }

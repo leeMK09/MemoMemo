@@ -1,9 +1,9 @@
 package com.playground.notificationoutbox.outbox.domain;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 public interface IdempotencySubject {
     IdempotencyKeyType getType();
 
-    Instant occurredAt();
+    LocalDateTime occurredAt();
 }

@@ -4,10 +4,10 @@ import com.playground.notificationoutbox.outbox.domain.Channel;
 import com.playground.notificationoutbox.outbox.domain.IdempotencyKeyType;
 import com.playground.notificationoutbox.outbox.domain.IdempotencySubject;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 public record NotificationRequested(
-        Instant occurredAt,
+        LocalDateTime occurredAt,
         String employerPhoneNumber,
         String workerPhoneNumber,
         Channel channel
