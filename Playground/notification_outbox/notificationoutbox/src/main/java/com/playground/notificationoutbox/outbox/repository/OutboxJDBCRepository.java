@@ -15,9 +15,9 @@ public class OutboxJDBCRepository {
     public void failure(List<NotificationDispatchResult.Failure> failures) {
         jdbcTemplate.batchUpdate("""
             UPDATE outbox
-            SET attempt_count = ?
-            status = ?,
-            next_attempt_at = ?
+            SET attempt_count = ?,
+                status = ?,
+                next_attempt_at = ?
             WHERE id = ?
         """, failures, failures.size(), (ps, r) -> {
             ps.setInt(1, r.attemptCount());
@@ -30,7 +30,7 @@ public class OutboxJDBCRepository {
     public void success(List<NotificationDispatchResult.Success> successes) {
         jdbcTemplate.batchUpdate("""
             UPDATE outbox
-            status = ?,
+            SET status = ?
             WHERE id = ?
         """, successes, successes.size(), (ps, r) -> {
             ps.setString(1, r.status().name());

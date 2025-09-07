@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
@@ -54,7 +55,7 @@ public class NotificationDispatcher {
         return futures;
     }
 
-    private void applyResults(List<CompletableFuture<NotificationDispatchResult>> results) {
+    public void applyResults(List<CompletableFuture<NotificationDispatchResult>> results) {
         List<NotificationDispatchResult.Success> successes = new ArrayList<>();
         List<NotificationDispatchResult.Failure> failures = new ArrayList<>();
 

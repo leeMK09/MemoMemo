@@ -1,6 +1,7 @@
 package com.playground.notificationoutbox.notification.domain;
 
 import com.playground.notificationoutbox.notification.service.NotificationKeyGenerator;
+import com.playground.notificationoutbox.outbox.domain.Channel;
 import com.playground.notificationoutbox.outbox.domain.IdempotencyKeyType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,17 +23,18 @@ class NotificationKeyGeneratorTest {
     }
 
     @Test
-    @DisplayName("멱등키는 'employer 전화번호_worker 전화번호_YYYY-MM-DD' 형태로 만들어진다")
+    @DisplayName("멱등키는 'employer전화번호_worker전화번호_YYYY-MM-DD_CHANNEL' 형태로 만들어진다")
     void generate() {
         String employerPhoneNumber = "123456789";
         String workerPhoneNumber = "987654321";
         Instant occurredAt = Instant.now();
-        NotificationRequested notificationRequested = new NotificationRequested(occurredAt, employerPhoneNumber, workerPhoneNumber);
+        Channel sms = Channel.SMS;
+        NotificationRequested notificationRequested = new NotificationRequested(occurredAt, employerPhoneNumber, workerPhoneNumber, sms);
 
         NotificationKeyGenerator generator = new NotificationKeyGenerator();
         String idempotencyKey = generator.generate(notificationRequested);
         String yyyymmdd = occurredAt.atZone(ZoneId.systemDefault()).toLocalDate().toString();
-        String expected = employerPhoneNumber + "_" + workerPhoneNumber + "_" + yyyymmdd;
+        String expected = employerPhoneNumber + "_" + workerPhoneNumber + "_" + yyyymmdd + "_" + sms;
 
         assertNotNull(idempotencyKey);
         assertEquals(expected, idempotencyKey);

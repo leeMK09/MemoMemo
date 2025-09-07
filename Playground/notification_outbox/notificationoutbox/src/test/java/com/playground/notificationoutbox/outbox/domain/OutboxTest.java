@@ -10,7 +10,7 @@ class OutboxTest {
     @DisplayName("Outbox 를 전송할 경우 시도횟수가 1 증가한다")
     void failed_when_inc_attempt_cnt() {
         Integer maxReached = 3;
-        Outbox outbox = new Outbox("", maxReached);
+        Outbox outbox = new Outbox("", maxReached, Channel.SMS);
 
         outbox.sent();
         Integer attemptCount1 = outbox.getAttemptCount();
@@ -27,7 +27,7 @@ class OutboxTest {
     @DisplayName("최대 시도횟수를 넘어갔다면 true 를 반환한다")
     void isMaxReached() {
         Integer maxReached = 3;
-        Outbox outbox = new Outbox("", maxReached);
+        Outbox outbox = new Outbox("", maxReached, Channel.SMS);
 
         outbox.sent();
         outbox.sent();
@@ -41,7 +41,7 @@ class OutboxTest {
     @DisplayName("요청 실패 후 최대 시도횟수를 넘어갔다면 'DEAD' 상태가 된다")
     void dead() {
         Integer maxReached = 3;
-        Outbox outbox = new Outbox("", maxReached);
+        Outbox outbox = new Outbox("", maxReached, Channel.SMS);
 
         outbox.sent();
         outbox.sent();

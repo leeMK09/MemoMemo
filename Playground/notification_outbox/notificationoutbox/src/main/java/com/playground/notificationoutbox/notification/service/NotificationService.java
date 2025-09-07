@@ -4,6 +4,7 @@ import com.playground.notificationoutbox.employer.service.EmployerReader;
 import com.playground.notificationoutbox.employer.service.dto.EmployerResult;
 import com.playground.notificationoutbox.notification.domain.NotificationRequested;
 import com.playground.notificationoutbox.notification.service.dto.NotificationCreation;
+import com.playground.notificationoutbox.outbox.domain.Channel;
 import com.playground.notificationoutbox.outbox.service.OutboxService;
 import com.playground.notificationoutbox.worker.service.WorkerReader;
 import com.playground.notificationoutbox.worker.service.dto.WorkerResult;
@@ -25,8 +26,9 @@ public class NotificationService {
         NotificationRequested notificationRequested = new NotificationRequested(
                 creation.occurredAt(),
                 employer.phoneNumber(),
-                worker.phoneNumber()
+                worker.phoneNumber(),
+                Channel.SMS
         );
-        outboxService.create(notificationRequested, creation.maxAttempts());
+        outboxService.create(notificationRequested, creation.maxAttempts(), Channel.SMS);
     }
 }

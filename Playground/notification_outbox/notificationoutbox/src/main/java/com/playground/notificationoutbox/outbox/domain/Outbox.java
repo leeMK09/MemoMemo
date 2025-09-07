@@ -34,23 +34,29 @@ public class Outbox {
     @Column(name = "status", nullable = false)
     private OutboxStatus status = OutboxStatus.NEW;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "channel", nullable = false)
+    private Channel channel;
+
     @Column(name = "next_attempt_at", nullable = false)
     private LocalDateTime nextAttemptAt;
 
-    public Outbox(String idempotencyKey, Integer maxAttempts) {
+    public Outbox(String idempotencyKey, Integer maxAttempts, Channel channel) {
         this.idempotencyKey = idempotencyKey;
         this.maxAttempts = maxAttempts;
         this.nextAttemptAt = LocalDateTime.now().plusSeconds(DEFAULT_OFFSET_ATTEMPT_AT);
         this.attemptCount = 0;
         this.status = OutboxStatus.NEW;
+        this.channel = channel;
     }
 
-    public Outbox(String idempotencyKey, Integer maxAttempts, LocalDateTime nextAttemptAt) {
+    public Outbox(String idempotencyKey, Integer maxAttempts, LocalDateTime nextAttemptAt, Channel channel) {
         this.idempotencyKey = idempotencyKey;
         this.maxAttempts = maxAttempts;
         this.nextAttemptAt = nextAttemptAt;
         this.attemptCount = 0;
         this.status = OutboxStatus.NEW;
+        this.channel = channel;
     }
 
     public void sent() {

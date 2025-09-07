@@ -1,5 +1,6 @@
 package com.playground.notificationoutbox.notification.domain;
 
+import com.playground.notificationoutbox.outbox.domain.Channel;
 import com.playground.notificationoutbox.outbox.domain.IdempotencyKeyType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,10 +34,10 @@ class NotificationRequestedTest {
     }
 
     private NotificationRequested createNotificationRequested() {
-        return new NotificationRequested(Instant.now(), null, null);
+        return new NotificationRequested(Instant.now(), null, null, Channel.SMS);
     }
 
     private NotificationRequested createNotificationRequested(Instant occurredAt) {
-        return new NotificationRequested(occurredAt, null, null);
+        return new NotificationRequested(occurredAt, null, null, Channel.SMS);
     }
 }

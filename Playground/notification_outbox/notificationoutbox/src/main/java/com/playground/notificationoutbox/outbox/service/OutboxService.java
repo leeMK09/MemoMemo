@@ -1,10 +1,7 @@
 package com.playground.notificationoutbox.outbox.service;
 
 import com.playground.notificationoutbox.notification.service.dto.NotificationDispatchResult;
-import com.playground.notificationoutbox.outbox.domain.IdempotencyKeyType;
-import com.playground.notificationoutbox.outbox.domain.IdempotencySubject;
-import com.playground.notificationoutbox.outbox.domain.Outbox;
-import com.playground.notificationoutbox.outbox.domain.OutboxStatus;
+import com.playground.notificationoutbox.outbox.domain.*;
 import com.playground.notificationoutbox.outbox.repository.OutboxJDBCRepository;
 import com.playground.notificationoutbox.outbox.repository.OutboxRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,11 +22,11 @@ public class OutboxService {
     private final OutboxJDBCRepository outboxJDBCRepository;
 
     @Transactional
-    public void create(IdempotencySubject subject, Integer maxAttempts) {
+    public void create(IdempotencySubject subject, Integer maxAttempts, Channel channel) {
         IdempotencyKeyType type = subject.getType();
         IdempotencyKeyGenerator generator = resolver.resolve(type);
         String idempotencyKey = generator.generate(subject);
-        Outbox outbox = new Outbox(idempotencyKey, maxAttempts);
+        Outbox outbox = new Outbox(idempotencyKey, maxAttempts, channel);
         try {
             outboxRepository.save(outbox);
         } catch (DataIntegrityViolationException e) {
@@ -59,11 +56,21 @@ public class OutboxService {
 
     @Transactional
     public void failureAll(List<NotificationDispatchResult.Failure> failures) {
-        outboxJDBCRepository.failure(failures);
+        try {
+            outboxJDBCRepository.failure(failures);
+        } catch (Exception e) {
+            log.error("Failure 상태 변경 실패 error: {}", e.getMessage(), e);
+            throw e;
+        }
     }
 
     @Transactional
     public void successAll(List<NotificationDispatchResult.Success> successes) {
-        outboxJDBCRepository.success(successes);
+        try {
+            outboxJDBCRepository.success(successes);
+        } catch (Exception e) {
+            log.error("Completed 상태 변경 실패 error: {}", e.getMessage(), e);
+            throw e;
+        }
     }
 }

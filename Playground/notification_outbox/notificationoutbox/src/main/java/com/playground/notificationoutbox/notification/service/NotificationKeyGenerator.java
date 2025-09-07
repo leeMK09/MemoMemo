@@ -22,6 +22,6 @@ public class NotificationKeyGenerator implements IdempotencyKeyGenerator<Notific
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate()
                 .toString();
-        return subject.employerPhoneNumber() + delimiter + subject.workerPhoneNumber() + delimiter + date;
+        return subject.employerPhoneNumber() + delimiter + subject.workerPhoneNumber() + delimiter + date + delimiter + subject.channel();
     }
 }
