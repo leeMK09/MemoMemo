@@ -22,13 +22,14 @@ public class OutboxService {
     private final OutboxJDBCRepository outboxJDBCRepository;
 
     @Transactional
-    public void create(IdempotencySubject subject, Integer maxAttempts, Channel channel) {
+    public Long create(IdempotencySubject subject, Integer maxAttempts, Channel channel) {
         IdempotencyKeyType type = subject.getType();
         IdempotencyKeyGenerator generator = resolver.resolve(type);
         String idempotencyKey = generator.generate(subject);
         Outbox outbox = new Outbox(idempotencyKey, maxAttempts, channel);
         try {
-            outboxRepository.save(outbox);
+            Outbox savedOutbox = outboxRepository.save(outbox);
+            return savedOutbox.getId();
         } catch (DataIntegrityViolationException e) {
             log.error("유니크 제약 조건으로 인한 처리 실패 message : {}", e.getMessage(), e);
             throw e;

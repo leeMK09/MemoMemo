@@ -2,7 +2,10 @@ package com.playground.notificationoutbox.notification.service;
 
 import com.playground.notificationoutbox.employer.service.EmployerReader;
 import com.playground.notificationoutbox.employer.service.dto.EmployerResult;
+import com.playground.notificationoutbox.notification.domain.Notification;
 import com.playground.notificationoutbox.notification.domain.NotificationRequested;
+import com.playground.notificationoutbox.notification.infrastructure.NotificationRepository;
+import com.playground.notificationoutbox.notification.infrastructure.NotificationSender;
 import com.playground.notificationoutbox.notification.service.dto.NotificationCreation;
 import com.playground.notificationoutbox.outbox.domain.Channel;
 import com.playground.notificationoutbox.outbox.service.OutboxService;
@@ -18,6 +21,7 @@ public class NotificationService {
     private final OutboxService outboxService;
     private final EmployerReader employerReader;
     private final WorkerReader workerReader;
+    private final NotificationRepository notificationRepository;
 
     @Transactional
     public void create(NotificationCreation creation) {
@@ -29,6 +33,8 @@ public class NotificationService {
                 worker.phoneNumber(),
                 Channel.SMS
         );
-        outboxService.create(notificationRequested, creation.maxAttempts(), Channel.SMS);
+        Long savedOutboxId = outboxService.create(notificationRequested, creation.maxAttempts(), Channel.SMS);
+        Notification notification = new Notification(savedOutboxId);
+        notificationRepository.save(notification);
     }
 }
