@@ -139,7 +139,7 @@
 - [🦄 object](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A6%84%20Kotlin/object.md)
 - [🦄 확장함수, inline 함수 등](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A6%84%20Kotlin/%ED%99%95%EC%9E%A5%ED%95%A8%EC%88%98%2C%20inline%20%ED%95%A8%EC%88%98%20%EB%93%B1.md)
 - [🦄 Sequence](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A6%84%20Kotlin/Sequence.md)
-- 🦄 [코틀린 코루틴] runBlocking 과 launch 의 차이
+- [🦄 [코틀린 코루틴] runBlocking 과 launch 의 차이](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A6%84%20Kotlin/%5B%EC%BD%94%ED%8B%80%EB%A6%B0%20%EC%BD%94%EB%A3%A8%ED%8B%B4%5D%20runBlocking%20%EA%B3%BC%20launch%20%EC%9D%98%20%EC%B0%A8%EC%9D%B4.md)
 
 </br>
 </br>
