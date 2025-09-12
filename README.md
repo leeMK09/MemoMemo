@@ -19,6 +19,7 @@
 - [💾 캐시 전략 패턴 종류](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EC%BA%90%EC%8B%B1%20%EC%A0%84%EB%9E%B5%20%ED%8C%A8%ED%84%B4%20%EC%A2%85%EB%A5%98.md)
 - [💾 캐시 설계 시 고려해야하는 전략들](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EC%BA%90%EC%8B%9C%20%EC%84%A4%EA%B3%84%20%EC%8B%9C%20%EA%B3%A0%EB%A0%A4%ED%95%B4%EC%95%BC%ED%95%98%EB%8A%94%20%EC%A0%84%EB%9E%B5%EB%93%A4.md)
 - [💾 [Redis] 캐시의 메모리 관리와 maxmemory-policy 설정](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%5BRedis%5D%20%EC%BA%90%EC%8B%9C%EC%9D%98%20%EB%A9%94%EB%AA%A8%EB%A6%AC%20%EA%B4%80%EB%A6%AC%EC%99%80%20maxmemory-policy%20%EC%84%A4%EC%A0%95.md)
+- [Redis] 백업 방식
 - [💾 READ-COMMITED를 사용하는 이유는?](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/READ-COMMITED%EB%A5%BC%20%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94%20%EC%9D%B4%EC%9C%A0%EB%8A%94%3F.md)
 - [💾 Join 의 특징 및 동작방식, 용어정리](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/Join%20%EC%9D%98%20%ED%8A%B9%EC%A7%95%20%EB%B0%8F%20%EB%8F%99%EC%9E%91%EB%B0%A9%EC%8B%9D%2C%20%EC%9A%A9%EC%96%B4%EC%A0%95%EB%A6%AC.md)
 - [💾 오브젝트 스캔](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EC%98%A4%EB%B8%8C%EC%A0%9D%ED%8A%B8%20%EC%8A%A4%EC%BA%94.md)
