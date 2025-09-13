@@ -128,7 +128,7 @@
 - [☕ 인터럽트 처리시 고려할점](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/%EC%9D%B8%ED%84%B0%EB%9F%BD%ED%8A%B8%20%EC%B2%98%EB%A6%AC%EC%8B%9C%20%EA%B3%A0%EB%A0%A4%ED%95%A0%EC%A0%90.md)
 - [☕ LockSupport](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/LockSupport.md)
 - [☕ ReentrantLock](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/ReentrantLock.md)
-- ☕ System.out.println 과 메모리 가시성의 관계
+- [☕ System.out.println 과 메모리 가시성의 관계](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/System.out.println%20%EA%B3%BC%20%EB%A9%94%EB%AA%A8%EB%A6%AC%20%EA%B0%80%EC%8B%9C%EC%84%B1%EC%9D%98%20%EA%B4%80%EA%B3%84.md)
 
 </br>
 </br>
