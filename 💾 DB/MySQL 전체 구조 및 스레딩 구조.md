@@ -20,7 +20,7 @@
 
 ## MySQL 전체 구조
 
-![mysql_architecture](./img/index-merge-scan.png)
+![mysql_architecture](./img/mysql_architecture.png)
 
 - MySQL 엔진은 요청된 SQL 문장을 분석하거나 최적화하는 등 DBMS 의 두뇌에 해당하는 처리를 수행한다
 - 실제 데이터를 디스크 스토리지에 저장, 디스크 스토리지로부터 데이터를 읽어오는 부분은 스토리지 엔진이 전담한다
