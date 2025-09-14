@@ -27,6 +27,7 @@
 - [💾 미리 집계하기](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EB%AF%B8%EB%A6%AC%20%EC%A7%91%EA%B3%84%ED%95%98%EA%B8%B0.md)
 - [💾 사용 목적에 따른 인덱스 설계](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EC%82%AC%EC%9A%A9%20%EB%AA%A9%EC%A0%81%EC%97%90%20%EB%94%B0%EB%A5%B8%20%EC%9D%B8%EB%8D%B1%EC%8A%A4%20%EC%84%A4%EA%B3%84.md)
 - [💾 집계 함수와 쿼리 순서](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EC%A7%91%EA%B3%84%20%ED%95%A8%EC%88%98%EC%99%80%20%EC%BF%BC%EB%A6%AC%20%EC%88%9C%EC%84%9C.md)
+- 💾 MySQL 전체 구조 및 스레딩 구조
 
 </br>
 </br>
