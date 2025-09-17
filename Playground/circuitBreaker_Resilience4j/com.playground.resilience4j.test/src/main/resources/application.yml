@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: test
+
+server:
+  port: 19090
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        registerHealthIndicator: true # App 헬스체크에 서킷 브레이커 상태 추가하여 모니터링
+        slidingWindowType: COUNT_BASED # 슬라이딩 윈도우 알고리즘을 호출 수 기반으로 설정 / 마지막 N번의 호출 결과를 기반으로 상태를 결정
+        slidingWindowSize: 5 # 최근 5번의 호출을 저장
+        minimumNumberOfCalls: 5 # 서킷 브레이커가 동작하기 위해 필요한 최소한의 호출 수를 5로 설정
+        slowCallRateThreshold: 100 # 느린 호출의 비율이 임계값(100%)을 초과하면 서킷 브레이커 동작
+        slowCallDurationThreshold: 60000 # 느린 호출의 기준 시간(밀리초), 60초 이상 걸리면 느린 호출로 간주함
+        failureRateThreshold: 50 # 실패율이 해당 임계값(50%)을 초과하면 서킷 브레이커 동작
+        permittedNumberOfCallsInHalfOpenState: 3 # 서킷 브레이커가 half-open 상태에서 허용하는 최대 호출 수
+        waitDurationInOpenState: 20s # open 상태에서 half-open 상태로 전환되기 전에 대기하는 시간
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  prometheus:
+    metrics:
+      export:
+        enabled: true
