@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: server
+
+server:
+  port: 19090
+
+eureka:
+  client:
+    register-with-eureka: false # 기본값 = true / 유레카 서버에 자신의 어플리케이션을 등록한다는 것 (클라이언트에서만 사용)
+    fetch-registry: false # 기본값 = true / 유레카 서버에 registry 를 가져올지 말지 설정
+    service-url:
+      defaultZone: http://localhost:19090/eureka/ # 유레카 클라이언트가 서버 통신을 위해 사용하는 URL
+  instance:
+    hostname: localhost
