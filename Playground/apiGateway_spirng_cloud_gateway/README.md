@@ -7,3 +7,13 @@
 - Client 는 `/order`, `/product` 를 통해서 요청
 - API 게이트웨이는 요청 URL 을 통해 라우팅
 - 각 서버는 `Eureka` 에 등록되어 현재 살아있는 인스턴스가 해당 요청을 수행 및 응답
+
+</br>
+</br>
+
+**v2 인증서버 추가**
+
+![gw_with_auth](./img/gw_with_auth.png)
+
+- Auth 서버를 추가 및 Eureka 에 인스턴스 등록
+- Auth 서버를 직접 Client 가 요청하지 않고 대신 Gateway 가 수행하도록함
