@@ -182,3 +182,4 @@
 - [📘 notification outbox 테스트](https://github.com/leeMK09/MemoMemo/tree/main/Playground/notification_outbox/notificationoutbox)
 - [📘 서비스 디스커버리 [Eureka] 테스트](https://github.com/leeMK09/MemoMemo/tree/main/Playground/serviceDiscovery_eureka)
 - [📘 로드밸런서 라운드 로빈 테스트 [Eureka + Ribbon]](https://github.com/leeMK09/MemoMemo/tree/main/Playground/loadBalance_ribbon_eureka)
+- 📘 서킷브레이커 [Resilience4j] 테스트
