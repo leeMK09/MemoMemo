@@ -185,3 +185,4 @@
 - [📘 서킷브레이커 [Resilience4j] 테스트](https://github.com/leeMK09/MemoMemo/tree/main/Playground/circuitBreaker_Resilience4j)
 - [📘 API Gateway [Spring Cloud Gateway] 테스트](https://github.com/leeMK09/MemoMemo/tree/main/Playground/apiGateway_spirng_cloud_gateway)
 - [📘 Config Server [Spring Cloud Config] 테스트](https://github.com/leeMK09/MemoMemo/tree/main/Playground/configServer)
+- 📘 이벤트 드리븐 테스트 [Spring Cloud Stream, Kafka]
