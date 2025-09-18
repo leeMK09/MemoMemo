@@ -1,0 +1,3 @@
+rootProject.name = 'eda-root'
+include("events", "order", "payment", "shipping")
+

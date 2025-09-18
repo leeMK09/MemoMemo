@@ -1,0 +1,19 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: shipping-service
+  cloud:
+    function:
+      definition: paymentApproved
+    stream:
+      default-binder: kafka
+      kafka:
+        binder:
+          brokers: localhost:9093
+      bindings:
+        paymentApproved-in-0:
+          destination: payment.approved
+          content-type: application/json
+          group: shipping-service

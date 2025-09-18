@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/order/eda-root.order.main.iml" filepath="$PROJECT_DIR$/.idea/modules/order/eda-root.order.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/payment/eda-root.payment.main.iml" filepath="$PROJECT_DIR$/.idea/modules/payment/eda-root.payment.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/shipping/eda-root.shipping.main.iml" filepath="$PROJECT_DIR$/.idea/modules/shipping/eda-root.shipping.main.iml" />
+    </modules>
+  </component>
+</project>

@@ -1,0 +1,27 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: payment-service
+  cloud:
+    function:
+      definition: handleOrder
+    stream:
+      default-binder: kafka
+      kafka:
+        binder:
+          brokers: localhost:9093
+        bindings:
+          handleOrder-in-0:
+            consumer:
+              enable-dlq: true
+              dlq-name: order.created.dlt
+      bindings:
+        handleOrder-in-0:
+          destination: order.created
+          content-type: application/json
+          group: payment-service
+        paymentApproved-out-0:
+          destination: payment.approved
+          content-type: application/json

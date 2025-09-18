@@ -1,0 +1,17 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: order-service
+  cloud:
+    stream:
+      default-binder: kafka
+      kafka:
+        binder:
+          brokers: localhost:9093
+      bindings:
+        orderCreated-out-0:
+          destination: order.created
+          content-type: application/json
+
