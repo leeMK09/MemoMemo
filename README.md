@@ -57,7 +57,7 @@
 - [🧠 타입 == 추상?](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%ED%83%80%EC%9E%85%20%3D%3D%20%EC%B6%94%EC%83%81%3F.md)
 - [🧠 맥락속의 협력](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EB%A7%A5%EB%9D%BD%EC%86%8D%EC%9D%98%20%ED%98%91%EB%A0%A5.md)
 - [🧠 메시지](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EB%A9%94%EC%8B%9C%EC%A7%80.md)
-- 🧠 [DDD] 도메인, 엔티티와 밸류, DIP 주의사항
+- [🧠 [DDD] 도메인, 엔티티와 밸류, DIP 주의사항](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%5BDDD%5D%20%EB%8F%84%EB%A9%94%EC%9D%B8%2C%20%EC%97%94%ED%8B%B0%ED%8B%B0%EC%99%80%20%EB%B0%B8%EB%A5%98%2C%20DIP%20%EC%A3%BC%EC%9D%98%EC%82%AC%ED%95%AD.md)
 
 </br>
 </br>

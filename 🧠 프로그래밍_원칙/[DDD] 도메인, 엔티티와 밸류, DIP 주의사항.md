@@ -48,7 +48,7 @@
 - 응용 영역은 기능을 구현하기 위해 도메인 영역의 도메인 모델을 사용한다
 - 응용 서비스는 로직을 직접 수행하기보다는 도메인 모델에 로직 수행을 위임한다
 
-```
+```java
 public class CancelOrderService {
 
     @Transactional
@@ -126,7 +126,7 @@ public class CancelOrderService {
 
 </br>
 
-```
+```java
 public interface OrderRepository {
     Order findByOrderNumber(OrderNumber orderNumber);
     void save(Order order);
