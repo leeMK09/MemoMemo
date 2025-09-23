@@ -32,3 +32,5 @@
 - `email.send.dlt` 라는 토픽을 소비
 - 첫번째로 로그 시스템에 전송
 - 두번째로 슬랙 알림 전송
+
+[정리](https://memomemo-lmk.tistory.com/17)
