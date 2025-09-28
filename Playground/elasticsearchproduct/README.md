@@ -16,3 +16,5 @@
 - 일반적으로 데이터 일관성을 위해 가운데 메시지 큐 혹은 브로커를 두고 관리하지만 검색 기능의 초점을 두고 있기 때문에 애플리케이션 레벨에서 데이터 일관성 처리
 
 ![architecture](./img/es_arch.png)
+
+[정리글](https://memomemo-lmk.tistory.com/24)

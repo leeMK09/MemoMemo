@@ -188,3 +188,4 @@
 - [📘 Config Server [Spring Cloud Config] 테스트](https://github.com/leeMK09/MemoMemo/tree/main/Playground/configServer)
 - [📘 이벤트 드리븐 테스트 [Spring Cloud Stream, Kafka]](https://github.com/leeMK09/MemoMemo/tree/main/Playground/event_driven_spring_cloud_stream)
 - [📘 Kafka 재시도(Retry) 와 DLT(Dead Letter Topic) 테스트](https://github.com/leeMK09/MemoMemo/tree/main/Playground/kafka_retry_dlt)
+- 📘 ElasticSearch 테스트 → 자동완성 + 검색기능
