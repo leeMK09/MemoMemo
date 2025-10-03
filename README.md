@@ -131,6 +131,7 @@
 - [☕ LockSupport](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/LockSupport.md)
 - [☕ ReentrantLock](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/ReentrantLock.md)
 - [☕ System.out.println 과 메모리 가시성의 관계](https://github.com/leeMK09/MemoMemo/blob/main/%E2%98%95%20Java/System.out.println%20%EA%B3%BC%20%EB%A9%94%EB%AA%A8%EB%A6%AC%20%EA%B0%80%EC%8B%9C%EC%84%B1%EC%9D%98%20%EA%B4%80%EA%B3%84.md)
+- ☕ JVM 메인 메모리와 작업 메모리 (JMM)
 
 </br>
 </br>
