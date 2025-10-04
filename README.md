@@ -175,6 +175,7 @@
 ### 🫀 [시스템 디자인]
 
 - [🫀 메시지 패턴 과 구축 사례](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%EB%A9%94%EC%8B%9C%EC%A7%80%20%ED%8C%A8%ED%84%B4%20%EA%B3%BC%20%EA%B5%AC%EC%B6%95%20%EC%82%AC%EB%A1%80.md)
+- 🫀 신뢰성
 
 </br>
 
