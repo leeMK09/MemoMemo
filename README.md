@@ -105,6 +105,7 @@
 ### 🧪 [테스트]
 
 - [🧪 테스트하기 전에 생각해보기](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%AA%20%ED%85%8C%EC%8A%A4%ED%8A%B8/%ED%85%8C%EC%8A%A4%ED%8A%B8%ED%95%98%EA%B8%B0%20%EC%A0%84%EC%97%90%20%EC%83%9D%EA%B0%81%ED%95%B4%EB%B3%B4%EA%B8%B0.md)
+- 🧪 자주 사용하는 용어 정리
 
 </br>
 </br>
