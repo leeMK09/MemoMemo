@@ -106,7 +106,7 @@
 
 - [🧪 테스트하기 전에 생각해보기](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%AA%20%ED%85%8C%EC%8A%A4%ED%8A%B8/%ED%85%8C%EC%8A%A4%ED%8A%B8%ED%95%98%EA%B8%B0%20%EC%A0%84%EC%97%90%20%EC%83%9D%EA%B0%81%ED%95%B4%EB%B3%B4%EA%B8%B0.md)
 - [🧪 자주 사용하는 용어 정리](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%AA%20%ED%85%8C%EC%8A%A4%ED%8A%B8/%EC%9E%90%EC%A3%BC%20%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94%20%EC%9A%A9%EC%96%B4%EC%A0%95%EB%A6%AC.md)
-- 🧪 상태 기반 검증 vs 행위 기반 검증
+- [🧪 상태 기반 검증 vs 행위 기반 검증](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%AA%20%ED%85%8C%EC%8A%A4%ED%8A%B8/%EC%83%81%ED%83%9C%20%EA%B8%B0%EB%B0%98%20%EA%B2%80%EC%A6%9D%20vs%20%ED%96%89%EC%9C%84%20%EA%B8%B0%EB%B0%98%20%EA%B2%80%EC%A6%9D.md)
 
 </br>
 </br>
