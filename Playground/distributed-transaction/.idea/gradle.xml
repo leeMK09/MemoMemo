@@ -36,6 +36,38 @@
         </option>
       </GradleProjectSettings>
       <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/saga-choreography" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/saga-choreography" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/saga-choreography/ch-order" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/saga-choreography/ch-order" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/saga-choreography/ch-point" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/saga-choreography/ch-point" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/saga-choreography/ch-product" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/saga-choreography/ch-product" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/saga-orchestration" />
         <option name="modules">
           <set>
