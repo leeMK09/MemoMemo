@@ -36,6 +36,38 @@
         </option>
       </GradleProjectSettings>
       <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/saga-orchestration" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/saga-orchestration" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/saga-orchestration/sg-order" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/saga-orchestration/sg-order" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/saga-orchestration/sg-point" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/saga-orchestration/sg-point" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/saga-orchestration/sg-product" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/saga-orchestration/sg-product" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/tcc" />
         <option name="modules">
           <set>
