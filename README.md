@@ -198,4 +198,4 @@
 - [📘 Kafka 재시도(Retry) 와 DLT(Dead Letter Topic) 테스트](https://github.com/leeMK09/MemoMemo/tree/main/Playground/kafka_retry_dlt)
 - [📘 ElasticSearch 테스트 → 자동완성 + 검색기능](https://github.com/leeMK09/MemoMemo/tree/main/Playground/elasticsearchproduct)
 - [📘 분산 트랜잭션 테스트 → TCC, SAGA](https://github.com/leeMK09/MemoMemo/tree/main/Playground/distributed-transaction)
-- 📘 Redis 리더보드 테스트
+- [📘 Redis 리더보드 테스트](https://github.com/leeMK09/MemoMemo/tree/main/Playground/redis_sorted_set)
