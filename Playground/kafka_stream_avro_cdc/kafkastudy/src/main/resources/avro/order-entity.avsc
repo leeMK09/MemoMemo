@@ -1,0 +1,47 @@
+{
+    "type": "record",
+    "name": "OrderEntity",
+    "namespace": "com.avro",
+    "doc": "주문 Entity 기반 Avro 스키마",
+    "fields": [
+        {
+            "name": "orderId",
+            "type": "string",
+            "doc": "주문 고유 식별자"
+        },
+        {
+            "name": "customerId",
+            "type": "string",
+            "doc": "고객 고유 식별자"
+        },
+        {
+           "name": "quantity",
+           "type": "int",
+           "doc": "주문 수량"
+        },
+        {
+            "name": "price",
+            "type": {
+                "type": "bytes",
+                "logicalType": "decimal",
+                "precision": 10,
+                "scale": 2
+            }
+        },
+        {
+            "name": "status",
+            "type": {
+                "type": "enum",
+                "name": "OrderStatus",
+                "symbols": ["PENDING", "CONFIRMED", "SHIPPED", "DELIVERED", "CANCELLED"]
+            }
+        },
+        {
+            "name": "createdAt",
+            "type": {
+                "type": "long",
+                "logicalType": "timestamp-millis"
+            }
+        }
+    ]
+}

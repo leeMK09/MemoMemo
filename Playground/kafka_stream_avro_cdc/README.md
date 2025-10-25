@@ -10,3 +10,30 @@
 
 - KStream/KGroupedStream → 전처리 → KTable
 - OrderEvent 에 대한 KStream Input 을 집계
+  - aggregate, map, filter
+
+</br>
+
+### 3. Avro, Schema Registry
+
+- 프로듀서, 컨슈머 간의 객체 스키마는 변경될 경우 이를 각각 반영해야 한다
+- 더불어 이 과정이 무중단으로 구성되는 것은 아주 복잡하고 어려운 작업이다
+- Avro 의 개념을 도입하면 해당 값을 레코드 형태로 변환해서 원하는 값을 추출하여 사용하는 형태로 구현이 가능하다
+  - 필드가 추가되는 상황에서 좀 더 유동적으로 동작할 수 있다
+
+![avro_sequence_diagram](../img/kafka_avro.png)
+
+- Avro 포맷의 시퀀스 다이어그램
+- 카프카에만 국한된 것은 아니다
+
+1. Schema Registry 툴에 스키마 버전을 저장
+
+   - 해당 버전을 기반으로 사용
+
+2. 기능 요구사항으로 인해 필드 추가
+
+   - Schema Registry 에 버전 업하여 저장 (v2)
+
+3. 원하는 서비스는 v2 버전의 스키마를 사용
+
+   - 이 시점에도 v1 스키마에 대해서는 읽고 처리할 수 있다
