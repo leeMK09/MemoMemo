@@ -37,3 +37,24 @@
 3. 원하는 서비스는 v2 버전의 스키마를 사용
 
    - 이 시점에도 v1 스키마에 대해서는 읽고 처리할 수 있다
+
+</br>
+
+### 4. CDC(Change Data Capture) 데이터 처리
+
+![cdc_flow](../img/CDC_flow.png)
+
+- 일반적인 CDC 동작 흐름
+  - CDC Connector 가 트랜잭션 로그를 읽고 이벤트 발행(`Publish Change Event`)
+- Push 방식
+  - 소스 DB 가 데이터를 밀어주는 방식, DB의 변경사항을 캡처한 뒤 원하는 시스템으로 전송
+- Pull 방식
+  - 소스 DB 가 직접 작업을 수행하지 않음
+  - 데이터의 변경사항을 테이블 열에 기록 및 대상 시스템이 주기적으로 폴링하여 데이터를 가져옴
+    - 최신의 데이터가 아닐 수 있다
+- 카프카와의 CDC
+  - ![cdc_with_kafka](../img/cdc_with_kafka.png)
+  - debezium 내부 동작
+  - ![debezium_components](../img/debezium_architecture.png)
+  - MySQL Debezium Connector 설정예시
+  - ![debezium_connector_json](../img/connector_json.png)
