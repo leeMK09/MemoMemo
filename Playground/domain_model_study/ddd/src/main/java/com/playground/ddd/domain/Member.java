@@ -13,7 +13,7 @@ import static org.springframework.util.Assert.*;
 
 @Entity
 @Getter
-@ToString
+@ToString(exclude = "memberDetail")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @NaturalIdCache
 public class Member {
@@ -28,15 +28,20 @@ public class Member {
 
     private String passwordHash;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private MemberDetail memberDetail;
+
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
 
     public static Member register(MemberRegisterRequest createRequest, PasswordEncoder passwordEncoder) {
         Member member = new Member();
+        MemberDetail memberDetail = new MemberDetail();
 
         member.email = new Email(createRequest.email());
         member.nickname = requireNonNull(createRequest.nickname());
         member.passwordHash = requireNonNull(passwordEncoder.encode(createRequest.password()));
+        member.memberDetail = memberDetail;
         member.status = MemberStatus.PENDING;
         return member;
     }
