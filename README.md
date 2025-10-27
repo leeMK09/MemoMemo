@@ -201,3 +201,4 @@
 - [📘 분산 트랜잭션 테스트 → TCC, SAGA](https://github.com/leeMK09/MemoMemo/tree/main/Playground/distributed-transaction)
 - [📘 Redis 리더보드 테스트](https://github.com/leeMK09/MemoMemo/tree/main/Playground/redis_sorted_set)
 - [📘 Kafka 테스트](https://github.com/leeMK09/MemoMemo/tree/main/Playground/kafka_stream_avro_cdc)
+- 📘 Domain Model Pattern 테스트
