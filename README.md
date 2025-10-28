@@ -183,6 +183,7 @@
 - [🫀 신뢰성](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%EC%8B%A0%EB%A2%B0%EC%84%B1.md)
 - [🫀 성능](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%EC%84%B1%EB%8A%A5.md)
 - [🫀 [카프카] 클러스터, 브로커, 토픽, 파티션, 메시지 생명주기 개념](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5B%EC%B9%B4%ED%94%84%EC%B9%B4%5D%20%ED%81%B4%EB%9F%AC%EC%8A%A4%ED%84%B0%2C%20%EB%B8%8C%EB%A1%9C%EC%BB%A4%2C%20%ED%86%A0%ED%94%BD%2C%20%ED%8C%8C%ED%8B%B0%EC%85%98%2C%20%EB%A9%94%EC%8B%9C%EC%A7%80%20%EC%83%9D%EB%AA%85%EC%A3%BC%EA%B8%B0%20%EA%B0%9C%EB%85%90.md)
+- 🫀 [카프카] 파티션, 세그먼트에 대해
 
 </br>
 
