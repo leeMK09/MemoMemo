@@ -32,7 +32,7 @@ public class Inventory {
     }
 
     public void decrease(Integer quantity) {
-        if (quantity > 0) {
+        if (quantity < 0) {
             throw new IllegalArgumentException("Quantity must be a positive number");
         }
         this.count -= quantity;

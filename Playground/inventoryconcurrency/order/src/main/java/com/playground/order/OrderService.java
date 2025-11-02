@@ -23,7 +23,7 @@ public class OrderService {
         orderRepository.save(new Order(request.inventoryId(), request.quantity()));
 
         log.info("call Inventory increase");
-        inventoryClient.increase(
+        inventoryClient.decrease(
                 new Request(
                         request.inventoryId(),
                         request.quantity()

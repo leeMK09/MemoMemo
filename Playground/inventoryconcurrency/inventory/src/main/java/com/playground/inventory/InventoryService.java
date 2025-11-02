@@ -26,7 +26,7 @@ public class InventoryService {
     @Transactional
     public void decrease(Long inventoryId, Integer quantity) {
         log.info("Start Inventory decrease");
-        var inventory = inventoryRepository.findById(inventoryId).orElseThrow();
+        var inventory = inventoryRepository.findByIdForUpdate(inventoryId).orElseThrow();
         inventory.decrease(quantity);
         log.info("Inventory decrease end");
     }
