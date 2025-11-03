@@ -186,6 +186,7 @@
 - [🫀 [카프카] 파티션, 세그먼트에 대해](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5B%EC%B9%B4%ED%94%84%EC%B9%B4%5D%20%ED%8C%8C%ED%8B%B0%EC%85%98%2C%20%EC%84%B8%EA%B7%B8%EB%A8%BC%ED%8A%B8%EC%97%90%20%EB%8C%80%ED%95%B4.md)
 - [🫀 [카프카] 카프카의 분산 시스템에 대해서](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5B%EC%B9%B4%ED%94%84%EC%B9%B4%5D%20%EC%B9%B4%ED%94%84%EC%B9%B4%EC%9D%98%20%EB%B6%84%EC%82%B0%20%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%97%90%20%EB%8C%80%ED%95%B4%EC%84%9C.md)
 - [🫀 [카프카] 프로듀서 아키텍쳐, 메시지 저장 및 효율적인 동작 개념](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5B%EC%B9%B4%ED%94%84%EC%B9%B4%5D%20%ED%94%84%EB%A1%9C%EB%93%80%EC%84%9C%20%EC%95%84%ED%82%A4%ED%85%8D%EC%B3%90%2C%20%EB%A9%94%EC%8B%9C%EC%A7%80%20%EC%A0%80%EC%9E%A5%20%EB%B0%8F%20%ED%98%B8%EC%9C%A8%EC%A0%81%EC%9D%B8%20%EB%8F%99%EC%9E%91%20%EA%B0%9C%EB%85%90.md)
+- 🫀 [카프카] 컨슈머의 리밸런싱, 오프셋 커밋 전략
 
 </br>
 
