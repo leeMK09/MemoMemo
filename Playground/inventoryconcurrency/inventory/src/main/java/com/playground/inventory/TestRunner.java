@@ -18,9 +18,9 @@ public class TestRunner implements CommandLineRunner {
 
     private static final Logger log = LoggerFactory.getLogger(TestRunner.class);
 
-    // 고정 시드 값 (TPS 1200 * 60s = 72,000 맞춤)
-    private static final int HOT_QTY  = 5400; // productId 1..5 (각 5400) → 27,000
-    private static final int COLD_QTY = 3000; // productId 6..20 (각 3000) → 45,000
+    // TPS 60 * 60s = 3,600 맞춤
+    private static final int HOT_QTY  = 240; // productId 1..5 → 1,200
+    private static final int COLD_QTY = 160; // productId 6..20 → 2,400
 
     private final JdbcTemplate jdbc;
     private final InventoryRepository repo;
@@ -32,23 +32,19 @@ public class TestRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        // 1) 깨끗하게 초기화 + IDENTITY 리셋 (PostgreSQL)
         jdbc.execute("TRUNCATE TABLE inventory RESTART IDENTITY");
 
-        // 2) 시드 (id는 1..20 자동 생성, 조회는 id 기준으로 진행)
         List<Inventory> list = new ArrayList<>();
-        // HOT: productId 1..5
         for (long pid = 1; pid <= 5; pid++) {
             list.add(new Inventory(pid, HOT_QTY));
         }
-        // COLD: productId 6..20
         for (long pid = 6; pid <= 20; pid++) {
             list.add(new Inventory(pid, COLD_QTY));
         }
         repo.saveAll(list);
 
-        // 3) 확인 로그
         Integer sum = jdbc.queryForObject("SELECT COALESCE(SUM(count),0) FROM inventory", Integer.class);
-        log.info("Seeded. HOT={} (x5), COLD={} (x15), SUM(count)={}", HOT_QTY, COLD_QTY, sum);
+        log.info("Seeded for TPS=60. HOT={} (x5), COLD={} (x15), SUM(count)={}",
+                HOT_QTY, COLD_QTY, sum);
     }
 }

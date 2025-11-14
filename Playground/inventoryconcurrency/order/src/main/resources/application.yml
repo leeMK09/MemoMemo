@@ -3,9 +3,9 @@ server:
 
 spring:
     datasource:
-      url: jdbc:postgresql://localhost:5432/orderdb
-      username: admin
-      password: admin
+      url: jdbc:postgresql://3.38.163.13:5432/orderdb
+      username: postgres
+      password: StrongP@ssw0rd
     jpa:
       hibernate:
         ddl-auto: create-drop
@@ -17,4 +17,4 @@ spring:
 
 clients:
   inventory:
-    base-url: http://localhost:8081
+    base-url: http://54.181.0.55:8081

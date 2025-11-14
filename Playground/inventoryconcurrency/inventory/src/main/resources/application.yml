@@ -2,9 +2,9 @@ server:
   port: 8081
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/inventorydb
-    username: admin
-    password: admin
+    url: jdbc:postgresql://3.38.163.13:5432/inventorydb
+    username: postgres
+    password: StrongP@ssw0rd
   jpa:
     hibernate:
       ddl-auto: create-drop
