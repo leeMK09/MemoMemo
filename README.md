@@ -193,7 +193,7 @@
 - [🫀 [카프카] 컨슈머의 리밸런싱, 오프셋 커밋 전략](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5B%EC%B9%B4%ED%94%84%EC%B9%B4%5D%20%EC%BB%A8%EC%8A%88%EB%A8%B8%EC%9D%98%20%EB%A6%AC%EB%B0%B8%EB%9F%B0%EC%8B%B1%2C%20%EC%98%A4%ED%94%84%EC%85%8B%20%EC%BB%A4%EB%B0%8B.md)
 - [🫀 무중단 배포](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%EB%AC%B4%EC%A4%91%EB%8B%A8%EB%B0%B0%ED%8F%AC.md)
 - [🫀 DLQ 의 순서보장은?](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/DLQ%20%EC%9D%98%20%EC%88%9C%EC%84%9C%EB%B3%B4%EC%9E%A5%EC%9D%80%3F.md)
-- 🫀 WebSocket 연결 수 폭증으로 인한 성능 문제
+- [🫀 WebSocket 연결 수 폭증으로 인한 성능 문제](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/WebSocket%20%EC%97%B0%EA%B2%B0%20%EC%88%98%20%ED%8F%AD%EC%A6%9D%EC%9C%BC%EB%A1%9C%20%EC%9D%B8%ED%95%9C%20%EC%84%B1%EB%8A%A5%20%EB%AC%B8%EC%A0%9C.md)
 
 </br>
 
