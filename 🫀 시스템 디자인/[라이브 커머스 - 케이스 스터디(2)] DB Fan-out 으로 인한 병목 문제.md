@@ -1,6 +1,6 @@
 ## [라이브 커머스 - 케이스 스터디(2)] DB Fan-out 으로 인한 병목 문제
 
-- [🫀 [라이브 커머스 - 케이스 스터디(1)] WebSocket 연결 수 폭증으로 인한 성능 문제](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/WebSocket%20%EC%97%B0%EA%B2%B0%20%EC%88%98%20%ED%8F%AD%EC%A6%9D%EC%9C%BC%EB%A1%9C%20%EC%9D%B8%ED%95%9C%20%EC%84%B1%EB%8A%A5%20%EB%AC%B8%EC%A0%9C.md)
+- [🫀 [라이브 커머스 - 케이스 스터디(1)] WebSocket 연결 수 폭증으로 인한 성능 문제](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5B%EB%9D%BC%EC%9D%B4%EB%B8%8C%20%EC%BB%A4%EB%A8%B8%EC%8A%A4%20-%20%EC%BC%80%EC%9D%B4%EC%8A%A4%20%EC%8A%A4%ED%84%B0%EB%94%94(1)%5D%20WebSocket%20%EC%97%B0%EA%B2%B0%20%EC%88%98%20%ED%8F%AD%EC%A6%9D%EC%9C%BC%EB%A1%9C%20%EC%9D%B8%ED%95%9C%20%EC%84%B1%EB%8A%A5%20%EB%AC%B8%EC%A0%9C.md)
   - 1번 문제 해결에서 나올 문제
     - 방송에서 발생하는 서비스 로직 이벤트를 시청자에게 실시간 공유시
     - SQS → Lambda 에서 DynamoDB 의 특정 샤드에 UPDATE / MODIFY 등의 작업을 수행
