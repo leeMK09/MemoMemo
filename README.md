@@ -183,7 +183,7 @@
 
 ### 🫀 [시스템 디자인]
 
-- 🫀 [AWS] ECS 핵심 개념 정리
+- [🫀 [AWS] ECS 핵심 개념 정리](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5BAWS%5D%20ECS%20%ED%95%B5%EC%8B%AC%20%EA%B0%9C%EB%85%90.md)
 - [🫀 메시지 패턴 과 구축 사례](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%EB%A9%94%EC%8B%9C%EC%A7%80%20%ED%8C%A8%ED%84%B4%20%EA%B3%BC%20%EA%B5%AC%EC%B6%95%20%EC%82%AC%EB%A1%80.md)
 - [🫀 신뢰성](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%EC%8B%A0%EB%A2%B0%EC%84%B1.md)
 - [🫀 성능](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%EC%84%B1%EB%8A%A5.md)

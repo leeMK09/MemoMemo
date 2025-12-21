@@ -33,7 +33,7 @@
   - CPU 메모리, 환경변수
   - 어떤 포트, 로그는 어떻게
 
-테라폼 구성 예시 (Auth 서버 + Otel Collector (사이드카))
+테라폼 구성 예시 (Auth 서버 + Otel Collector [사이드카 방식])
 
 ```terraform
 resource "aws_ecs_task_definition" "auth" {
@@ -242,7 +242,7 @@ resource "aws_ecs_task_definition" "auth" {
   - Health Check > 비정상 Task 는 자동 제거 후 재생성
 - **핵심은 ECS 의 자가 치유(Self-Healing) 기능**
 
-테라폼 예시 (Auth ECS Service + Internal ALB (블루/그린))
+테라폼 예시 (Auth ECS Service + Internal ALB [블루/그린 배포])
 
 ```terraform
 resource "aws_ecs_service" "auth" {
