@@ -222,6 +222,15 @@ resource "aws_ecs_task_definition" "auth" {
 }
 ```
 
+**IAM Role 필수**
+
+- `Task Execution Role` : ECS 가 Task 를 시작하기 위해 필요한 권한
+  - ECR 에서 이미지 Pull / CloudWatch Logs 에 로그 전송 / Secrets Manager 에서 시크릿 값 읽기
+  - ECS 엔진이 사용 (인프라 레벨)
+- `Task Role` : 컨테이너 내부의 애플리케이션이 AWS 서비스에 접근하기 위한 권한
+  - S3 버킷 읽기,쓰기 / DynamoDB 접근 / SQS 메시지 읽기 / SNS 토픽 발행
+  - 애플리케이션 코드가 사용 (애플리케이션 레벨)
+
 ### Task
 
 - Task Definition 을 기반으로 실행된 컨테이너 그룹
