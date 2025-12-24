@@ -341,3 +341,36 @@ resource "aws_ecs_service" "auth" {
   - ENI 개수 제한 (서브넷의 IP 개수 제한)
   - Task 당 하나의 ENI 소모
   - 큰 클러스터는 충분한 IP 주소 확보 필요
+
+</br>
+
+### ECS 와 ALB
+
+- ECS/Fargate 의 Task 는 IP 가 계속 변경됨
+  - 재시작, 스케일 아웃/인, 배포시 등
+- Task 는 EIP 를 직접 가질 수 없음
+  - 수명이 짧은 ENI 가 붙었다가 사라짐
+- 동시에 여러 개가 뜨고, 동적으로 생성/삭제됨
+- 그래서 고정된 Public Endpoint 가 필요하다
+  - ALB/NLB 같은 라우팅 계층 또는 Service Discovery 가 필요함
+  - 일반적인 HTTP API 라면 ALB 가 가장 흔한 해결방법
+
+</br>
+
+### 무중단 배포와 ALB
+
+- 일반적인 흐름
+  - 새 버전의 Task 를 띄움
+  - Target Group 헬스체크 통과 (Healthy)
+  - ALB 가 새 버전 Task 로 트래픽 분산 시작
+  - 구 버전 Task 는 Draining → 종료
+- 즉 무중단의 핵심은 헬스체크 + 드레이닝 + 점진적 전환이고 ALB/TG 가 그 기능을 제공해주는 것
+
+**체크리스트**
+
+- 헬스체크 엔드포인트 설계
+  - `/health` 를 너무 무겁게 만들면 헬스체크 트래픽 부담 → 일반적으로 Spring Actuator 에서 제공
+- Grace Period 는 앱 기동 시간에 맞춰 충분히
+  - 앱 기동시간을 고려해야함
+- Deregistration Delay 는 요청 처리시간 기준
+  - 평균 최악 처리시간 + 약간의 버퍼 고려
