@@ -16,7 +16,7 @@
 ## VPC 내부 트래픽이 흐르는 순서
 
 - EC2/ECS Task 가 외부로 요청이 나갈 때
-  - [Application] → [ENI] → [Security Group](허용/차단) → [Route Table](어디로 보낼지) → [NAT Gateway or IGW] → [Internet or AWS Service]
+  - [Application] → [ENI] → [Security Group] (허용/차단) → [Route Table](어디로 보낼지) → [NAT Gateway or IGW] → [Internet or AWS Service]
 
 </br>
 
