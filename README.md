@@ -224,4 +224,4 @@
 - [📘 Redis 리더보드 테스트](https://github.com/leeMK09/MemoMemo/tree/main/Playground/redis_sorted_set)
 - [📘 Kafka 테스트](https://github.com/leeMK09/MemoMemo/tree/main/Playground/kafka_stream_avro_cdc)
 - [📘 Domain Model Pattern 테스트](https://github.com/leeMK09/MemoMemo/tree/main/Playground/domain_model_study)
-- 📘 Java NIO 테스트
+- [📘 Java NIO 테스트](https://github.com/leeMK09/MemoMemo/tree/main/Playground/java_nio_blockingio)
