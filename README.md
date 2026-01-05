@@ -33,6 +33,7 @@
 - [💾 AUTO_INCREMENT LOCK](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/AUTO_INCREMENT%20LOCK.md)
 - [💾 DB 네임드 락 vs Redis 분산락](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/DB%20%EB%84%A4%EC%9E%84%EB%93%9C%20%EB%9D%BD%20vs%20Redis%20%EB%B6%84%EC%82%B0%EB%9D%BD.md)
 - [💾 Primary-Replica 구조의 비용](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/Primary-Replica%20%EA%B5%AC%EC%A1%B0%EC%9D%98%20%EB%B9%84%EC%9A%A9.md)
+- 💾 로그와 페이지
 
 </br>
 </br>
