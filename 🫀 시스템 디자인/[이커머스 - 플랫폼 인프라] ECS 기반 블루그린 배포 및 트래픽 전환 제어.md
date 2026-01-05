@@ -113,3 +113,4 @@ deployment_controller {
   - Slack 승인 메시지 → 전환 예정 알림
   - 누가 언제 승인했는지 기록 가능
   - 장애 발생 시 전환 시점과 원인 추적이 쉬워짐
+- 적용 : [KLP Logistics 블루/그린 배포 수동 전환 PR](https://github.com/Kim-Lee-Park/KimLeePark-Logistics/pull/217)
