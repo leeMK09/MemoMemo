@@ -40,18 +40,17 @@
 
 ```text
 GitHub Actions
-  → ECS Task Definition 등록
-  → CodeDeploy 배포 생성
-      → Green Task Set 생성
-      → 헬스체크 대기
-      → BeforeAllowTraffic Hook
-          → Lambda
-              → Slack 승인 요청
-                  → 승인/거절 버튼
-                      → API Gateway
-                          → Callback Lambda
-                              → CodeDeploy 상태 전달
-      → 승인 시 트래픽 전환
+
+1. ECS Task Definition 등록
+2. CodeDeploy 배포 생성
+3. Green Task Set 생성
+4. 헬스체크 대기
+5. BeforeAllowTraffic Hook
+  5-1. Lambda (트래픽 전환 승인/거절 Slack 메시지 발송)
+6. 승인시 트래픽 전환 (Slack)
+7. API Gateway
+8. Callback Lambda
+  8-1. CodeDeploy 상태 전달
 ```
 
 </br>
