@@ -182,6 +182,7 @@
 - [🕸️ TCP 의 흐름제어와 혼잡제어](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%95%B8%EF%B8%8F%20Network/TCP%20%EC%9D%98%20%ED%9D%90%EB%A6%84%EC%A0%9C%EC%96%B4%EC%99%80%20%ED%98%BC%EC%9E%A1%EC%A0%9C%EC%96%B4.md)
 - [🕸️ Connection Timeout, Socket Timeout, Read Timeout](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%95%B8%EF%B8%8F%20Network/Connection%20Timeout%2C%20Socket%20Timeout%2C%20Read%20Timeout.md)
 - [🕸️ 레이턴시의 구성요소](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%95%B8%EF%B8%8F%20Network/%EB%A0%88%EC%9D%B4%ED%84%B4%EC%8B%9C%EC%9D%98%20%EA%B5%AC%EC%84%B1%EC%9A%94%EC%86%8C.md)
+- 🕸️ 파일 다운로드 중 LAN 케이블을 분리했다가 다시 연결하면 TCP 연결은 어떻게 될까?
 
 </br>
 
