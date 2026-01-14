@@ -34,7 +34,7 @@
 - [💾 DB 네임드 락 vs Redis 분산락](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/DB%20%EB%84%A4%EC%9E%84%EB%93%9C%20%EB%9D%BD%20vs%20Redis%20%EB%B6%84%EC%82%B0%EB%9D%BD.md)
 - [💾 Primary-Replica 구조의 비용](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/Primary-Replica%20%EA%B5%AC%EC%A1%B0%EC%9D%98%20%EB%B9%84%EC%9A%A9.md)
 - [💾 로그와 페이지](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EB%A1%9C%EA%B7%B8%EC%99%80%20%ED%8E%98%EC%9D%B4%EC%A7%80.md)
-- [💾 리더 기반 복제 (Leader-based Replication)](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EB%A6%AC%EB%8D%94%20%EA%B8%B0%EB%B0%98%20%EB%B3%B5%EC%A0%9C(Leader-based%20Replication).md)
+- [💾 리더 기반 복제 (Leader-based Replication)](<https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EB%A6%AC%EB%8D%94%20%EA%B8%B0%EB%B0%98%20%EB%B3%B5%EC%A0%9C(Leader-based%20Replication).md>)
 
 </br>
 </br>
@@ -183,6 +183,7 @@
 - [🕸️ Connection Timeout, Socket Timeout, Read Timeout](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%95%B8%EF%B8%8F%20Network/Connection%20Timeout%2C%20Socket%20Timeout%2C%20Read%20Timeout.md)
 - [🕸️ 레이턴시의 구성요소](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%95%B8%EF%B8%8F%20Network/%EB%A0%88%EC%9D%B4%ED%84%B4%EC%8B%9C%EC%9D%98%20%EA%B5%AC%EC%84%B1%EC%9A%94%EC%86%8C.md)
 - [🕸️ 파일 다운로드 중 LAN 케이블을 분리했다가 다시 연결하면 TCP 연결은 어떻게 될까?](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%95%B8%EF%B8%8F%20Network/%ED%8C%8C%EC%9D%BC%20%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C%20%EC%A4%91%20LAN%20%EC%BC%80%EC%9D%B4%EB%B8%94%EC%9D%84%20%EB%B6%84%EB%A6%AC%ED%96%88%EB%8B%A4%EA%B0%80%20%EB%8B%A4%EC%8B%9C%20%EC%97%B0%EA%B2%B0%ED%95%98%EB%A9%B4%20TCP%20%EC%97%B0%EA%B2%B0%EC%9D%80%20%EC%96%B4%EB%96%BB%EA%B2%8C%20%EB%90%A0%EA%B9%8C%3F.md)
+- 🕸️ Out of path 와 SPI, DPI
 
 </br>
 
@@ -194,7 +195,7 @@
 - [🫀 [AWS] VPC](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5BAWS%5D%20VPC.md)
 - [🫀 [AWS] VPC Endpoint](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5BAWS%5D%20VPC%20Endpoint.md)
 - [🫀 [AWS] VPC IP 주소가 고갈되었을때](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5BAWS%5D%20VPC%20IP%20%EC%A3%BC%EC%86%8C%EA%B0%80%20%EA%B3%A0%EA%B0%88%EB%90%98%EC%97%88%EC%9D%84%EB%95%8C.md)
-- [🫀 [AWS] AWS 관점에서 점보 프레임이란](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5BAWS%5D%20AWS%20%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C%20%EC%A0%90%EB%B3%B4%20%ED%94%84%EB%A0%88%EC%9E%84(Jumbo%20Frame).md)
+- [🫀 [AWS] AWS 관점에서 점보 프레임이란](<https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5BAWS%5D%20AWS%20%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C%20%EC%A0%90%EB%B3%B4%20%ED%94%84%EB%A0%88%EC%9E%84(Jumbo%20Frame).md>)
 - [🫀 [AWS] EC2 네트워크 최적화 정리](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5BAWS%5D%20EC2%20%EB%84%A4%ED%8A%B8%EC%9B%8C%ED%81%AC%20%EC%B5%9C%EC%A0%81%ED%99%94%20%EC%A0%95%EB%A6%AC.md)
 - [🫀 [k8s] 핵심 개념 정리](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5Bk8s%5D%20%ED%95%B5%EC%8B%AC%20%EA%B0%9C%EB%85%90%20%EC%A0%95%EB%A6%AC.md)
 - [🫀 메시지 패턴 과 구축 사례](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%EB%A9%94%EC%8B%9C%EC%A7%80%20%ED%8C%A8%ED%84%B4%20%EA%B3%BC%20%EA%B5%AC%EC%B6%95%20%EC%82%AC%EB%A1%80.md)
@@ -210,8 +211,8 @@
 - [🫀 무중단 배포](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%EB%AC%B4%EC%A4%91%EB%8B%A8%EB%B0%B0%ED%8F%AC.md)
 - [🫀 Airflow vs Cron Job](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/Airflow%20vs%20Cron%20Job.md)
 - [🫀 DLQ 의 순서보장은?](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/DLQ%20%EC%9D%98%20%EC%88%9C%EC%84%9C%EB%B3%B4%EC%9E%A5%EC%9D%80%3F.md)
-- [🫀 [라이브 커머스 - 케이스 스터디(1)] WebSocket 연결 수 폭증으로 인한 성능 문제](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5B%EB%9D%BC%EC%9D%B4%EB%B8%8C%20%EC%BB%A4%EB%A8%B8%EC%8A%A4%20-%20%EC%BC%80%EC%9D%B4%EC%8A%A4%20%EC%8A%A4%ED%84%B0%EB%94%94(1)%5D%20WebSocket%20%EC%97%B0%EA%B2%B0%20%EC%88%98%20%ED%8F%AD%EC%A6%9D%EC%9C%BC%EB%A1%9C%20%EC%9D%B8%ED%95%9C%20%EC%84%B1%EB%8A%A5%20%EB%AC%B8%EC%A0%9C.md)
-- [🫀 [라이브 커머스 - 케이스 스터디(2)] DB Fan-out 으로 인한 병목 문제](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5B%EB%9D%BC%EC%9D%B4%EB%B8%8C%20%EC%BB%A4%EB%A8%B8%EC%8A%A4%20-%20%EC%BC%80%EC%9D%B4%EC%8A%A4%20%EC%8A%A4%ED%84%B0%EB%94%94(2)%5D%20DB%20Fan-out%20%EC%9C%BC%EB%A1%9C%20%EC%9D%B8%ED%95%9C%20%EB%B3%91%EB%AA%A9%20%EB%AC%B8%EC%A0%9C.md)
+- [🫀 [라이브 커머스 - 케이스 스터디(1)] WebSocket 연결 수 폭증으로 인한 성능 문제](<https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5B%EB%9D%BC%EC%9D%B4%EB%B8%8C%20%EC%BB%A4%EB%A8%B8%EC%8A%A4%20-%20%EC%BC%80%EC%9D%B4%EC%8A%A4%20%EC%8A%A4%ED%84%B0%EB%94%94(1)%5D%20WebSocket%20%EC%97%B0%EA%B2%B0%20%EC%88%98%20%ED%8F%AD%EC%A6%9D%EC%9C%BC%EB%A1%9C%20%EC%9D%B8%ED%95%9C%20%EC%84%B1%EB%8A%A5%20%EB%AC%B8%EC%A0%9C.md>)
+- [🫀 [라이브 커머스 - 케이스 스터디(2)] DB Fan-out 으로 인한 병목 문제](<https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5B%EB%9D%BC%EC%9D%B4%EB%B8%8C%20%EC%BB%A4%EB%A8%B8%EC%8A%A4%20-%20%EC%BC%80%EC%9D%B4%EC%8A%A4%20%EC%8A%A4%ED%84%B0%EB%94%94(2)%5D%20DB%20Fan-out%20%EC%9C%BC%EB%A1%9C%20%EC%9D%B8%ED%95%9C%20%EB%B3%91%EB%AA%A9%20%EB%AC%B8%EC%A0%9C.md>)
 - [🫀 [이커머스 - 플랫폼 인프라] ECS 기반 블루그린 배포 및 트래픽 전환 제어](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5B%EC%9D%B4%EC%BB%A4%EB%A8%B8%EC%8A%A4%20-%20%ED%94%8C%EB%9E%AB%ED%8F%BC%20%EC%9D%B8%ED%94%84%EB%9D%BC%5D%20ECS%20%EA%B8%B0%EB%B0%98%20%EB%B8%94%EB%A3%A8%EA%B7%B8%EB%A6%B0%20%EB%B0%B0%ED%8F%AC%20%EB%B0%8F%20%ED%8A%B8%EB%9E%98%ED%94%BD%20%EC%A0%84%ED%99%98%20%EC%A0%9C%EC%96%B4.md)
 
 </br>
