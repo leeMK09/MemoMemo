@@ -192,6 +192,7 @@
 - [🫀 [AWS] ECS 네트워크 모드 정리](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5BAWS%5D%20ECS%20%EB%84%A4%ED%8A%B8%EC%9B%8C%ED%81%AC%20%EB%AA%A8%EB%93%9C.md)
 - [🫀 [AWS] 로드밸런서](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5BAWS%5D%20%EB%A1%9C%EB%93%9C%EB%B0%B8%EB%9F%B0%EC%84%9C.md)
 - [🫀 [AWS] VPC](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5BAWS%5D%20VPC.md)
+- 🫀 [AWS] VPC Endpoint
 - [🫀 [AWS] VPC IP 주소가 고갈되었을때](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5BAWS%5D%20VPC%20IP%20%EC%A3%BC%EC%86%8C%EA%B0%80%20%EA%B3%A0%EA%B0%88%EB%90%98%EC%97%88%EC%9D%84%EB%95%8C.md)
 - [🫀 [AWS] AWS 관점에서 점보 프레임이란](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5BAWS%5D%20AWS%20%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C%20%EC%A0%90%EB%B3%B4%20%ED%94%84%EB%A0%88%EC%9E%84(Jumbo%20Frame).md)
 - [🫀 [AWS] EC2 네트워크 최적화 정리](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5BAWS%5D%20EC2%20%EB%84%A4%ED%8A%B8%EC%9B%8C%ED%81%AC%20%EC%B5%9C%EC%A0%81%ED%99%94%20%EC%A0%95%EB%A6%AC.md)
