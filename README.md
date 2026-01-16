@@ -199,7 +199,7 @@
 - [🫀 [AWS] EC2 네트워크 최적화 정리](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5BAWS%5D%20EC2%20%EB%84%A4%ED%8A%B8%EC%9B%8C%ED%81%AC%20%EC%B5%9C%EC%A0%81%ED%99%94%20%EC%A0%95%EB%A6%AC.md)
 - [🫀 [k8s] 핵심 개념 정리](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5Bk8s%5D%20%ED%95%B5%EC%8B%AC%20%EA%B0%9C%EB%85%90%20%EC%A0%95%EB%A6%AC.md)
 - [🫀 [k8s] Pod, Deployment 생성 흐름](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5Bk8s%5D%20Pod%2C%20Deployment%20%EC%83%9D%EC%84%B1%20%ED%9D%90%EB%A6%84.md)
-- 🫀 [k8s] Pod Network, Service Network
+- [🫀 [k8s] Pod Network, Service Network](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%5Bk8s%5D%20Pod%20Network%2C%20Service%20Network.md)
 - [🫀 메시지 패턴 과 구축 사례](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%EB%A9%94%EC%8B%9C%EC%A7%80%20%ED%8C%A8%ED%84%B4%20%EA%B3%BC%20%EA%B5%AC%EC%B6%95%20%EC%82%AC%EB%A1%80.md)
 - [🫀 신뢰성](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%EC%8B%A0%EB%A2%B0%EC%84%B1.md)
 - [🫀 성능](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%AB%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EB%94%94%EC%9E%90%EC%9D%B8/%EC%84%B1%EB%8A%A5.md)
