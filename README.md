@@ -35,6 +35,7 @@
 - [💾 Primary-Replica 구조의 비용](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/Primary-Replica%20%EA%B5%AC%EC%A1%B0%EC%9D%98%20%EB%B9%84%EC%9A%A9.md)
 - [💾 로그와 페이지](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EB%A1%9C%EA%B7%B8%EC%99%80%20%ED%8E%98%EC%9D%B4%EC%A7%80.md)
 - [💾 리더 기반 복제 (Leader-based Replication)](<https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EB%A6%AC%EB%8D%94%20%EA%B8%B0%EB%B0%98%20%EB%B3%B5%EC%A0%9C(Leader-based%20Replication).md>)
+- 💾 파티셔닝 종류, 문제점, 재균형화
 
 </br>
 </br>
