@@ -36,7 +36,7 @@
 - [💾 로그와 페이지](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EB%A1%9C%EA%B7%B8%EC%99%80%20%ED%8E%98%EC%9D%B4%EC%A7%80.md)
 - [💾 리더 기반 복제 (Leader-based Replication)](<https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EB%A6%AC%EB%8D%94%20%EA%B8%B0%EB%B0%98%20%EB%B3%B5%EC%A0%9C(Leader-based%20Replication).md>)
 - [💾 파티셔닝 종류, 문제점, 재균형화](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%ED%8C%8C%ED%8B%B0%EC%85%94%EB%8B%9D%20%EC%A2%85%EB%A5%98%2C%20%EB%AC%B8%EC%A0%9C%EC%A0%90%2C%20%EC%9E%AC%EA%B7%A0%ED%98%95%ED%99%94.md)
-- 💾 커밋 후 읽기
+- [💾 커밋 후 읽기](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EC%BB%A4%EB%B0%8B%20%ED%9B%84%20%EC%9D%BD%EA%B8%B0.md)
 
 </br>
 </br>
