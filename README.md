@@ -39,6 +39,7 @@
 - [💾 커밋 후 읽기](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EC%BB%A4%EB%B0%8B%20%ED%9B%84%20%EC%9D%BD%EA%B8%B0.md)
 - [💾 스냅숏 격리에서 쓰기 스큐 문제](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EC%8A%A4%EB%83%85%EC%88%8F%20%EA%B2%A9%EB%A6%AC%EC%97%90%EC%84%9C%20%EC%93%B0%EA%B8%B0%20%EC%8A%A4%ED%81%90%20%EB%AC%B8%EC%A0%9C.md)
 - [💾 몽고 DB의 메모리 매핑, 샤딩, 레플리카 셋](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EB%AA%BD%EA%B3%A0%20DB%EC%9D%98%20%EB%A9%94%EB%AA%A8%EB%A6%AC%20%EB%A7%A4%ED%95%91%20%ED%8C%8C%EC%9D%BC%2C%20%EC%83%A4%EB%94%A9%2C%20%EB%A0%88%ED%94%8C%EB%A6%AC%EC%B9%B4%20%EC%85%8B.md)
+- 💾 몽고 DB 트랜잭션
 
 </br>
 </br>
