@@ -41,6 +41,7 @@
 - [💾 몽고 DB의 메모리 매핑, 샤딩, 레플리카 셋](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EB%AA%BD%EA%B3%A0%20DB%EC%9D%98%20%EB%A9%94%EB%AA%A8%EB%A6%AC%20%EB%A7%A4%ED%95%91%20%ED%8C%8C%EC%9D%BC%2C%20%EC%83%A4%EB%94%A9%2C%20%EB%A0%88%ED%94%8C%EB%A6%AC%EC%B9%B4%20%EC%85%8B.md)
 - [💾 몽고 DB 트랜잭션](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EB%AA%BD%EA%B3%A0%20DB%20%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98.md)
 - [💾 몽고 DB Snapshot Isolation](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EB%AA%BD%EA%B3%A0%20DB%20Snapshot%20Isolation.md)
+- 💾 몽고 Write Concern
 
 </br>
 </br>
