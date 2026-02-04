@@ -30,7 +30,7 @@
 - [💾 MySQL 전체 구조 및 스레딩 구조](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/MySQL%20%EC%A0%84%EC%B2%B4%20%EA%B5%AC%EC%A1%B0%20%EB%B0%8F%20%EC%8A%A4%EB%A0%88%EB%94%A9%20%EA%B5%AC%EC%A1%B0.md)
 - [💾 복제, 다중리더, 동시 쓰기 등의 용어,개념 정리](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EB%B3%B5%EC%A0%9C%2C%20%EB%8B%A4%EC%A4%91%EB%A6%AC%EB%8D%94%2C%20%EB%8F%99%EC%8B%9C%20%EC%93%B0%EA%B8%B0%20%EB%93%B1%EC%9D%98%20%EC%9A%A9%EC%96%B4%2C%EA%B0%9C%EB%85%90%20%EC%A0%95%EB%A6%AC.md)
 - [💾 실무에서의 Unique ID(Case Study)](<https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EC%8B%A4%EB%AC%B4%EC%97%90%EC%84%9C%EC%9D%98%20Unique%20ID(Case%20Study).md>)
-- 💾 만료된 잠금을 들고 쓰기를 수행(Case Study)
+- [💾 만료된 잠금을 들고 쓰기를 수행(Case Study)](<https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EB%A7%8C%EB%A3%8C%EB%90%9C%20%EC%9E%A0%EA%B8%88%EC%9D%84%20%EB%93%A4%EA%B3%A0%20%EC%93%B0%EA%B8%B0%EB%A5%BC%20%EC%88%98%ED%96%89(Case%20Study).md>)
 - [💾 AUTO_INCREMENT LOCK](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/AUTO_INCREMENT%20LOCK.md)
 - [💾 DB 네임드 락 vs Redis 분산락](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/DB%20%EB%84%A4%EC%9E%84%EB%93%9C%20%EB%9D%BD%20vs%20Redis%20%EB%B6%84%EC%82%B0%EB%9D%BD.md)
 - [💾 Primary-Replica 구조의 비용](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/Primary-Replica%20%EA%B5%AC%EC%A1%B0%EC%9D%98%20%EB%B9%84%EC%9A%A9.md)
