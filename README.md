@@ -45,6 +45,7 @@
 - [💾 몽고 DB Snapshot Isolation](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EB%AA%BD%EA%B3%A0%20DB%20Snapshot%20Isolation.md)
 - [💾 몽고 DB Write Concern](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EB%AA%BD%EA%B3%A0%20DB%20Write%20Concern.md)
 - [💾 몽고 DB Read Preference](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EB%AA%BD%EA%B3%A0%20DB%20Read%20Preference.md)
+- 💾 몽고 DB 의 인덱스 (multikey, ttl, text)
 
 </br>
 </br>
