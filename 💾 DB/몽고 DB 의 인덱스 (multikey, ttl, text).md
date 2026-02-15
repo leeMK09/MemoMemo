@@ -68,3 +68,97 @@ db.users.createIndex({ createdAt: 1 }, { expireAfterSeconds: 3600 });
 
 - TTL 인덱스는 단일 필드 인덱스만 허용되며 복합 인덱스는 TTL 을 지원하지 않으며 `expireAfterSeconds` 를 무시한다
 - 즉 createdAt + status 로 복합 인덱스 요구사항이 있다면 TTL 로는 직접 못하고 별도의 모델링(만료용 별도 필드 분리)로 해결해야 한다
+
+</br>
+
+## Text 인덱스
+
+- Text 인덱스는 문자열 필드 안의 단어들을 토큰화(tokenize)해서 특정 단어가 포함된 문서를 빠르게 찾도록 만드는 인덱스이다
+- MongoDB 문서는 text 인덱스가 문자열 콘텐트에 대한 텍스트 검색 쿼리를 지원하고 특정 단어/문자열을 찾을 때 성능을 개선한다
+- 각 문서의 각 인덱싱 필드에서 stemming(어간 처리) 이후의 유니크 단어마다 인덱스 엔트리가 생긴다
+    - 그 때문에 RAM 과 저장공간을 많이 차지하고 쓰기 성능에도 영향을 준다
+
+**생성 및 기본 제약**
+
+- 한 컬렉션은 text 인덱스를 최대 하나만 가질 수 있고 그 하나의 text 인덱스에 여러 필드를 포함할 수 있다
+
+```javascript
+db.articles.createIndex({
+    title: "text",
+    body: "text",
+});
+```
+
+**언어, stemming, stop word(불용어)**
+
+- Text 검색은 언어 설정에 따라 불용어 목록과 stemming 규칙이 달라진다
+- 문서는 `default_language` 를 `none` 으로 주면 불용어 제거도 하지 않고 stemming 도 하지 않는 단순 토큰화로 동작한다
+- 즉 자연어 기반 검색이라고 할 때 MongoDB text 인덱스가 해주는 자연어 처리는 범용 검색엔진 수준의 문맥 이해라기보다 언어별 형태 단순화(어간 처리) + 불용어 제거 + 토큰 단위 매칭에 가깝다
+
+**$text 쿼리 문법**
+
+- `$text` 쿼리는 다음 형태로 실행되고 `$search` 문자열은 기본적으로 단어들을 OR 로 해석한다
+- MongoDB 는 `$search` 의 term 들에 대해 기본적으로 logical OR 쿼리를 수행한다
+
+```javascript
+db.users.find({
+    $text: { $search: "mongo" },
+});
+```
+
+- 여기서 `$search` 문자열 처리 규칙 중 중요한 건 다음과 같다
+
+```javascript
+db.articles.find({ $text: { $search: "bake coffee cake" } }); // 단어 여러개는 OR 처리
+
+db.articles.find({ $text: { $search: '"ssl cerificate"' } }); // 따옴표 (escape) 로 정확한 구문을 만들 수 있다
+
+db.articles.find({ $text: { $search: "Coffee -shop" } }); // 하이픈 은 단어 제외로 동작한다
+```
+
+- 이 규칙들은 대부분의 문장부호를 delimiter 로 취급하되 `-` 는 단어 제외(negative), `\` 는 exact string 을 의미한다
+- 또한 `$text` 는 결과에 관련된 점수(text Score) 를 부여하고 `{ $meta: "textScore" }` 로 projection 하거나 정렬할 수 있다
+
+**Text 인덱스의 한계**
+
+- Text 인덱스는 한 컬렉션 당 1개만 가질 수 있는 제약이 있고 정렬 성능을 근본적으로 개선하지 못하며 인덱스 자체가 단어 단위로 저장되므로 단어 간 거리(proximity) 같은 정보는 저장하지 않는다
+- 이런 제약 때문에 검색 기능이 제품 경쟁력인 서비스는 MongoDB 내장 text 보다 Atlas Search (Lucene 기반) 로 넘어가는 경우가 많다
+
+</br>
+
+### Atlas Search (아틀라스 서치)
+
+- Atlas Search 는 Atlas 에서 제공하는 `$search` aggregation stage 기반의 검색 기능이고 `$text` 의 `$search` 필드와 Atlas Search 의 `$search` stage 는 이름은 같지만 다르다
+- 즉 `db.collection.find({ $text: { $search: "..." }})` 는 self-managed 포함 MongoDB text 인덱스 기반 검색, Atlas Search 는 `aggregate([{ $search: ... }, ...])` 파이프라인으로 동작한다
+
+**compound, should, must, filter**
+
+- Atlas Search 의 `compound` 는 불리언 쿼리 조합을 표현하는 연산자, `must`, `mustNot`, `should`, `filter` 절은 배열로 받는다
+    - 각 절은 subclause 배열을 가진다
+- 또한 `should` 를 여러 개 쓰면 `minimumShouldMatch` 로 최소 몇 개의 should 가 만족해야 결과에 포함할지를 설정할 수 있고 기본값은 0이다
+- 그리고 성능 관점에서 중요한 규칙은 scoring 이 필요 없는 조건(정확한 일치, 범위, in 같은 검색)은 `filter` 에 두어 불필요한 점수 계산을 줄이도록 한다
+
+```javascript
+db.fruit.aggregate([
+    {
+        $search: {
+            compound: {
+                must: [{ text: { query: "varieties", path: "description" } }],
+                should: [{ text: { query: "banana", path: "description" } }],
+                filter: [{ equals: { path: "category", value: "nonorganic" } }],
+            },
+        },
+    },
+    { $limit: 20 },
+]);
+```
+
+- 위 예시는 설명(description) 에 varieties 가 반드시 들어가야 한다 (must)
+- banana 가 들어가면 더 선호하되(should), category 같은 조건은 점수와 무관하니 filter 로 처리
+
+**서치 쿼리**
+
+- MongoDB 에서 검색이라고 부를 때 두 갈래로 나뉜다
+- 첫째 `$text` 는 MongoDB 의 text 인덱스를 기반으로 `find` 에서 바로 쓰는 방식이고 검색 문자열은 기본 OR 이며 `-` 로 제외, `\"...\"` 로 구문 검색을 표현한다
+- 둘째 Atlas Search 는 `aggregate` 의 `$search` stage 로 들어가며 `compound` 로 must/should/filter 로 조합하고 `minimumShouldMatch` 같은 검색엔진식 기능을 제공한다
+- 즉 간단한 키워드 검색이면 `$text` 로도 가능, 검색 품질/스코어링/복잡한 조건 조합/다중 인덱스/분석기(analyzer) 튜닝이 중요해지면 Atlas Search 로 사용
