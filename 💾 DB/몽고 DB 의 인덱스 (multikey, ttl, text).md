@@ -162,3 +162,53 @@ db.fruit.aggregate([
 - 첫째 `$text` 는 MongoDB 의 text 인덱스를 기반으로 `find` 에서 바로 쓰는 방식이고 검색 문자열은 기본 OR 이며 `-` 로 제외, `\"...\"` 로 구문 검색을 표현한다
 - 둘째 Atlas Search 는 `aggregate` 의 `$search` stage 로 들어가며 `compound` 로 must/should/filter 로 조합하고 `minimumShouldMatch` 같은 검색엔진식 기능을 제공한다
 - 즉 간단한 키워드 검색이면 `$text` 로도 가능, 검색 품질/스코어링/복잡한 조건 조합/다중 인덱스/분석기(analyzer) 튜닝이 중요해지면 Atlas Search 로 사용
+
+</br>
+
+## 페이징과 정렬
+
+```javascript
+db.users.find().sort({ age: 1, name: -1 }).skip(10).limit(10);
+```
+
+- `find().sort().skip().limit()` 은 서버가 먼저 정렬 순서를 만든 뒤 앞의 일부를 건너띄고 필요한 개수만 반환하는 흐름으로 동작한다
+- 위 예시에서는 나이 오름차순, 동률이라면 이름 내림차순으로 정렬한 결과에서 11번째부터 20번째까지를 반환한다
+
+```javascript
+db.users.aggregate([{ $sort: { age: -1 } }, { $skip: 20 }, { $limit: 10 }]);
+```
+
+- 같은 의미에서 Aggregation 에서는 위 예시처럼 처리한다
+- 차이점은
+    - `find + sort + skip + limit` 패턴과
+    - `aggregate + $sort + $skip + $limit` 패턴은
+- 기본적인 동작 개념은 동일하지만 Aggregation 은 이후에 `$match`, `$group`, `$project` 등 다양한 연산자를 이어붙여 데이터 파이프라인을 구성할 수 있다는 점이 강점이다
+
+**Projection**
+
+```javascript
+db.users.aggregate([{ $project: { name: 1, email: 1 } }]);
+```
+
+- 메모리는 정렬 단계에서도 쓰이지만 실제 API 비용의 큰 부분은 불필요한 필드를 얼마나 많이 실어 나르는가에서 발생한다
+- 그래서 `$project` (또는 `find` 의 projection 인자)로 필요한 필드만 남기는 것이 핵심이다
+- `name`, `email` 만 필요한 화면이라면 해당 필드만 포함하고 `_id` 가 필요 없으면 `_id: 0` 을 명시해야 응답 크기를 더 줄일 수 있다
+    - `name`, `email` 두 필드는 결과에 포함되며 나머지 필드들은 기본적으로 제외된다
+    - `_id` 는 명시하지 않으면 기본적으로 포함된다
+    - `{ $project: { name: 0, email: 0 }}` 형태로 필드 포함 대신 제외를 지정할 수도 있다
+- 중첩 필드는 `"address.city": 1` 처럼 점 표기법으로 필요한 하위 값만 추출할 수도 있다
+    - `{ $project: { name: 1, "address.city": 1, _id: 0 }}`
+
+**인덱스와 같이 설계되어야 하는 이유**
+
+- 정렬 필드와 인덱스가 맞지 않으면 MongoDB 가 정렬 중간 결과를 메모리에 더 많이 쌓거나 디스크 보조를 사용하게 된다
+- 그래서 `sort({ age: 1, name: - 1})` 를 자주 사용하면 정렬 순서와 동일한 복합 인덱스를 우선 검토해야 한다
+
+**트레이드 오프와 실패 시나리오**
+
+- `skip` 기반 페이지 번호 방식은 앞 페이지를 많이 건너뛸수록 비용이 선형으로 증가한다
+- 또한 트래픽이 큰 환경에서 중간에 데이터가 삽입/삭제되면 사용자가 다음 페이지를 눌렀을 때 중복 조회나 누락 조회가 생길 수 있다
+- Projection 은 메모리를 절약하지만 포함/제외 규칙을 혼용하면(특수한 `_id` 예외 제외) 쿼리 오류가 나므로 응답 스키마를 먼저 고정하고 작성하는 편을 고려해야 한다
+- 페이지가 얕고 단순 목록이라면 `find + sort + skip + limit + projection` 이 가장 직관적이다
+- 페이지가 깊거나 실시간 변경이 많은 목록이면 cursor 기반 페이징 (마지막 문서의 정렬 키와 `_id` 를 다음 조건으로 사용) 이 더 안정적이다
+- 복잡한 가공이 필요하다면 Aggregation 으로 적용하며 초반에 `$match` 와 `$project` 를 배치해 처리량 자체를 줄일 수 있다
