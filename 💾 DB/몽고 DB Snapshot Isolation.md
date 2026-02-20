@@ -57,3 +57,32 @@
 3. 분산 환경에서 더 비싸다
     - replica set 전체에서 동일한 스냅샷 시점을 유지해야 하며 커밋 시 다수 노드의 합의가 필요
     - 그래서 standalone MongoDB 에서는 트랜잭션을 지원하지 않는다
+
+</br>
+
+## 몽고 DB 의 Cache, Flush, Dirty Page (WiredTiger 스토리지 엔진 기준)
+
+- 쓰기 성능을 확보하기 위해 변경사항을 먼저 캐시에 반영
+- 이후 Flush 와 Checkpoint 를 통해 디스크 일관성과 복구 기준점을 확정한다
+- 즉 `Cache` → `Dirty Page` → `Flush` → `Checkpoint` → `WAL` 흐름순으로 동작
+
+**동작 메커니즘**
+
+- 애플리케이션이 `insert`, `update`, `delete` 를 요청하면 엔진은 우선 메모리 캐시의 페이지를 수정하고 해당 시점의 페이지는 디스크와 불일치하므로 Dirty Page 가 된다
+- 이후 Dirty 비율, 주기, 시스템 상태 같은 조건이 충족되면 백그라운드 쓰기 작업이 Dirty Page 를 디스크 파일로 내리고 기록이 완료된 페이지는 Clean 상태로 전환된다
+- 이 과정이 Flush 이다
+- Checkpoint 는 Flush 보다 목적이 넓다
+- Checkpoint 는 단순히 일부 Dirty Page 를 내리는 것이 아닌 특정 시점의 데이터 상태를 복구 기준점으로 사용 가능한 일관된 상태로 확정한다
+- 그래서 장애 복구 시에는 Checkpoint 시점의 디스크 상태를 기준으로 이후 WAL 로그를 재적용해 정합성을 맞춘다
+
+**Flush 와 Checkpoint 차이점**
+
+- Flush 는 주로 캐시 압력을 낮추고 Dirty Page 를 줄이는 운영 동작이다
+- 반면 Checkpoint 는 복구 기준점을 만드는 일관성 동작이다
+- 두 기능 모두 디스크 기록을 포함하지만 Flush 는 성능/메모리 관리 성격이 강하고 Checkpoint 는 내구성/복구 경계 확정 성격이 강하다
+- 즉 Flush 는 캐시를 정리하는 쓰기 배출, Checkpoint 는 복구 가능한 일관성 시점을 확정하는 작업
+
+**실패 시나리오 관점**
+
+- 장애가 Checkpoint 직전에 발생하면 최근 변경분 중 일부는 데이터 파일에 없을 수 있지만 WAL 이 남아있으면 복구 과정에서 재적용된다
+- 다만 I/O 병목이나 Checkpoint 지연이 큰 환경에서는 복구 시간이 길어질 수 있으므로 Dirty Page 누적과 디스크 쓰기 지연을 운영 지표로 함께 관리해야 한다
