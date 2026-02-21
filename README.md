@@ -76,7 +76,7 @@
 - [🧠 맥락속의 협력](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EB%A7%A5%EB%9D%BD%EC%86%8D%EC%9D%98%20%ED%98%91%EB%A0%A5.md)
 - [🧠 메시지](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%EB%A9%94%EC%8B%9C%EC%A7%80.md)
 - [🧠 [DDD] 도메인, 엔티티와 밸류, DIP 주의사항](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%5BDDD%5D%20%EB%8F%84%EB%A9%94%EC%9D%B8%2C%20%EC%97%94%ED%8B%B0%ED%8B%B0%EC%99%80%20%EB%B0%B8%EB%A5%98%2C%20DIP%20%EC%A3%BC%EC%9D%98%EC%82%AC%ED%95%AD.md)
-- 🧠 [디버깅] 핵심 분석 루프
+- [🧠 [디버깅] 핵심 분석 루프](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%A7%A0%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%EC%9B%90%EC%B9%99/%5B%EB%94%94%EB%B2%84%EA%B9%85%5D%20%ED%95%B5%EC%8B%AC%20%EB%B6%84%EC%84%9D%20%EB%A3%A8%ED%94%84.md)
 
 </br>
 </br>
