@@ -130,3 +130,57 @@
     - 샤드 키 설계시 고려할 점(핫스팟, 스캐터-개더 등)이 있음
     - 데이터 이동과 메타데이터 관리가 어려움
     - 트랜잭션이나 조인 성격의 작업은 샤드간 경계를 넘으며 비용이 커짐
+
+</br>
+
+## Change Stream
+
+- Oplog 는 Primary 에서 일어나는 모든 변경을 기록한다
+    - Oplog 를 통해서 어떤 도큐먼트가 생성/수정/삭제되었는지를 실시간으로 감지할 수 있다
+    - 해당 이벤트를 기반으로 다른 서비스에서 추가 작업을 수행할 수 있다
+- 몽고DB 는 이를 고수준 API로 감싸 Change Stream 이라는 기능을 제공한다 → Change Stream 은 Oplog 위에 올라간 고수준 API 이며 형태는 특정 컬렉션/DB/전체 클러스터에 대한 변경 스트림을 읽는 커서 역할
+    - 이를 통해 별도의 Kafka, Redis Pub/Sub 같은 메시지 큐를 사용하지 않고도 DB 레벨에서 카프카/레디스 Pub/Sub 느낌의 이벤트 스트림을 제공받을 수 있다
+    - 이를 이용해서 서비스 간 느슨한 결합을 만들 수 있다
+
+**중요한 점**
+
+- Change Stream 은 몽고 DB Wire Protocol (= 드라이버 프로토콜) 기반이다
+- 공식 API 는 `db.collection.watch()` 같은 드라이버/셸/SDK 메소드로 노출된다
+
+```javascript
+const changeStream = db
+    .collection("test")
+    .watch([{ $match: { operationType: "insert" } }]);
+
+for await (const change of changeStream) {
+    console.log("변경 감지", change);
+}
+```
+
+- `watch()`
+    - 내부적으로는 레플리카셋의 Oplog 를 tailing 하는 tailable cursor 를 연다
+    - 계속해서 새로운 이벤트를 push/pull 하는 스트림을 유지한다
+    - 각 이벤트마다 resume token 을 제공해서 끊겼다가 다시 이어 받을 수 있게 한다
+
+**예시: BigQuery 가 Change Stream 을 구독**
+
+- BigQuery 는 자체적으로 몽고 DB 프로토콜을 이해해서 Change Stream 을 직접 여는 것이 아니다
+- 몽고 DB 쪽에 Change Stream 을 읽는 중간 서비스/커넥터가 존재함
+- 해당 서비스가 읽은 이벤트를 Pub/Sub, Kafka, GCS, Cloud Storage 파일, Dataflow 등으로 흘려보냄
+- BigQuery 는 해당 데이터를 스트리밍 insert, Batch(파일/스토리지) 로드 또는 Dataflow/Connector 를 통해 ingest
+- 형태로 간접적으로 소비한다
+- 예시 1) 몽고 DB → Change Stream → 커스텀 ETL 서비스 → BigQuery
+    - Node/Java 같은 앱이 `watch()` 로 Change Stream 을 연다
+    - 이벤트를 JSON 으로 변환해서 BigQuery 에 `INSERT` (Stream API) 혹은 GCS 파일로 로깅
+    - BigQuery 는 해당 데이터를 테이블로 반영
+- 예시 2) 몽고 DB Kafka Source Connector → Kafka → BigQuery Sink
+    - 몽고 DB Source Connector 가 Change Stream 을 읽어서 Kafka 토픽에 이벤트를 push
+    - BigQuery Sink (예: Kafka Connect BigQuery, Dataflow 템플릿)가 토픽을 읽어서 테이블에 적재
+- 예시 3) Atlas 공식 연동 (Atlas → GCP 생태계 → BigQuery)
+    - 몽고 DB Atlas 에서 GCP 연동 기능/커넥터 사용
+    - 내부적으로는 Change Stream + ETL 파이프라인으로 BigQuery 에 동기화
+- 예시 4) 몽고 DB → Change Stream → SSE → ETL 서비스 → BigQuery
+    - Node/Java 같은 앱이 `watch()` 로 Change Stream 을 연다
+    - 이벤트를 계속 읽고 해당 서비스가 받은 Change Stream 이벤트를 SSE(Server-Sent Events), WebSocket, chunked HTTP Response 등의 형태로 외부 HTTP 클라이언트에게 전송
+    - ETL 서비스는 해당 HTTP 스트림을 받아서 BigQuery 에 쓰는 역할을 수행
+- 즉 Mongo 프로토콜을 이해하는 소비자가 반드시 중간에 끼어있어야 한다
