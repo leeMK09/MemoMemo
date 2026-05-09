@@ -35,7 +35,7 @@
 - 쉽게 말하면 distributor 가 누가 맡을지 정한다면 ingester 는 실제로 맡아서 쌓는다
 - 먼저 LiveTrace 라는 메모리 버퍼에 trace 데이터를 둔다
 - 그 다음 조건이 맞으면 WAL 에 데이터를 쓴다
-- 그 다음 Complete Block 을 만들고, 최종적으로 S3 에 flush 한다
+- 그 다음 Complete Block 을 만들고, 최종적으로 오브젝트 스토리지(ex: S3) 에 flush 한다
 
 **동작 방식**
 
@@ -69,7 +69,7 @@
 - ingester 와 object storage 를 함께 조회한다.
   - 공식 문서에서는 read path 에서 querier 가 ingester 와 S3 를 함께 보고 결과를 병합한다고 되어 있다
 
-**왜 굳이 둘다(S3, ingester) 조회하는 가**
+**왜 굳이 둘다(오브젝트 스토리지, ingester) 조회하는 가**
 
 - 최신 trace 는 아직 ingester 메모리나 최근 block 에만 남아 있고, 완전히 장기 저장 구조로 정리되지 않았을 수 있다
 - 반면 조금 시간이 지난 trace 는 이미 S3 block 안에 있다
