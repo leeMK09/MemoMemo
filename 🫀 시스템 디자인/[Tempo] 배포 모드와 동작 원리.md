@@ -135,3 +135,73 @@
   - 노드가 추가되거나 제거될 때 ring이 재구성되면서 담당 범위가 바뀌므로, 그 순간의 flush 되지 않은 데이터나 in-flight 요청 처리에 대한 이해가 필요하다
   - 따라서 replication_factor 를 어떻게 줄지, WAL 을 어디에 둘지, restart 시 어떻게 복구할지를 같이 봐야한다
   - 즉 ring 하나만 잘 넣는다고 끝나는 것이 아닌 ring 변경 시 데이터 보전 전략이 같이 있어야 한다
+
+</br>
+
+## 요청 하나가 어떻게 저장되는가
+
+- OTel Collector 와 AWS 환경의 자원들을 사용한다면 OTel Collector 가 OTLP/HTTP 로 데이터를 보내고, ALB 가 아무 Tempo 인스턴스의 distributor 로 보낸다 이후 distributor 가 ring 을 조회하여 담당 ingester 를 찾고, ingester 가 메모리와 WAL 을 거쳐 complete block 을 만들고, 최종적으로 S3 에 저장한다
+
+**좀 더 자세한 내부 동작 과정**
+
+1. 애플리케이션 -> OTel Collector -> Tempo
+
+- 먼저 애플리케이션은 보통 직접 Tempo 로 보내지 않고 OTel Collector 로 span 을 보낸다
+- Otel Collector 는 span 을 모아서 batch 처리하고 재시도도 하고, 필요하면 memory limiter 도 걸 수 있다. 이 단계는 Tempo 앞단의 완충기 역할을 한다
+- 이후 ALB 는 요청을 Tempo 인스턴스 중 하나로 전달하며 여기까지가 일반적인 로드밸런싱 작업이다
+
+2. Tempo -> ingester (Tempo 내부 컴포넌트)
+
+- 그런데 이 지점이 최종 저장 담당자를 결정하는 지점은 아니다, 요청을 받은 인스턴스의 distributor 는 span 에서 traceID 를 보고 해시를 계산한 뒤, ingester ring 을 조회해서 실제 담당 ingester 를 찾는다
+- 그래서 ALB 가 무작위로 분산한 결과와 상관없이, 같은 traceID 는 ring 규칙에 따라 항상 같은 ingester 계열로 모이게 된다
+- 이것이 중요한 이유는 같은 trace 의 span 들이 여러 인스턴스들로 흩어져 버리면 later join 이나 complete trace 조회가 비효율적이기 때문이다
+- ring 은 이 trace locality 를 어느 정도 유지하려고 하며 hash(traceID) 후 replication_factor 개수의 ingester 를 결정한다
+- 담당 ingester 가 span 을 받으면 우선 메모리의 LiveTrace 버퍼에 넣는다.
+- 이 단계는 아직 추척이 진행 중인 trace 를 메모리에 유지하는 단계이다
+- trace 는 span 이 순차적으로 조금씩 들어올 수 있으므로 너무 빨리 디스크 block 을 굳혀 버리면 조각이 지나치게 많이 생길 수 있다
+  - 그래서 `trace_idel_period` 와 `trace_idel_period` 가 중요하다
+- 일정 시간 동안 추가 span 이 안 오면 idle 로 판단해서 WAL HeadBlock 을 내리고, 너무 오래 메모리에만 두지 않도록 최대 live 기반이 지나면 강제로 WAL 로 내린다
+
+3. ingester (Tempo 내부 컴포넌트) -> WAL
+
+- 그 다음 WAL 단게로 가게 된다
+- WAL 은 디스크에 쓰는 write-ahead log 이다
+- 아직 최종 block 으로 굳어서 S3 에 올라가진 않았지만, 최소한 프로세스가 죽더라도 메모리의 trace 를 통째로 날리지는 않겠다는 안전장치이다
+- 재시작 시 WAL 에서 reload 해서 복구한다
+
+4. WAL -> Complete Block
+
+- WAL 에 쌓인 데이터는 일정 크기나 일정 시간이 되면 complete block 으로 전환된다
+- `max_block_bytes` 나 `max_block_duration` 조건을 넘으면 Apache Parquet 형식의 block 을 만들고, 이때 bloom filter 와 index 도 같이 생성한다
+- 이 단계가 중요한데 이유는 조회 시 S3 에 있는 모든 데이터를 다 훓는 것이 아니라, block 단위로 이 block 에 찾는 trace 가 있을 가능성이 있는지를 먼저 판단하기 때문이다
+- bloom filter 와 index 가 그 조회 효율을 담당하게 된다
+
+5. Complete Block -> S3
+
+- 마지막으로 complete block 이 S3 에 flush 된다
+- 그런데 flush 했다고 해서 ingester 가 즉시 잊어버리는 것은 아니다
+- `complete_block_timeout` 동안 ingester 가 block 을 계속 보유하고 querier 가 최신 데이터를 직접 조회할 수 있다
+- 이것은 막 저장된 최신 데이터는 아직 object storage 만 확인하는 것보다 ingester 에서 바로 보는 편이 빠를 수 있다는 운영적 현실을 반영한 것 이다
+- 즉 read path 는 S3 만 확인하는 것이 아닌 최신 데이터는 ingester 도 함께 본다
+
+</br>
+
+## Read Path 는 왜 더 복합적인가
+
+- Tempo 의 read path 는 단순히 S3 에서 파일 하나 읽기가 아닌 대시보드(ex: Grafana) -> Query Frontend -> Querier x N -> Ingester 와 S3 를 함께 조회한 뒤 결과를 병합하고 deduplication 하는 흐름이다
+
+**좀 더 자세한 구조의 의미**
+
+- Grafana 사용자가 trace 조회를 요청하면, query frontend 가 그 요청을 받아 적절히 나누고, querier 들이 병렬로 처리한다
+- 이때 querier 는 두 군데를 볼 수 있는데, 하나는 아직 S3 에 완전히 반영되지 않았거나 최신 상태를 들고 있는 ingester 이고 다른 하나는 이미 object storage 에 저장된 block 들이다
+- 최신 데이터와 장기 저장 데이터가 경계 없이 이어져야 하기 때문에, read path 는 이 두 계층을 동시에 조회해서 결과를 합쳐야 한다
+  - 결과 병합과 deduplication 을 적용
+- 여기서 bloom filter 의 존재가 매우 중요하며 bloom filter 는 이 block 에 해당 traceID 가 절대 없는지를 빠르게 판정하기 위한 구조이다
+  - false positive 는 있을 수 있지만 false negative 는 없다 즉 bloom filter 가 없다고 하면 안봐도 되고, 있을 수도 있다고 하면 index 와 Parquet 까지 더 들어가서 확인해야 한다
+  - 이 구조가 없다면 querier 는 S3 block 을 훨씬 더 많이 열어봐야 하고, query latency 와 object storage 비용 모두 올라가게 된다
+- read path 의 트레이드 오프는 성능과 비용, 그리고 최신성 사이에 있다
+  - 최신 trace 를 빨리 보고 싶으면 ingester 가 최근 block 을 좀 더 오래 들고 있어야 한다
+  - 하지만 너무 오래 들고 있으면 메모리 사용량이 커진다
+  - S3 block 을 크게 만들면 object 수가 줄고 조회 overhead 도 줄 수 있지만, block 하나를 여는 비용과 특정 trace 찾기까지의 scan 단위가 커질 수 있다
+  - 반대로 block 을 너무 작게 만들면 object 수가 많아지고 compaction 부담이 커지게 된다
+  - 즉 write path 와 read path 는 block 크기, flush 주기, complete_block_timeout 같은 설정으로 서로 영향을 주고 받게 된다
