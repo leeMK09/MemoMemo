@@ -56,3 +56,20 @@
 - 커밋되지 않은 변경은 commit record 또는 commit decision 이 없기 때문에 복구 과정에서 최종 반영 대상으로 간주되지 않는다
 - 반대로 commit이 완료된 트랜잭션은 checkpoint 전에 서버가 죽었더라도 journal을 통해 복구될 수 있다
   - 즉 장애 복구의 핵심은 로그를 없애는 것이 아니라 어떤 로그가 commit된 상태까지 도달했는지 판단하고, commit된 변경은 redo하며, commit되지 않은 변경은 최종 상태로 노출하지 않는 것이다
+
+> RDB 의 WAL 과 MongoDB 의 WAL
+>
+> - PostgreSQL 이나 MySQL InnoDB도 WAL/redo log/undo log를 통해 원자성과 내구성을 만든다
+> - MongoDB도 WiredTiger journal과 checkpoint, transaction metadata, oplog를 조합해서 유사하게 원자성과 내구성을 만든다
+> - 다만 MongoDB는 document model과 replica set oplog라는 구조가 강하게 붙어 있다
+> - 사용자의 write가 Primary에서 적용되면 그 변경은 local database의 oplog에도 기록되고, Secondary는 이 oplog를 가져가서 자기 데이터셋에 적용한다
+> - 따라서 트랜잭션 원자성은 스토리지 엔진 내부의 commit/abort 처리와 복제 로그의 oplog에 어떤 단위로 기록되고 전파되는가를 함께 확인해봐야 한다
+
+**MongoDB 트랜잭션 트레이드 오프**
+
+- 트랜잭션을 사용하면 여러 document 변경을 하나의 원자적 단위로 묶을 수 있지만, 그만큼 락 유지 시간, snapshot 유지 비용, oplog/journal 기록 비용, write conflict 가능성, replication 지연 가능성이 증가한다
+- 특히 document model 을 잘못 설계해서 원래 하나의 document 안에 넣어도 되는 데이터를 여러 collection 에 나누고 매번 tracsaction 으로 묶으면, MongoDB 의 장점인 document-local atomicity 를 버리고 RDB식 multi-row transaction 비용을 생각해야 한다
+- 그래서 MongoDB 에서는 **항상 원자적 연산의 경우 트랜잭션을 사용하자 가 아니라, 정말 여러 document 간 불변식이 강하게 묶여야 하는가**와 같은 모델링의 관점에서 생각해봐야 한다
+- 예시: 포인트 적립
+  - 사용자의 잔액, 포인트, 결제 상태처럼 반쪽 성공이 장애로 이어지는 데이터는 트랜잭션 또는 idempotent 한 상태 전이 모델로 보호해야 한다
+  - 반면 조회용 통계, 추천 후보, 비핵심 로그처럼 나중에 재계산하거나 보정할 수 있는 데이터는 트랜잭션에 넣지 않고 outbox, change stream, batch backfill 로 분리하는 편이 장애 범위를 줄일 수 있게 된다
