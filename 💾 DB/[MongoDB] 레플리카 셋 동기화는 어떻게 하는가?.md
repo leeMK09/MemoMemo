@@ -41,3 +41,19 @@
     - oplog는 무한히 보관되지 않는다
     - oplog가 오래된 항목을 덮어쓰기 시작했는데, 어떤 Secondary가 아직 그 항목을 가져가지 못했다면 그 Secondary는 더 이상 incremental하게 따라잡을 수 없다
     - 이 상태를 stale member라고 볼 수 있고, MongoDB 문서에도 member가 너무 뒤처져 Primary가 아직 복제하지 못한 oplog entry를 overwrite하면 stale 상태가 되며, 이 경우 데이터를 제거하고 initial sync를 다시 수행하는 방식 등으로 resync해야 한다
+
+> 장애 시나리오
+>
+> - Primary가 초당 5천 건의 영수증 insert를 받고 있고, 각 영수증 document에는 OCR 결과와 긴 문자열 필드가 포함되어 있다
+> - Secondary는 같은 oplog를 가져오지만 디스크가 느리고, 동시에 분석팀에서 Secondary에 무거운 aggregation query를 날리고 있다 이때 Secondary의 WiredTiger cache는 읽기와 쓰기 적용이 경쟁하게 되고, 디스크는 인덱스 갱신과 대량 read를 동시에 처리하게 된다
+> - 그러면 Secondary의 apply 속도가 떨어지고 replication lag 가 커진다
+> - 만약 이 상태에서 Primary가 죽으면, lag가 큰 Secondary는 최신 데이터를 충분히 갖고 있지 않기 때문에 Primary로 승격되더라도 일부 write가 rollback될 수 있거나, majority write concern을 사용하지 않은 write는 새 Primary에 존재하지 않을 수 있다
+> - 여기서 write concern이 중요하다
+> - `w:1`은 Primary가 자기 기준으로 write를 처리하면 성공 응답을 줄 수 있어서 latency가 낮다 하지만 Primary가 write를 받고 Secondary들이 충분히 복제하기 전에 장애가 나면 그 write는 rollback될 수 있다
+> - 반대로 `w:"majority"`는 다수의 data-bearing member가 write를 acknowledge할 때까지 기다리므로 latency가 증가하지만, Primary 장애 시 rollback 가능성을 낮춘다
+> - 즉 더 많은 member가 acknowledge할수록 Primary 장애 시 written data 가 rollback될 가능성이 낮아지지만, 높은 write concern은 클라이언트가 기다려야 하므로 latency를 증가시킬 수 있다
+> - 읽기에서도 read preference와 read concern을 같이 확인해야 한다
+> - 애플리케이션이 Secondary에서 읽도록 설정하면 Primary 부하를 줄일 수 있지만, replication lag 때문에 방금 쓴 데이터를 못 읽을 수 있다
+> - 영수증 포인트 지급 서비스의 경우 사용자는 영수증을 올리고 포인트가 바로 반영되길 기대하는 화면이라면 Secondary read는 위험할 수 있다
+> - 반대로 관리자 통계, 추천 후보, 대시보드처럼 몇 초 지연이 허용되는 데이터라면 Secondary read로 Primary 부하를 줄일 수 있다
+> - 즉 replica set 은 단순히 HA만 제공하는 것이 아니라 consistency 와 latency 사이의 선택지를 제공한다
