@@ -57,3 +57,31 @@
 > - 영수증 포인트 지급 서비스의 경우 사용자는 영수증을 올리고 포인트가 바로 반영되길 기대하는 화면이라면 Secondary read는 위험할 수 있다
 > - 반대로 관리자 통계, 추천 후보, 대시보드처럼 몇 초 지연이 허용되는 데이터라면 Secondary read로 Primary 부하를 줄일 수 있다
 > - 즉 replica set 은 단순히 HA만 제공하는 것이 아니라 consistency 와 latency 사이의 선택지를 제공한다
+
+**Change Stream**
+
+- Change Stream은 majority commit 과 관련이 있다
+- MongoDB 문서에 따르면 `Mongo.watch()` 는 majority of data-bearing members에 persisted된 데이터 변경만 알린다
+- 또한 replica set에 arbiter가 있고 data-bearing member가 충분하지 않아 operation이 majority commited될 수 없는 경우 change stream이 열려 있어도 알림을 보내지 않을 수 있다
+- 이 말은 outbox + Change Stream 구조에서 장애 대응 포인트가 명확하다는 의미이다
+- Change Stream worker가 죽었다가 재시작할 때 resume token을 안전하게 저장해야 한다
+- worker가 이벤트를 외부 시스템에 발행한 뒤 resume token을 저장하기 전에 죽으면 같은 이벤트가 다시 발행할 수 있다
+- 반대로 resume token을 먼저 저장하고 외부 발행전에 죽으면 이벤트를 잃을 수 있다
+- 그래서 outbox event 자체에 `eventId`, `status`, `publishedAt`, `retryCount`, `lastError` 같은 필드를 두고 외부 발행은 idempotent하게 설계해야 한다
+- Change Stream은 단순히 이벤트를 감지하는 통로이며 외부 시스템까지 exactly-once delivery를 자동 보장하지 않는다
+
+**운영 관점에서 봐야하는 replica set 장애 포인트**
+
+- 운영 관점에서 replica set 장애를 줄이려면 몇 가지 기준을 반드시 봐야한다
+- 첫째, `rs.status()` 나 `db.getReplicationInfo()`로 replication lag, oplog window, member state를 확인해야 한다
+- MongoDB 문서에서도 `db.getReplicationInfo()`가 oplog에 poll한 데이터를 사용해 replica set 상태 정보를 반환하며 replication 진단에 사용할 수 있다
+- 둘째, oplog size와 최소 보존 시간을 write volume에 맞게 설정해야 한다
+    - MongoDB는 `replSetResizeOplog`로 oplog 크기 또는 minimum retention period를 조정할 수 있지만, 줄일 경우 오래된 entry가 truncate되어 클라이언트가 읽던 oplog entry가 사라지는 등 문제가 생길 수 있다
+- 셋째, Secondary에 무거운 분석 쿼리를 직접 날리는 구조는 조심해야 한다
+    - 분석 workload가 replica apply 를 방해하면 HA 목적으로 둔 Secondary가 오히려 장애 시점에 쓸모없어질 수 있다
+
+**정리**
+
+- Replica Set에서 복제 DB가 리더 DB의 Change Stream 이벤트를 구독하는 방식이 아닌 oplog 복제를 통해 적용한다
+- Change Stream 은 애플리케이션이 변경 이벤트를 구독하기 위한 API이고 내부적으로 oplog 정보를 사용한다
+- 즉 복제 → oplog 기반, 애플리케이션 이벤트 감지 → Change Stream 기반 으로 구분해야 한다
