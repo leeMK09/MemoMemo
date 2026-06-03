@@ -50,6 +50,7 @@
 - [💾 [MongoDB] 몽고 DB 의 인덱스 (multikey, ttl, text)](<https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%5BMongoDB%5D%20%EB%AA%BD%EA%B3%A0%20DB%20%EC%9D%98%20%EC%9D%B8%EB%8D%B1%EC%8A%A4%20(multikey%2C%20ttl%2C%20text).md>)
 - [💾 [MongoDB] 몽고DB는 어떻게 트랜잭션을 원자적으로 처리하는가?](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%5BMongoDB%5D%20%EB%AA%BD%EA%B3%A0%20DB%EB%8A%94%20%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98%EC%9D%84%20%EC%96%B4%EB%96%BB%EA%B2%8C%20%EC%9B%90%EC%9E%90%EC%A0%81%EC%9C%BC%EB%A1%9C%20%EC%B2%98%EB%A6%AC%ED%95%98%EB%8A%94%EA%B0%80%3F.md)
 - [💾 [MongoDB] 레플리카 셋 동기화는 어떻게 하는가?](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%5BMongoDB%5D%20%EB%A0%88%ED%94%8C%EB%A6%AC%EC%B9%B4%20%EC%85%8B%20%EB%8F%99%EA%B8%B0%ED%99%94%EB%8A%94%20%EC%96%B4%EB%96%BB%EA%B2%8C%20%ED%95%98%EB%8A%94%EA%B0%80%3F.md)
+- 💾 [MongoDB] 몽고 DB 쓰기
 
 </br>
 </br>
