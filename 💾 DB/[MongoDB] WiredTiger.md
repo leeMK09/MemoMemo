@@ -50,3 +50,107 @@
 - WiredTiger는 이때 key 하나에 대해 최신 값 하나만 덮어쓰기 하지 않고, 여러 버전 중 reader에게 visible한 버전을 골라준다
 - 중요한 점은 MongoDB의 document는 결국 WiredTiger 내부에서는 BSON value를 가진 record로 저장되고, WiredTiger는 record/key 단위로 version visibility를 판단한다는 것 이다
 - MongoDB 레벨에서는 document를 읽는다고 이해하지만 storage engine 레벨에서는 B-tree page 안의 key/value record에 대해 현재 transaction이 볼 수 있는 update를 찾는다에 가깝다
+
+</br>
+
+### 읽기 요청이 들어오면 WiredTiger는 어떤 기준으로 버전을 고르는가?
+
+- WiredTiger의 MVCC는 단순히 가장 최근 버전을 읽는 것이 아닌 읽기 transaction은 자기 snapshot을 갖고 있고, WiredTiger는 각 update가 이 snapshot에 포함되는지를 판단한다
+- WiredTiger transaction 문서에 따르면 transaction이 snapshot을 가지고 있으면 각 read는 update의 transaction id가 snapshot 안에 있는지 확인한다 이후 snapshot 안에 있는 transaction id나 snapshot의 가장 큰 transaction id 보다 큰 transaction id를 가진 update는 reader에게 보이지 않는다
+- 즉 어떤 reader가 시작될 때 WiredTiger는 현재 진행 중이던 transaction들과 내가 읽기 시작한 시점 이후에 생긴 transaction들을 구분할 수 있는 snapshot 정보를 잡는다
+- reader는 그 snapshot 기준으로 이미 commit되어 있던 변경은 볼 수 있지만, 그 시점에 아직 진행 중이던 transaction의 변경이나 나중에 시작된 transaction의 변경은 볼 수 없다
+
+**예시로 알아보기**
+
+```json
+// 예를 들어 transaction id(tx id) 흐름이 아래와 같다고 해보자
+
+T10 : 이미 commit 됨
+T11 : reader 시작 시점에 아직 진행 중
+T12 : reader 시작 후 시작됨
+
+```
+
+- 이 reader는 T10의 변경은 볼 수 있다 하지만 T11은 reader 가 시작될 때 아직 commit되지 않은 transaction 이었기 때문에, 나중에 commit 되더라도 이 reader의 snapshot 안에서는 보이지 않는다
+- T12는 reader보다 나중에 시작된 transaction이므로 당연히 보이지 않는다
+- 이것이 snapshot isolation 이며 WiredTiger 문서는 snapshot isolation에서 transaction은 transaction 시작 전에 commit된 record version을 읽고, dirty read와 non-repeatable read는 발생하지 않지만 phantom read는 가능하며, snapshot isolation은 serializable과 같지 않다고 설명한다
+- 특히 서로 다른 데이터를 갱신하는 두 transaction이 각자 상대방 시작 전 상태를 읽고 모두 commit되면, 어떤 직렬 실행으로도 설명되지 않는 write skew가 발생할 수 있다
+- 즉 MongoDB의 transaction을 사용한다고 해서 모든 동시성 이상 현상이 사라지는 것은 아니다, 특히 두 사람이 동시에 같은 조건을 읽고 서로 다른 document를 insert/update하는 경우에는 unique index나 별도 constraint 설계가 필요할 수 있다
+
+</br>
+
+### timestamp != transaction id
+
+- WiredTiger MVCC를 제대로 이해하려면 transaction id (tx id) 와 timestamp를 구분해야 한다
+- tx id 는 WiredTiger 내부에서 동시 transaction의 visibility를 판단하는 데 사용된다
+- 어떤 update가 reader가 시작될 때 이미 commit된 것인지, 아직 진행 중이던 것인지, reader 이후에 생긴 것인지 판단하는 데 관여한다
+- 반면 timestamp는 MongoDB가 WiredTiger에게 넘겨주는 논리적 시간에 가깝다
+- WiredTiger timestamp 문서에 따르면 timestamp는 wall-clock time과 반드시 같지 않은 application time이며 WiredTiger는 timestamp를 64 bit unsigned integer로 다루고, 값 자체를 실제 시계 시간으로 해석하지 않는다
+- WiredTiger 문서는 각 transaction에 read timestamp와 commit timestamp가 있으며, read timestamp는 read operation에 사용되는 application time이고 commit timestamp는 write operation에 사용되는 application time이 라고 설명한다
+- 각 database item의 value 변경은 timestamp와 연결되고, value는 어떤 시작 시간부터 다음 overwrite/remove 전까지의 time window를 갖는다
+- 즉 tx id 는 실행 시점의 동시성 판단에 가깝고 timestamp는 MongoDB 전체 복제/복구/majority commit/read concern 관점에서 이 변경이 어느 논리적 시점의 변경인가를 표현하는 데 가깝다
+- 그래서 버전 선택은 개념적으로 아래와 같다
+
+> reader 가 어떤 key를 읽는다
+>
+> 1. 최신 update부터 update chain을 따라간다
+> 2. 각 update에 대해 transaction id 기준으로 visible한지 본다
+> 3. timestamp가 있는 경우 read timestamp 이하인지 본다
+> 4. 두 조건을 모두 만족하는 첫 번째 버전을 반환한다
+> 5. 메모리 update chain에서 못 찾으면 disk image를 본다
+> 6. 그래도 못 찾으면 history store를 본다
+
+- 이 판단 때문에 MongoDB는 같은 document에 대해 여러 시점의 reader가 동시에 존재할 수 있다
+- 최신 reader는 최신 commit timestamp의 값을 읽고, 오래된 snapshot reader는 history store에 보간된 옛 값을 읽는다
+
+</br>
+
+### update chain은 실제로 어떤 식으로 생기는가
+
+**예시: 하나의 사용자 document가 있다고 가정**
+
+```json
+{
+    "_id": "user-1",
+    "point": 100
+}
+```
+
+```json
+// 처음에는 disk image에 point 100이 있다고 가정
+disk image: user-1 → point=100
+```
+
+```json
+// 이후 T20 transaction이 point를 120으로 바꾼다
+// WiredTiger는 기존 disk image를 즉시 덮어써서 없애는 방식이 아니라 메모리 안에 새로운 update를 붙인다
+update chain:
+    [point=120, txn=T20, commitTs=20] → null
+
+disk image:
+    [point=100]
+```
+
+```json
+// 그다음 T30이 point를 150으로 바꾸면 update chain의 head에 최신 update가 붙는다
+update chain:
+    [point=150, txn=T30, commitTs=30]
+        → [point=120, txn=T20, commitTs=20]
+        → null
+
+disk image:
+    [point=100]
+```
+
+- 이 상태에서 read timestamp 25로 읽는 transaction이 들어온다면?
+- WiredTiger는 먼저 head인 point 150을 본다
+- commit timestamp가 30이므로 read timestamp 25보다 미래이다
+- 따라서 이 reader에게는 보이면 안된다 그 다음 point 120을 본다
+- commit timestamp가 20이므로 read timestamp 25이하이다, transaction id 기준으로도 visible하다면 이 reader는 point 120을 읽는다
+- 반대로 read timestamp 35인 reader는 point 150을 읽는다
+- 이처럼 같은 시점에 서로 다른 reader가 서로 다른 값을 읽는 것이 MVCC의 핵심이다
+- 여기서 중요한 운영 포인트는 오래된 reader가 계속 살아 있으면, WiredTiger는 그 reader가 필요로 할 수 있는 과거 버전을 함부로 버릴 수 없다
+- 그래서 오래 열린 transaction 오래 도는 aggregation, 오래 유지되는 cursor는 history store와 cache에 압력을 준다
+    - large, long-running transaction이 cache pressure를 만들 수 있고, transaction이 끝나기 전까지 해당 상태가 in-memory에 유지되어 evict될 수 없으며, cache 가 trigger 이상으로 올라가면 application thread가 eviction에 동원되어 latency가 증가할 수 있다
+- 이 부분이 장애 포인트에서 자주 보이는 갑자기 MongoDB가 느려졌다의 원인이 될 수 있다
+    - 단순히 CPU가 높아서가 아닌 오래 열린 snapshot이 과거 버전을 pinning하고 그 결과 WiredTiger cache가 비워지지 못하고, 결국 application thread가 자기 요청 처리 대신 eviction 작업에 끌려 들어가면서 응답 시간이 튀는 구조가 된다
