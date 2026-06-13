@@ -17,6 +17,8 @@ await fs.promises.writeFile("copy.bin", data);
 - 즉 Stream은 단순 편의 API가 아니라 큰 데이터와 느린 I/O를 애플리케이션이 메모리 안정적으로 처리하기 위한 런타임 레벨 추상화이다
     - Stream은 데이터 자체가 아닌 데이터가 시간에 따라 조각으로 이동하는 흐름을 다루는 모델
 
+</br>
+
 ### Stream 의 처리 흐름
 
 - 애플리케이션 프로세스는 디스크나 네트워크 카드에 직접 접근하지 않는다
@@ -36,6 +38,8 @@ await fs.promises.writeFile("copy.bin", data);
 - 큰 chunk로 읽으면 syscall overhead는 줄어들지만 한 번에 버퍼링하는 메모리가 커지고, 느린 destination을 만났을 때 메모리 압박이 커질 수 있다
 - 그래서 Stream의 `highWaterMark` 같은 개념이 나온다
 
+</br>
+
 ### Buffer 와 Stream
 
 - Buffer는 데이터 조각이다 더 정확히 말하면 바이너리 데이터를 담는 메모리 영역이다
@@ -46,6 +50,8 @@ await fs.promises.writeFile("copy.bin", data);
 - 그래서 CSV 한 줄, JSON 하나, TCP 메시지 하나, 한글 문자 하나가 chunck 경계와 정확히 맞는다는 보장은 없다
 - TCP는 message protocol이 아니라 byte stream이기 때문이다 그래서 애플리케이션 레벨에서는 반드시 framing이 필요하다
 - 줄 단위 프로토콜이면 `\n` 을 기준으로 자르고 바이너리 프로토콜이면 length-prefix를 붙이고 HTTP/2 나 gRPC는 자체 frame 구조를 둔다
+
+</br>
 
 ### Readable Stream
 
@@ -82,6 +88,8 @@ for await (const chunk of readable) {
 - Readable의 트레이드 오프는 단순하다 자동으로 흐르게 하면 처리량은 좋아질 수 있지만 소비사 속도 제어가 어려워진다
 - 소비자가 직접 당겨가게 하면 제어는 쉬워지지만 구현 방식에 따라 처리량이 낮아질 수 있다
 - 그래서 실무에서는 source가 빠르고 처리 로직이 무거우면 async iterator나 pipeline을 사용하고 단순 전달이면 pipe/pipeline을 쓰는 식으로 선택한다
+
+</br>
 
 ### Writable Stream
 
@@ -122,6 +130,8 @@ async function writeAll(writable, chunks) {
 - 이 코드는 단순해 보이지만 매우 중요하다
 - `write()` 가 false를 반환했는데 무시하면 consumer가 느리다는 신호를 무시하고 producer가 계속 밀어붙이는 것이다
 - 그 순간 Stream의 장점이 사라진다
+
+</br>
 
 ### Backpressure 는 Stream 의 핵심
 
