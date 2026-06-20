@@ -154,3 +154,32 @@ disk image:
     - large, long-running transaction이 cache pressure를 만들 수 있고, transaction이 끝나기 전까지 해당 상태가 in-memory에 유지되어 evict될 수 없으며, cache 가 trigger 이상으로 올라가면 application thread가 eviction에 동원되어 latency가 증가할 수 있다
 - 이 부분이 장애 포인트에서 자주 보이는 갑자기 MongoDB가 느려졌다의 원인이 될 수 있다
     - 단순히 CPU가 높아서가 아닌 오래 열린 snapshot이 과거 버전을 pinning하고 그 결과 WiredTiger cache가 비워지지 못하고, 결국 application thread가 자기 요청 처리 대신 eviction 작업에 끌려 들어가면서 응답 시간이 튀는 구조가 된다
+
+### history store는 왜 필요한가?
+
+- update chain이 계속 길어지면 메모리를 너무 많이 먹는다
+- 그렇다고 오래된 버전을 바로 버리면 오래된 snapshot reader가 읽을 값이 사라진다
+- 이 사이를 해결하기 위해 WiredTiger는 오래된 버전을 history store로 옮길 수 있다
+- MongoDB 문서에 따르면 MongoDB는 snapshot history를 `WiredTigerHS.wt`파일에 유지한다
+- `minSnapshotHistoryWindowInSeconds` 값을 늘리면 서버가 지정된 시간 동안 오래된 수정 값을 유지해야 하므로 disk 사용량이 증가한다
+- 쉽게 이야기해서 history store는 오래된 snapshot reader를 위한 과거 버전의 창고이다
+- 최신 버전은 update chain 이나 disk image에 남고, 오래된 버전은 history store로 이동할 수 있다
+- 하지만 history store는 공짜가 아니다
+- 오래된 snapshot이 많거나 update가 많은 workload에서는 history store가 커진다
+- history store가 커지면 디스크 사용량이 늘고, 오래된 read가 많아질수록 history store 조회 비용이 생긴다
+- 또한 checkpoint, eviction, reconciliation이 더 복잡해진다
+- 예를 들어 `users` 의 point를 자주 갱신한다고 가정한다면 동시에 어떤 관리자 화면이 오래 걸리는 aggregation을 실행할때 오래된 snapshot을 붙잡고 있는다
+- 그 사이 point update가 계속 발생하면 WiredTiger는 최신 point만 유지할 수 없고, 관리자 aggregation이 볼 수 있어야 하는 과거 버전들을 유지해야 한다
+- 이 과거 버전들이 history store에 쌓이면 디스크와 cache에 부담이 생기게 된다
+
+### writer는 기존 값을 어떻게 바꾸는가?
+
+- MVCC 에서 writer는 개념적으로 기존 값을 직접 파괴하지 않고 새 버전을 만든다
+- 물론 실제 물리 저장 구조에서는 B-tree page, memory buffer, reconciliation, checkpoint 과정이 얽혀 있으므로 항상 새 파일 위치에 append만 한다처럼 단순화할 수 없다
+- 그러나 visibility 관점에서는 writer가 새 update record를 만들고, reader는 자기 snapshot 기준으로 기존 버전 또는 새 버전 중 하나를 선택한다
+- MongoDB 레벨에서 사용자가 `updateOne({ _id: "user-1", }, { $inc: { point: 10 }})` 를 호출하면, MongoDB는 query predicate를 만족하는 document를 찾고, update modifier를 적용한 새 BSON 상태를 만들고, WiredTiger storage transaction 안에서 해당 record의 update를 생성한다
+- 이 update는 즉시 모든 reader에게 보이는 것이 아니라, transaction commit 상태와 timestamp visibility 조건을 통과해야 보인다
+- 만약 두 writer 가 같은 document를 동시에 바꾼다면 WiredTiger는 optimistic concurrency control을 사용하기 때문에 두 writer를 처음부터 큰 락으로 잡아두지 않는다
+- 둘 다 진행할 수 있지만, 같은 document/version을 수정하려는 충돌이 감지되면 하나가 write conflict를 겪는다
+- MongoDB 문서는 storage engine이 두 작업 사이의 conflict 를 감지하면 하나의 작업이 write conflict를 겪고 MongoDB가 해당 작업을 투명하게 재시도한다
+- MongoDB가 내부적으로 재시도할 수 있는 범위가 있지만, transaction 전체나 애플리케이션 레벨의 부작용까지 자동으로 exactly-once으로 만들어주지는 않는다
