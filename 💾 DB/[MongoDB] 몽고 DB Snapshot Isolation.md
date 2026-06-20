@@ -44,6 +44,23 @@
     - 트랜잭션 내부에서 문서를 읽을 때 해당 문서의 여러 버전 중에서 트랜잭션의 read timestamp 이전에 커밋된 버전만 선택하고 나머지는 전부 무시한다
     - 이 때문에 같은 문서를 여러 번 읽어도 결과가 동일하고 다른 트랜잭션의 변경으로 결과가 바뀌지 않는다
 
+> 예를 들어 서비스에 한 유저는 동시에 활성 쿠폰을 최대 1개만 가질 수 있다는 규칙이 있다고 가정
+> 쿠폰이 별도 document로 저장되어 있고, 두 transaction이 동시에 실행된다
+>
+> - T1: user-1의 활성 쿠폰이 있는지 조회 → 없음
+> - T2: user-1의 활성 쿠폰이 있는지 조회 → 없음
+> - T1: coupon-A를 active로 insert
+> - T2: coupon-B를 active로 insert
+> - 둘다 서로 다른 document를 insert하므로 write conflict가 안 날 수 있음
+> - 결과: user-1에게 active coupon이 2개 생김
+
+- 각 transaction은 자기 snapshot 기준으로 활성 쿠폰이 없었다는 판단을 했다
+- 하지만 전체 결과는 비즈니스 규칙을 깨뜨린다
+    - 이것이 snapshot isolation의 대표적인 write skew 이다
+- 이 문제를 해결하려면 transaction만 믿으면 안된다
+- MongoDB 에서는 `userId + active` 같은 unique index 설계, 상태 문서 하나에 조건부 update를 거는 방식, 또는 유저별 쿠폰 상태를 하나의 document 안에 모으는 모델링을 고려해야 한다
+- 즉 MongoDB 에서 consistency 를 지키려면 MVCC 격리 수준과 데이터 모델링을 같이 설계해야 한다
+
 **Snapshot Isolation 을 트랜잭션에서만 제공하는 이유**
 
 간단하게 정의하자면 Snapshot Isolation 은 비용이 발생한다
