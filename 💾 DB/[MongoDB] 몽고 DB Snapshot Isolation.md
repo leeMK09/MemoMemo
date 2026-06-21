@@ -103,3 +103,58 @@
 
 - 장애가 Checkpoint 직전에 발생하면 최근 변경분 중 일부는 데이터 파일에 없을 수 있지만 WAL 이 남아있으면 복구 과정에서 재적용된다
 - 다만 I/O 병목이나 Checkpoint 지연이 큰 환경에서는 복구 시간이 길어질 수 있으므로 Dirty Page 누적과 디스크 쓰기 지연을 운영 지표로 함께 관리해야 한다
+
+</br>
+
+### checkpoint 와 MVCC
+
+- MVCC는 메모리에서 여러 버전을 관리한다
+- 하지만 데이터베이스는 결국 디스크에 영속성 데이터를 남겨야 한다
+- WiredTiger는 checkpoint를 통해 특정 시점의 일관된 snapshot을 data file에 기록한다
+- MongoDB 문서에 따르면 WiredTiger는 데이터를 disk에 쓸 때 snapshot의 모든 데이터를 여러 data file에 일관되게 기록하고, durable해진 데이터는 checkpoint 역할을 한다
+- checkpoint는 마지막 checkpoint까지 data file에 일관된 상태임을 보장하며, MongoDB는 기본적으로 WiredTiger checkpoint를 60초 간격으로 생성한다
+- 새 checkpoint를 쓰는 동안 이전 checkpoint는 여전히 유효하고, 새로운 checkpoint는 WiredTiger metadata table이 원자적 업데이트되어 새로운 checkpoint를 참조하게 될 때 영구적인 접근이 가능하게 된다
+- 즉 WiredTiger는 매 write마다 data file을 완전히 최신 상태로 동기화하지 않고 매 write 마다 모든 관련 page를 fsync 하면 매우 느리기 때문이다
+- 대신 메모리와 journal을 사용하고, 주기적으로 checkpoint를 만들어 여기까지는 data file 만으로도 일관된 복구 지점이다는 기준점을 만든다
+- 이 구조에서 MVCC가 중요한 이유는 checkpoint 역시 아무 값이나 마구 쓰면 안되기 때문이다
+- checkpoint는 일관된 snapshot이어야 하며 어떤 key는 T100까지 반영하고 다른 key는 T90까지만 반영했는데 둘 사이의 transaction 관계가 깨져 있다면 복구 후 데이터가 논리적으로 깨질 수 있다
+- 그래서 WiredTiger는 snapshot과 timestamp, stable timestamp 같은 개념을 통해 checkpoint에 들어갈 수 있는 안정된 버전과 아직 임시 데이터의 버전을 구분한다
+- 이것이 MongoDB replication rollback과도 연관된다
+- Primary 였던 노드가 다른 노드들과 네트워크가 끊긴 상태에서 write를 받았는데 그 write가 majority commited 되지 못했고, 이후 다른 노드가 새 Primary가 되면 기존 Primary의 일부 변경은 rollback되어야 할 수 있다
+- WiredTiger의 timestamp, stable timestamp, oplog, checkpoint, journal은 이 복구/rollback 흐름의 기반이 된다
+
+</br>
+
+### journal 과 MVCC
+
+- MVCC가 누가 어떤 버전을 볼 수 있는가를 해결한다면, journal은 장애 후 어떤 변경을 복구할 수 있는가를 해결한다
+- MongoDB 문서에 따르면 WiredTiger는 checkpoint와 함께 write-ahead log, 즉 journal을 사용해 durability를 보장한다
+- journal은 checkpoint 사이의 모든 data modification을 보존하고 MongoDB가 checkpoint 사이에 종료되면 마지막 checkpoint 이후 변경을 journal로 replay한다
+- MongoDB 프로세스가 write를 처리할 때 변경은 먼저 WiredTiger cache에 반영된다
+- 그다음 durability가 필요한 변경은 journal record로 만들어지며 이 journal write는 운영체제의 page cache를 거쳐 storage device로 내려간다
+- 단순히 `write()` 시스템콜이 반환되었다고 해서 물리 NAND flash에 영구 반영되었다고 단정할 수는 없다
+- 커널 page cache, 파일 시스템 journal, block layer, storage controller cache, NVMe/SATA device cache가 사이에 있기 때문이다
+- 그래서 DB는 fsync 또는 fdatasync 계열 flush, storage barrier, write ordering을 통해 로그가 먼저 durable해진 뒤 page data가 나중에 checkpoint로 내려가도 복구 가능하다는 전제를 세운다
+- 정리하면 journal은 MVCC 의 버전 선택 규칙 자체는 아니지만 MVCC가 만든 변경들이 장애 후에도 commit 된 상태로 복구될 수 있게 만드는 내구성 계층이다
+
+</br>
+
+### eviction, reconciliation, checkpoint 와 MVCC
+
+- WiredTiger는 B-tree 기반 저장 구조를 사용한다
+- 데이터와 인덱스 page는 WiredTiger cache에 올라오고, update가 발생하면 page와 update chain이 메모리에서 바뀐다
+- 하지만 cache는 무한하지 않으므로 언젠가 page를 내보내야 한다
+    - 이 과정을 eviction이라고 한다
+- MongoDB의 WiredTiger 문서는 cache 사용량이 target보다 낮으면 eviction이 발생하지 않고, target 이상 trigger 미만이면 internal thread가 eviction을 수행하며, trigger 이상이면 application thread가 자기 작업을 멈추고 eviction에 동원될 수 있다고 설명한다
+- 또한 large, long-running transaction은 cache pressure 상황에서 application thread가 eviction에 동원되어 latency가 증가하는 문제와 연결된다고 설명한다
+- Eviction이 단순히 메모리 page를 버리는 것이라면 쉬울 것 같지만 MVCC 때문에 복잡해진다
+- 어떤 page에 여러 key가 있고 각 key마다 여러 버전이 있을 수 있다
+- Eviction/reconciliation 과정은 이 page를 disk에 어떤 형태로 기록할 것인가, 어떤 최신 버전을 disk image로 만들 것인가, 어떤 오래된 버전을 history store로 옮길 것인가, 아직 active reader가 필요로 하는 버전을 버리면 안 되는가를 판단해야 한다
+- 예를 들어 어떤 page 안에 `user-1`, `user-2`, `user-3`이 있고 각 user document가 여러 번 갱신되었다고 가정하자
+- 최신 reader에게는 최신 값만 필요하지만, 오래된 transaction이 아직 read timestamp 100으로 열려 있으면 timestamp 100 기준의 값도 필요하다
+- 이때 eviction은 최신 값만 disk에 쓰고 옛 버전은 버릴 수 없다, 옛 버전은 history store에 남겨야 할 수 있다
+    - 이 작업이 많아질수록 eviction 비용이 증가하게 된다
+- 운영에서 이 구조는 매우 중요하다, 오래 걸리는 transaction이나 cursor가 많으면 `oldest timestamp` 또는 pinned timestamp가 앞으로 가지 못한다
+- WiredTiger timestamp 문서는 pinned timestamp가 oldest timestamp와 현재 실행 중인 transaction들의 read timestamp 중 최소값이며, 오래된 데이터를 drop하거나 garbage collect할때 실제 lower bound로 사용된다고 설명한다
+- 즉 오래된 reader 하나가 나는 아직 timestamp 100을 보고 있다 라고 붙잡고 있으면, WiredTiger는 timestamp 100 이후의 과거 버전들을 함부로 정리하지 못한다
+- 이 상태에서 write가 계속 들어오면 history store와 cache가 커지고, eviction이 어려워지고, 결국 application thread stall로 이어질 수 있다
