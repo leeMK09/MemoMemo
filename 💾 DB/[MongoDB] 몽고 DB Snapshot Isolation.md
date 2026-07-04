@@ -158,3 +158,62 @@
 - WiredTiger timestamp 문서는 pinned timestamp가 oldest timestamp와 현재 실행 중인 transaction들의 read timestamp 중 최소값이며, 오래된 데이터를 drop하거나 garbage collect할때 실제 lower bound로 사용된다고 설명한다
 - 즉 오래된 reader 하나가 나는 아직 timestamp 100을 보고 있다 라고 붙잡고 있으면, WiredTiger는 timestamp 100 이후의 과거 버전들을 함부로 정리하지 못한다
 - 이 상태에서 write가 계속 들어오면 history store와 cache가 커지고, eviction이 어려워지고, 결국 application thread stall로 이어질 수 있다
+
+</br>
+
+## read concern 과 MVCC
+
+- MongoDB에서 `readConcern`을 바꾸면 애플리케이션이 어떤 시점의 데이터를 읽을지 달라진다
+- 이때 WiredTiger의 MVCC 와 timestamp가 실제 기반 역할을 한다
+- `local`에 가까운 읽기는 현재 노드가 알고 있는 최신 commited state를 빠르게 읽는 성격이 강하다
+- latency가 낮지만, replica set failover나 rollback 상황에서는 나중에 사라질 수 있는 데이터를 읽었을 가능성을 고려해야 한다
+- `majority` read concern은 majority commited된 데이터만 읽도록 하여 rollback 가능성이 낮은 데이터를 보려는 목적을 갖는다
+- 이때 MongoDB는 replication layer의 majority commit point와 storage engine의 timestamp visibility를 연결해서 어느 timestamp까지는 majority commited 되었다고 볼 수 있는가를 관리한다
+- `snapshot` read concern은 transaction에서 특정 snapshot을 기준으로 여러 read가 같은 시점의 일관된 view를 보도록 한다
+- WiredTiger의 snapshot isolation 과 read timestamp가 여기에 연결된다
+- 장애 대응에서 중요한 것은 `readConcern`이 단순한 옵션이 아니라는 점이다
+    - 예를 들어 사용자가 영수증을 업로드한 직후 자신의 포인트를 조회하는 API 가 Secondary에서 `local` 수준으로 읽으면, replication lag 때문에 방금 쓴 포인트가 안 보일 수 있다
+    - 반대로 모든 읽기가 majority/snapshot으로 강하게 가져가면 latency 와 resource 사용량이 증가할 수 있다
+- 결국 MVCC는 다양한 일관성 레벨을 구현할 수 있게 해주지만, 애플리케이션이 어떤 데이터에 어떤 일관성을 요구하는지는 따로 설계해야 한다
+
+</br>
+
+## concurrent write 와 oplog hole
+
+- MongoDB 는 동시 write 를 직렬화하지 않는다
+- 성능을 위해 여러 write가 동시에 진행될 수 있다, 그런데 replica set 에서 oplog 는 timestamp 순서로 읽힌다
+- MongoDB storage README 에 따르면 MongoDB는 concurrent write를 지원하기 때문에 out-of-order commit이 발생할 수 있고, 나중 timestamp를 가진 write가 먼저 commit 되면 일시적으로 oplog hole이 생길 수 있다
+- timestamp는 storage transaction commit 전에 할당되며, 모든 write를 serialize하면 성능이 떨어지기 때문에 out-of-order write를 지원한다고 설명한다
+- 예를 들어 Writer A가 timestamp T5를 받고, Writer B가 timestamp T6를 받았다고 가정
+    - 그런데 B가 먼저 commit 되면 oplog에는 T6이 보이지만 T5는 아직 비어 있는 hole 상태가 된다
+    - 이때 Secondary가 oplog를 timestamp 순서로 읽다가 T6까지 읽어버리면, 나중에 들어온 T5를 놓칠 수 있다
+    - MongoDB README는 이런 문제를 막기 위해 oplog 의 in-memory no-holes point 를 추적하고 oplogReadTimestamp를 사용해 forward cursor oplog reader가 hole을 지나치지 않도록 한다고 설명한다
+- 이 부분은 MVCC와 replication이 만나는 지점이다
+- WiredTiger는 동시 write를 허용해서 성능을 얻는다 하지만 replica set은 oplog를 빠짐없이 순서대로 복제해야 한다
+- 그래서 MongoDB는 동시성을 허용하면서도 복제 reader 가 hole을 건너뛰지 않게 하는 별도 visibility rule을 둔다
+- 운영 관점에서는 이것이 MongoDB는 내부적으로 꽤 복잡한 순서 보장 장치를 갖고 있다는 의미이다
+- 사용자는 단순히 insert/update를 날리지만, 내부에는 transaction id, commit timestamp, durable timestamp, oplog visibility, no-holes point, majority commit point가 함께 맞아야 replica set 일관성이 유지된다
+
+</br>
+
+## OS 레벨에서 MVCC 가 성능에 주는 영향
+
+- MVCC는 동시성을 높이지만, OS와 하드웨어 관점에서는 비용도 만든다
+- 첫째, MVCC는 메모리 사용량을 증가시킬 수 있다
+    - 최신 값 하나만 유지하는 방식이라면 메모리에 최신 page만 있으면 된다
+    - 하지만 MVCC 에서는 active reader가 필요로 하는 옛 버전도 보관해야 한다
+    - 이 옛 버전은 WiredTiger cache 혹은 history storage에 남는다
+    - 그 결과 working set이 커지고, cache miss가 늘고, OS page cache 와 WiredTiger internal cache 사이의 갭이 증가하게 된다
+- 둘째, MVCC는 write amplification을 만들 수 있다
+    - document 하나를 여러 번 update하면 최신 값만 덮어쓰는 것이 아닌 update chain, history store, journal, checkpoint, index update가 함께 발생하게 된다
+    - 특히 인덱스가 많으면 document update 하나가 여러 index B-tree page 변경으로 확장된다
+    - 이 변경들은 WriedTiger cache에서 dirty page를 만들고, journal 에는 redo 가능한 record를 남기며, checkpoint 시점에는 dirty page flush 를 발생시킨다
+- 셋째, MVCC는 disk I/O 패턴을 복합적으로 만든다
+    - Journal은 비교적 append-friendly한 write에 가깝지만, checkpoint와 eviction은 B-tree page를 여러 위치에 쓰는 패턴을 만들 수 있다
+    - History store도 별도 파일에 과거 버전을 쓰고 읽는다
+    - SSD에서는 random write가 HDD보다 훨씬 낫지만 queue depth가 높아지거나 device 내부 garbage collection이 겹치면 p99 latency 가 될 수 있다
+- 넷째, 오래된 snapshot은 garbage collection을 막는다
+    - OS 관점에서 보면 이는 메모리를 비울 수 없는 상태와 비슷하다
+    - WiredTiger가 cache를 비우고 싶어도 특정 transaction이 아직 필요로 하는 버전이 있으면 안전하게 제거할 수 없다
+    - 그러면 eviction thread가 더 많이 일하고, application thread까지 동원되며 CPU는 높은데 실제 요청 처리량은 떨어지는 형상이 발생할 수 있다
+- 이런 이유로 MongoDB 장애를 분석할 때는 단순히 CPU, Memory만 보면 안되고 cache dirty bytes, cache eviction stats, history store size, trnasction durable ... 등을 같이 봐야한다
