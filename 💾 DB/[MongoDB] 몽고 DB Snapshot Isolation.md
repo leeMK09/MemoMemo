@@ -217,3 +217,60 @@
     - WiredTiger가 cache를 비우고 싶어도 특정 transaction이 아직 필요로 하는 버전이 있으면 안전하게 제거할 수 없다
     - 그러면 eviction thread가 더 많이 일하고, application thread까지 동원되며 CPU는 높은데 실제 요청 처리량은 떨어지는 형상이 발생할 수 있다
 - 이런 이유로 MongoDB 장애를 분석할 때는 단순히 CPU, Memory만 보면 안되고 cache dirty bytes, cache eviction stats, history store size, trnasction durable ... 등을 같이 봐야한다
+
+</br>
+
+### 장애 케이스 MVCC
+
+**오래 걸리는 조회 하나가 왜 쓰기 장애를 일으키는가?**
+
+- 예를 들어 관리자가 지난 30일 영수증 OCR 결과 통계를 MongoDB에서 직접 aggregation 으로 조회했다고 가정
+- 이 aggregation이 오래 걸리고, cursor가 오랫동안 살아 있는다.
+- 동시에 사용자는 계속 영수증을 업로드하고, OCR 결과 document가 계속 insert/update된다
+- 이때 오래 걸리는 aggregation은 특정 snapshot을 붙잡는다
+- WiredTiger는 이 aggregation이 시작된 시점의 consistent view를 유지해야 한다
+- 그 사이 writer들은 최신 document를 계속 만든다
+- 최신 reader는 최신 값을 읽으면 되지만, 오래된 aggregation은 시작 시점의 값을 읽어야 하므로 WiredTigre는 과거 버전을 버리지 못하게 된다
+- 점점 write volume이 높아지면 update chain과 history store가 커진다
+- WiredTiger cache에 dirty data 와 old version이 쌓이며 Eviction이 어려워진다
+- Cache가 trigger 이상으로 올라가면 application thread가 eviction에 동원된다
+- 그 결과 일반 API 요청의 latency가 증가하며 심하면 transaction이 abort되거나 write conflict retry가 늘거나, checkpoint가 길어지고, Secondary replication lag까지 증가할 수 있다
+- 이 문제는 오래 열린 snapshot이 MVCC 버전 정리를 막는다
+
+**hot document update가 왜 write conflict를 만드는가?**
+
+- 모든 사용자의 출석 체크 수를 하나의 통계 document에 누적한다고 가정
+
+```json
+{
+    "_id": "daily-attendance-stat-2026-05-17",
+    "count": 100000
+}
+```
+
+- 모든 출석 요청이 document 하나에 $inc를 수행하면, MongoDB는 document-level concurrency control을 사용하므로 같은 document에 대한 write가 계속 충돌할 수 있다
+- WiredTiger는 optimistic하게 진행시키지만, 같은 document의 같은 version을 여러 writer가 동시에 바꾸려고 하면 write conflict가 발생하고 재시도 비용이 생긴다
+- MVCC는 reader와 writer의 blocking을 줄이는 데 강하지만, 같은 document에 write가 몰리는 hot spot을 없애지 못한다
+- 이 경우 해결책은 통계 document를 shard처럼 나누는 것 이다
+- 예를 들어 100개 bucket document에 분산해서 $inc하고, 조회 시 합산하는 방식으로 write contention을 줄일 수 있다
+
+```json
+daily-attendance-stat-2026-05-17-bucket-00
+daily-attendance-stat-2026-05-17-bucket-01
+...
+daily-attendance-stat-2026-05-17-bucket-99
+```
+
+- 이렇게 하면 writer들이 서로 다른 document를 갱신하므로 document-level concurrency control의 장점을 살릴 수 있다
+- MongoDB에서 성능을 내리면 MVCC를 이해하는 것뿐 아니라, write contention이 생기지 않도록 document 모델을 설계해야 한다
+
+**history store 가 커지는 이유**
+
+- History store가 커지는 대표적인 원인은 오래된 snapshot + 많은 update 이다
+- insert만 많은 workload보다 update/delete 가 많은 workload에서 과거 버전 유지 비용이 더 눈에 띌 수 있다
+- insert는 과거 버전이 없거나 적지만, update/delete는 이전 값이 reader에게 필요할 수 있기 때문이다
+- 예를 들어 `receipts` document의 OCR 상태가 `PENDING → PROCESSING → COMPLETED → REWARDED` 로 빠르게 바뀐다고 가정
+- 동시에 오래된 read transaction이 `PENDING` 시점의 snapshot을 붙잡고 있으면, WiredTiger는 이후 상태 변경을 하면서도 이전 상태 변경을 일정 기간 유지해야 한다
+- 이 작업이 대량으로 발생하면 history store가 커질 수 있다
+- MongoDB 문서가 `minSnapshotHistoryWindowInSeconds`를 늘리면 오래된 수정 값들을 더 오래 유지해야 해서 disk 사용량이 증가한다고 설명하는 이유가 바로 이것이다
+- 운영에서 history store 증가가 보이면 디스크 부족으로 용량을 늘리자로 끝내면 안되고 왜 오래된 snapshot이 유지되는지, 어떤 transaction/cursor가 오래 살아 있는지, long-running query가 있는지 batch job이 primary에서 돌고 있는지, secondary lag가 있는지 같이 봐야한다
