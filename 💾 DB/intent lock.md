@@ -88,3 +88,73 @@ Document   : WiredTiger가 document-level concurrency control로 실제 충돌 �
 - 그래서 여러 요청이 같은 collection 안의 서로 다른 document를 동시에 update할 수 있다
 - 실제 같은 document 를 동시에 바꾸려는 충돌은 WiredTiger가 optimistic concurrency control로 감지한다
 - 즉 `IX` 는 컬렉션 자체를 막는 쓰기 잠금이 아니고 `IX` 는 컬렉션 아래 어딘가에서 쓰기할 예정이라는 의도 표시이다
+
+</br>
+
+## 조회할 때는 어떻게 되는가?
+
+```javascript
+db.receipts.find({ userId: "user-1" });
+```
+
+- 이 조회는 document들을 읽는다
+- 이때 MongoDB는 상위 리소스에 `IS` 를 잡는다
+- 개념적으로는 다음과 같다
+
+```text
+Global   : IS
+Database : IS
+Collection: IS
+Document : WiredTiger snapshot/MVCC로 visible version 선택
+```
+
+- 이 조회 작업은 컬렉션 전체를 exclusive하게 바꾸려는 작업과는 충돌해야 한다
+- 이유는 읽는 도중 컬렉션이 drop 되거나 rename되면 안 되기 때문이다
+- 하지만 다른 일반적인 document update와는 공존할 수 있어야 한다
+- MongoDB와 WiredTiger 는 MVCC를 사용하기 때문에 reader는 writer가 만든 최신 버전을 기다리지 않고 자기 snapshot 기준으로 볼 수 있는 버전을 읽을 수 있다
+- 그래서 `IS`와 `IX`는 함께 존재할 수 있다
+- 한 작업은 아래에서 읽을 예정이고 다른 작업은 아래에서 쓸 예정이다
+- 이 둘이 상위 resource 수준에서 공존할 수 있어야 MongoDB가 동시에 읽기와 쓰기를 처리할 수 있다
+- 단 collection 전체에 `X`가 필요한 작업은 다르다
+- `X`는 다른 모든 모드와 공존할 수 없다
+- MongoDB 문서도 exclusive lock은 다른 어떤 lock mode와도 공존할 수 없고 shared lock은 intent shared와만 공존할 수 있다고 설명한다
+
+**호환성 테이블**
+
+```text
+        IS     IX      S      X
+IS      가능   가능    가능   불가
+IX      가능   가능    불가   불가
+S       가능   불가    가능   불가
+X       불가   불가    불가   불가
+```
+
+- 이 표에서 가장 중요한 것은 `IS` 와 `IX` 가 서로 공존 가능하다는 점이다
+- 이것이 일반적인 읽기와 쓰기가 같은 database/collection 아래에서 동시에 진행할 수 있게 해준다
+- 또 하나 중요한 것은 `IX` 와 `S` 가 충돌한다는 점이다
+- `S`는 해당 리소스 자체를 공유 모드로 읽겠다는 뜻이다
+- 예를 들어 컬렉션 전체에 대해 일관된 공유 접근이 필요한 작업이 컬렉션에 `S`를 잡았는데 동시에 누군가 그 컬렉션 아래 document를 쓰겠다고 `IX`를 잡으면, 컬렉션 전체를 안정적으로 읽는다는 보장이 깨질 수 있다
+- 그래서 `S` 와 `IX` 는 공존하지 않는다
+- 마지막으로 `X` 는 모든 것과 충돌한다
+- `X` 는 해당 리소스를 배타적으로 소유하겠다는 의미이기 때문에, 그 아래에서 읽으려는 의도도, 쓰려는 의도도, 해당 리소스를 실제 읽는 작업도 모두 막아야 한다
+
+</br>
+
+## intent lock 이 없다면?
+
+- 사용자 A 의 요청이 `receipts` 컬렉션 안의 `receipt-1` 문서를 수정하고 있다
+- 이 작업은 `document-level lock` 또는 WiredTiger 의 OCC만 사용한다고 가정한다
+    - `WiredTiger OCC` : OCC (Optimistic Concurrency Control, 낙관적 동시성 제어)
+        - lock 대기를 줄이고 동시성을 높임, 트랜잭션 진행 중에는 충돌을 검사하지 않고 데이터를 변경하다, 커밋 시점에 write-write 충돌이 발생했는지 확인하며 충돌이 있으면 트랜잭션을 중단하고 재시도한다
+- 동시에 관지가 작업이 `receipts` 컬렉션을 drop하려고 한다
+- 이때 drop 작업은 컬렉션 전체를 지워도 되는지 판단해야 한다
+- 그런데 document-level 잠금만 있다면 drop 작업은 컬렉션 아래의 모든 document에 누가 작업 중인지 확인해야 한다
+- 컬렉션에 document가 수천만 개라면 이 것은 불가능에 가깝다
+- 또는 drop 작업이 document-level 작업을 모르고 그냥 진행하면, 한쪽은 document를 수정 중인데 다른 쪽은 컬렉션을 지우는 모순이 생긴다
+- intent lock은 이 문제를 계층적으로 해결한다
+- document update 작업은 상위 collection에 `IX`를 남긴다
+- drop collection 작업은 collection 에 `X`를 잡으려 한다
+- lock manager 는 `IX` 와 `X`가 충돌한다는 것만 보면 된다
+- 하위 document를 일일이 확인하지 않아도 된다
+- 즉 intent lock은 하위 리소스 잠금 상태를 상위 리소스에 요약해서 표시하는 장치이다
+- 이 장치 덕분에 MongoDB는 document-level concurrency 와 collection/database-level 관리 작업을 동시에 안전하게 조율할 수 있다
