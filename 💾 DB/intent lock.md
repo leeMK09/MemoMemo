@@ -158,3 +158,46 @@ X       불가   불가    불가   불가
 - 하위 document를 일일이 확인하지 않아도 된다
 - 즉 intent lock은 하위 리소스 잠금 상태를 상위 리소스에 요약해서 표시하는 장치이다
 - 이 장치 덕분에 MongoDB는 document-level concurrency 와 collection/database-level 관리 작업을 동시에 안전하게 조율할 수 있다
+
+</br>
+
+## intent lock 과 WiredTiger MVCC 의 관계
+
+- WiredTiger 의 MVCC 는 document 또는 record 버전의 visibility를 다룬다
+- 어떤 reader가 어떤 version을 볼 수 있는지, 어떤 writer가 같은 document를 동시에 바꾸려 할 때 write conflict가 나는지, 오래된 snapshot 때문에 history store가 커지는지 같은 문제를 해결한다
+- 반면 intent lock은 MongoDB server layer의 lock manager가 global, database, collection 같은 상위 리소스의 동시 접근을 조율하는 장치이다
+- 즉 둘은 같은 동시성 제어 범주에 있지만 담당하는 범위가 다르다
+- MongoDB Lock Manager
+    - Global / Database / Collection 수준의 S, X, IS, IX 관리
+    - drop, rename, index build, command, DDL 성 작업과 일반 CRUD의 충돌 조율
+    - 상위 리소스에 대해 지금 안전하가?를 판단
+- WiredTiger Storage Engine
+    - Document / record 수준의 MVCC와 optimistic concurrency control
+    - snapshot visibility 판단
+    - write conflict 감지
+    - update chain, history store, checkpoint, journal 처리
+- 예를 들어 `updateOne()` 이 들어오면 MongoDB server layer는 collection 까지 `IX` 를 잡아서 이 컬렉션 아래에서 쓰기 중임을 표시한다
+- 그 다음 실제 document의 현재 버전과 update chain, write conflict 처리는 WiredTiger가 맡는다
+- WiredTiger가 같은 document에 대한 동시 update 충돌을 감지하면 MongoDB server layer로 conflict를 알리고, MongoDB는 해당 작업을 재시도하거나 에러를 반환할 수 있다
+- 따라서 intent lock은 MVCC를 대체하지 않는다
+- 그리고 MVCC도 intent lock을 대체하지 않는다
+- intent lock은 큰 리소스와 작은 리소스 사이의 계층적 조율이고 MVCC는 작은 리소스에서 버전 기반으로 읽기/쓰기 충돌을 줄이는 방식이다
+
+</br>
+
+## 실제 장애 케이스에서 intent lock
+
+- 운영 중에 MongoDB가 갑자기 느려졌다면 `db.currentOp()` 나 lock 관련 지표를 볼때 특정 작업이 lock을 기다리는 상황이 보일 수 있다
+- 여기서 intent lock을 모르면 `IX` 가 보이는 순간 쓰기 락이 걸려서 다 막혔다고 오해하기 쉽다
+- 하지만 대부분의 일반 CRUD에서 보이는 `IX`는 정상적인 의도 표시이다
+- 문제가 되는 것은 `IX` 자체가 아니라, 어떤 작업이 `X` 나 `S` 같은 더 강한 lock을 기다리거나 잡고 있어서 다른 작업들이 대기하는 경우이다
+- 예를 들어 대량 index build, collection rename, drop collection, collMod, 일부 metadata 변경 작업이 컬렉션 또는 데이터베이스 수준의 강한 잠금을 필요로 할 수 있다
+- 이 작업이 진행되거나 대기 중이면 일반 CRUD 가 상위 리소스에서 lock 충돌을 겪을 수 있다
+- 서비스에서 `receipts` 컬렉션에 초당 수천 건의 insert가 들어오고 있다고 가정
+- 각 insert는 collection에 `IX`를 잡고 document를 추가한다
+- 이 상태에서 운영자가 실수로 같은 컬렉션에 대해 구조 변경성 작업을 수행한다
+- 이 작업이 collection에 `X` 를 필요로 한다면, 기존 `IX` 작업들이 모두 빠져나가야 `X`를 잡을 수 있다
+- 반대로 `X` 가 대기열에서 앞에 서면, 뒤따르는 일반 CRUD 가 lock scheduling 정책에 의해 지연될 수도 있다
+- 이때 애플리케이션에서는 단순히 insert latency가 증가한 것처럼 보인다
+- 하지만 실제 원인은 document-level write conflict가 아니라 collection-level lock 충돌일 수 있다
+- 따라서 장애 분석에서는 slow query 만 볼 것이 아니라 currentOp에서 어떤 작업이 어떤 lock mode를 잡고 있거나 기다리는지 봐야 한다
