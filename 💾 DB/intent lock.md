@@ -201,3 +201,26 @@ X       불가   불가    불가   불가
 - 이때 애플리케이션에서는 단순히 insert latency가 증가한 것처럼 보인다
 - 하지만 실제 원인은 document-level write conflict가 아니라 collection-level lock 충돌일 수 있다
 - 따라서 장애 분석에서는 slow query 만 볼 것이 아니라 currentOp에서 어떤 작업이 어떤 lock mode를 잡고 있거나 기다리는지 봐야 한다
+
+</br>
+
+## intent lock 과 index build 관계
+
+- 이전에는 index build가 강한 lock을 오래 잡아 서비스에 큰 영향을 주는 경우가 많았고, MongoDB 버전이 올라가면서 동시성 영향이 줄어드는 방향으로 개선되어 왔다
+- 다만 본질적으로 index build는 컬렉션 전체의 데이터를 스캔하고, 새로운 index 구조를 만들고, write가 동시에 들어오는 상황에서 index 동시성을 유지해야 하는 작업이다
+- 이때 intent lock은 일반 CRUD와 index build 같은 컬렉션 수준 작업이 서로 어떤 범위에서 공존할 수 있는지를 조율한다
+- 일반 insert/update는 컬렉션에 `IX`를 잡고 들어온다, index build는 단계별로 필요한 lock mode가 달라질 수 있고, 특정 순간에는 더 강한 lock을 요구할 수 있다
+- 따라서 대량 트래픽 중 index build를 수행하면, MongoDB 버전과 작업 방식에 따라 lock contention, cache pressure, disk I/O 증가, replication lag 가 함께 나타날 수 있다
+- 여기서 중요한 것은 intent lock 때문에 index build가 느리다가 아닌 intent lock은 단지 동시 접근을 안전하게 조율하는 신호라는 것이다
+- 실제 성능 영향은 index build가 만드는 컬렉션 스캔, B-tree 생성, disk write, cache 사용, replication apply 비용까지 함께 봐야 한다
+
+</br>
+
+## RDB 의 intent lock 과 비교
+
+- RDB, 특히 MySQL 의 스토리지 엔진인 InnoDB에서도 intention lock 이라는 개념이 존재한다
+- 테이블 수준 lock 과 row 수준 lock 이 동시에 존재하기 때문에 어떤 트랜잭션이 row 에 exclusive lock을 잡으려면 테이블에 intention exclusive lock을 먼저 표시해한 ㅎ다
+- 그래야 다른 트랜잭션이 테이블 전체에 exclusive lock을 잡으려 할 때 이 테이블 아래 row 들 중 누군가 쓰기 중이다 라는 사실을 빠르게 알 수 있다
+- MongoDB도 같은 계층적 문제를 푼다
+- 다만 MongoDB + WiredTiger 에서는 document-level 동시성 제어가 전통적인 row lock manager 만으로 처리된다기보다는 WiredTiger 의 MVCC 와 optimistic concurrency control 에 깊게 의존한다
+- 그래서 MongoDB의 intent lock은 document lock 자체라기보다는 상위 계층의 동시성 조율 신호로 보는 것이 정확하다
