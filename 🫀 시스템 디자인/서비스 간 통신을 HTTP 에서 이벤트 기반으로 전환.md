@@ -140,3 +140,166 @@ OrderCreated
     - **"주문이 생성되었다."**
 - 누가 이 사건에 관심을 가지는지는 발행자의 관심사가 아니다
 - 이러한 구조가 Publish / Subscribe 구조의 중요한 목적 중 하나다
+
+</br>
+
+## SQS 만 사용한다면?
+
+- 이미 SQS 를 사용하고 있다면 가장 먼저 생각할 수 있는 방법은 하나의 Queue에 이벤트를 넣는 것 이다
+
+```text
+Order Service
+       │
+       ▼
+      SQS
+       │
+ ┌─────┼─────┐
+ ▼     ▼     ▼
+B2C Delivery Notification
+```
+
+- 하지만 이 구조는 우리가 원하는 Pub/Sub 구조가 아니다
+- SQS는 기본적으로 Queue이며 여러 Consumer가 하나의 Queue를 소비하면 메시지를 나눠 가진다
+
+```text
+Queue
+
+Message A
+Message B
+Message C
+
+    │
+ ┌──┼──┐
+ ▼  ▼  ▼
+
+C1  C2  C3
+
+----------
+
+C1 → Message A
+C2 → Message B
+C3 → Message C
+```
+
+- Message A 를 C1, C2, C3가 모두 받는 것이 아닌 동일 Queue의 여러 Consumer는 보통 경쟁 소비자 Competing Consumer 관계가 된다
+- Kafka의 Consumer Group과 비교하면 동일한 SQS Queue를 여러 Worker가 소비하는 모습이 하나의 Consumer Group과 어느 정도 비슷하다
+- 따라서 다음 요구사항에는 하나의 SQS만으로 부족하다
+- **하나의 이벤트를 여러 서비스가 각각 독립적으로 처리해야 한다**
+
+</br>
+
+### 방법 1. 서비스마다 직접 SQS로 발행하기
+
+```text
+               ┌──> B2C Queue
+               │
+Order Service ─┼──> Delivery Queue
+               │
+               └──> Notification Queue
+```
+
+- 위 구조처럼 각 서비스에 맞는 SQS 를 직접 발행한다면 독립적으로 처리할 순 있다
+- 하지만 이 경우 기존 HTTP 방식과 본질적으로 비슷한 문제가 다시 발생한다
+- Order Service 코드가 다음 Queue들의 존재를 모두 알고 있기 때문이다
+    - `publish(b2cQueue)`
+    - `publish(deliveryQueue)`
+    - `publish(notificationQueue)`
+- 새로운 Consumer가 추가될 때마다 Producer를 수정해야 한다
+- 메시징 시스템을 도입했지만 서비스 간 논리적인 결합도는 크게 줄어들지 않은 것이다
+- 따라서 한 단계의 메시지 라우터가 필요하다
+
+</br>
+
+### SNS + SQS Fan-out 구조
+
+- AWS 에서는 대표적으로 SNS 와 SQS 를 조합해 이러한 구조를 만들 수 있다
+
+```text
+                   ┌──> B2C SQS
+                   │
+                   ├──> Delivery SQS
+Order Service ──> SNS
+                   ├──> Notification SQS
+                   │
+                   └──> Analytics SQS
+```
+
+- 여기서 역할을 나누어보면 아래와 같다
+    - SNS
+        - = Publish / Subscribe
+        - = 하나의 메시지를 여러 Subscriber에게 전달
+    - SQS
+        - = Queue
+        - = 메시지를 저장하고 Consumer가 안정적으로 처리할 수 있게 함
+- AWS 에서도 SNS -> 여러 SQS로 메시지를 복제하는 구조를 대표적인 Fan-out 패턴으로 설명한다
+- SNS 는 메시지를 여러 Subscriber에게 push 하고, SQS는 이를 보관한 뒤 각 Consumer가 독립적으로 처리하도록 한다
+- 따라서 실제 구조는 다음처럼 설명된다
+
+```text
+                Publish
+Order Service ───────────> Order Event Topic
+                                  │
+               ┌──────────────────┼──────────────────┐
+               │                  │                  │
+               ▼                  ▼                  ▼
+           B2C Queue        Delivery Queue      Analytics Queue
+               │                  │                  │
+            Worker             Worker             Worker
+```
+
+- 중요한 점은 SNS Consumer Group 이 존재하는 것이 아니라 각 관심사별 SQS 가 독립적인 Subscription 역할을 한다는 것 이다
+- 그리고 하나의 SQS 안에서 여러 Consumer 인스턴스를 실행한다
+
+```text
+SNS Topic
+   │
+   ▼
+
+B2C Queue
+   │
+ ┌─┼───────────┐
+ │ │           │
+ ▼ ▼           ▼
+B2C Worker1  Worker2  Worker3
+
+
+-----------
+
+Kafka
+
+Topic
+ ├─ Consumer Group A
+ ├─ Consumer Group B
+ └─ Consumer Group C
+
+
+SNS + SQS
+
+SNS Topic
+ ├─ SQS A
+ ├─ SQS B
+ └─ SQS C
+```
+
+- 완전히 동일한 구현은 아니지만 Pub/Sub 관점에서는 비슷한 역할을 구성할 수 있다
+
+</br>
+
+**왜 SNS 만 사용하지 않고 SNS + SQS 를 사용하는가?**
+
+- SNS 또한 직접 HTTP Endpoint 를 Subscriber로 등록할 수 있다
+
+```text
+SNS
+ ├── HTTP → B2C
+ ├── HTTP → Delivery
+ └── HTTP → Notification
+```
+
+- 하지만 이 경우 Consumer 가 장애 상태라면 다시 전달 문제가 중요해진다
+- 반면 SQS 를 사이에 두면 Producer 와 Consumer 의 실행 시점을 분리할 수 있다
+    - SNS -> SQS 구조인 경우 Consumer 가 장애 발생시 메시지는 SQS 에 남아있음
+    - 이후 Consumer 가 다시 복구되면 메시지 처리 가능
+- 즉 SQS 가 버퍼 역할과 장애 격리 역할을 해준다
+- SNS 는 Push 기반이고 SQS 는 Consumer 가 polling 하는 Queue 기반 서비스이다
+- 두 서비스를 결합하면 이벤트를 여러 Consumer 에게 fan-out 하면서 동시에 각 Consumer가 나중에 처리할 수 있도록 메시지를 보존할 수 있다
