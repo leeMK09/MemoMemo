@@ -303,3 +303,83 @@ SNS
 - 즉 SQS 가 버퍼 역할과 장애 격리 역할을 해준다
 - SNS 는 Push 기반이고 SQS 는 Consumer 가 polling 하는 Queue 기반 서비스이다
 - 두 서비스를 결합하면 이벤트를 여러 Consumer 에게 fan-out 하면서 동시에 각 Consumer가 나중에 처리할 수 있도록 메시지를 보존할 수 있다
+
+</br>
+
+## SNS Subscription Filter
+
+- 모든 Consumer가 모든 이벤트에 관심이 있는 것은 아니다
+- 예를 들어 하나의 Topic에 다음 이벤트가 존재한다고 가정하자
+    - `OrderCreated`, `OrderCanceled`, `OrderUpdated`, `DeliveryStarted`, `DeliveryCompleted`, `PaymentCompleted`
+- 그리고 B2C 서비스는 다음 이벤트만 필요할 수도 있다
+    - `OrderCreated`, `OrderCanceled`, `DeliveryStarted`, `DeliveryCompleted`
+- 가장 단순하게 만들면 모든 메시지를 B2C Queue로 보내고 애플리케이션에서 걸러낼 수 있다
+- 하지만 불필요한 메시지를 Queue에 넣을 필요가 없다
+- SNS에는 `Subscription Filter`가 존재한다
+- SNS는 `message attribute` 또는 `JSON message body`를 기준으로 각각의 `Subscription`에 전달할 이벤트를 필터링할 수 있다
+- `Filter Policy`가 없다면 해당 `Subscriber`는 `Topic`의 모든 메시지를 받는다
+- 예를 들어 이벤트에 다음 Attribute를 넣는다
+    - `eventType = ORDER_CREATED`
+- 그러면 B2C Subscription은 다음 이벤트만 받을 수 있다
+
+```json
+{
+    "eventType": [
+        "ORDER_CREATED",
+        "ORDER_CANCELED",
+        "DELIVERY_STARTED",
+        "DELIVERY_COMPLETED"
+    ]
+}
+```
+
+```text
+                         ORDER_CREATED
+                       ┌───────────────> B2C Queue
+                       │
+Order Event ──> SNS ───┼── filter
+                       │
+                       └───────────────> Analytics Queue
+                             ALL
+```
+
+- 다만 Filter Policy 변경은 AWS 의 eventual consistency 특성 때문에 완전히 반영되기까지 시간이 걸릴 수 있으며 AWS 문서에서는 최대 15분을 언급하고 있다
+- 따라서 Filter 변경 직후 모든 메시지가 즉시 새로운 정책으로 동작한다고 가정해서는 안된다
+
+</br>
+
+## Transactional Outbox
+
+- 메시지와 DB를 하나의 트랜잭션으로 처리하기 위한 방법이 Transaction Outbox 이다
+- Producer가 SNS 에 직접 이벤트를 보내지 않고 먼저 자신의 DB 에 이벤트를 저장한ㄷ
+    - 이벤트를 DB 에 저장하는건 핵심 로직과 같은 트랜잭션으로 처리되어야 한다
+- 이후 별도의 Publisher가 Outbox 를 읽고 메시지를 발행한다
+- AWS 에서도 Transactional Outbox를 분산 시스템에서 DB 갱신과 이벤트 전송 간 dual-write 문제를 해결하기 위한 패턴으로 소개한다
+- 하지만 여기에도 또 다른 문제가 생긴다
+
+### Outbox 를 썼다고 Exactly Once가 되는 것은 아니다
+
+- 다음 상황을 생각해볼 수 있다
+    1. Outbox 조회
+    2. SNS Publish 성공
+    3. SNS에서 성공 응답
+    4. Outbox published=true 업데이트 직전
+    5. Publisher 장애
+- Publisher가 재시작하면 해당 Outbox는 여전히 미발행 상태이다
+    - `published = false`
+- 따라서 다시 Publish 한다
+- 결과적으로 동일 이벤트가 두 번 발행될 수 있다
+- 따라서 이벤트 기반 시스템에서는 중복 이벤트는 발생할 수 있다고 가정하는 것이 안전한다
+
+</br>
+
+## SQS Standard 의 At-Least-Once
+
+- SQS Standard Queue 역시 기본적으로 `at-least-once delivery` 이다
+- AWS 는 Standard Queue 가 같은 메시지의 여러 복사본을 전달할 수 있으며 순서도 완벽히 보장되지 않는다고 명시하고 있다
+- 따라서 Consumer는 동일 메시지가 여러 번 처리되어도 문제가 생기지 않도록 멱등하게 설계해야 한다
+- 만약 Consumer 가 DB UPDATE 까지 성공한 다음 ACK, 정확히는 SQS 의 DeleteMessage를 호출하기 전에 죽었다고 가정하자
+- Visibility Timeout이 지나면 메시지가 다시 나타난다
+- SQS에서는 메시지를 receive하면 일정 시간 동안 다른 Consumer에게 보이지 않도록 Visibility Timeout을 적용한다
+- 해당 시간 안에 처리를 완료하고 메시지를 삭제하지 못하면 메시지는 다시 visible 상태가 되어 재처리될 수 있다
+- 따라서 Consumer가 동일 이벤트를 다시 처리할 수 있다
