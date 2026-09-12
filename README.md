@@ -207,7 +207,7 @@
 - [🕸️ Out of path 와 SPI, DPI](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%95%B8%EF%B8%8F%20Network/Out%20of%20path%20%EC%99%80%20SPI%2C%20DPI.md)
 - [🕸️ NAT 방식](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%95%B8%EF%B8%8F%20Network/NAT%20%EB%B0%A9%EC%8B%9D.md)
 - [🕸️ IPSec VPN 과 터널링](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%95%B8%EF%B8%8F%20Network/IPSec%20VPN%20%EA%B3%BC%20%ED%84%B0%EB%84%90%EB%A7%81.md)
-- 🕸️ [WAS 서버] 외부 API 호출 시 connection pool
+- [🕸️ [WAS 서버] 외부 API 호출 시 connection pool](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%95%B8%EF%B8%8F%20Network/%5BWAS%20%EC%84%9C%EB%B2%84%5D%20%EC%99%B8%EB%B6%80%20API%20%ED%98%B8%EC%B6%9C%20%EC%8B%9C%20connection%20pool.md)
 
 </br>
 
