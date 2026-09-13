@@ -125,3 +125,118 @@ free
 
 - 이 설계의 핵심은 단순히 설정을 개별화한 것이 아니다
 - 외부 dependency 별로 resource pool 과 failure domain을 분리한 것이다
+
+> `maxSockets`
+>
+> - keep-alive가 좋다면 connection을 많이 만들면 더 빠를 것 같다
+> - 예를 들어 요청이 100개 동시에 들어오면 connection 100개를 만들면 전부 동시에 처리할 수 있다
+> - 그런데 그러면 외부 Vendor 입장에서는 갑자기 100개의 동시 요청이 들어온다
+> - 그래서 Agent에는 `maxSockets` 라는 제한이 있다
+> - 예를 들어 `maxSockets = 10` 이라고 가정하자
+> - 현재 Vendor API 응답시간이 100ms 라고 한다면 10개 요청이 동시에 들어오면 Socket 하나 당 하나의 요청이 총 10개 실행된다
+> - 그런데 11번째 요청이 이후에 들어온다면 새 connection을 만들고 싶지만 maxSockets 가 10이므로 Agent는 그 요청을 기다리게 된다
+> - 따라서 `maxSockets` 는 그냥 connection pool size 가 아니며 실제로는 downstream concurrency limiter 역할을 한다
+> - Vendor가 한 번에 받을 수 있는 트래픽을 제한하는 backpressure 장치이기도 하다
+> - 이 때문에 값을 너무 크게 잡는 것도 문제고 너무 작게 잡는 것도 문제다
+> - 그래서 `maxSockets` 값은 경험적으로 정할 값은 아니며 다음 관계를 보고 정해야 한다
+>     - 동시 요청수 = RPS x 응답시간
+>     - 예를 들어 Vendor 호출량이 100 RPS 이고 평균 응답시간이 100ms 라면 평균 concurrency는 대략 10 (100 x 0.1초)
+
+</br>
+
+### 워커 단위 설정
+
+- 예를 들어 워커 당 `maxSockets` 가 10 ~ 20이라고 했을때, Node cluster가 worker 8개라면 Agent가 worker마다 따로 존재한다
+    - Worker1 -> 최대 20, Worker2 -> 최대 20
+    - 그러면 실제 프로세스 전체에서는 20 x 8 = 160개의 connection이 가능하다
+- 즉 개발자가 코드에서 보는 숫자는 `maxSockets = 20` 이지만 Vendor에서 보는 숫자는 160일 수 있다
+- 그래서 connection pool 의 capacity는 항상 프로세스 단위가 아니라 fleet 전체 단위로 계산해야 한다
+    - 이건 DB connection pool 에서도 동일하다
+    - 예를 들어 HikariCP를 pod 당 20으로 잡았는데 pod가 50개라면 DB 입장에서는 1,000 connection이다
+
+> `maxFreeSocket`
+>
+> - 이제 요청이 끝났다고 해보자
+> - 활성 connection 20개가 모두 free 상태가 되었다
+> - keep-alive의 논리만 생각하면 20개를 다 저장해도 된다
+> - 하지만 만약 새벽 시간대라서 몇 시간 동안 호출이 거의 없다면? 20개의 TCP connection을 계속 붙들고 있는 것은 별 의미가 없다
+> - 그래서 `maxFreeSockets` 는 현재 아무 요청도 처리하지 않는 idle socket을 몇 개까지 pool에 남겨둘지 결정한다
+> - 이 값 역시 트레이드 오프이다, 너무 작으면 트래픽이 조금만 다시 올라와도 connection을 새로 만들어야 한다
+
+> `peer`
+>
+> - keep-alive connection에는 Node만 관여하는게 아니다
+> - connection은 두 당사자가 공유하는 상태다
+>     - Node <---> Vendor
+> - Node 입장에서는 Vendor가 `peer` 이고 Vendor 입장에서는 Node 가 `peer` 이다
+> - 그런데 현실에서는 실제 `peer` 가 Vendor application이 아닐 수도 있다
+> - 앞 단에 Node -> Internet -> AWS ALB -> Nginx -> Vendor API Server 라면 Node 가 유지하고 있는 TCP connection은 Vendor application까지 직접 이어지는 것이 아니라 중간 Load Balancer에서 종료될 수도 있다
+> - 그래서 connection idle timeout을 조사할때 "Vendor Node 서버 keep-alive timeout이 몇초인가?" 만 보면 안된다
+
+</br>
+
+## keep-alive 에서 가장 까다로운 문제 - stale socket
+
+- Node Agent의 free pool에 connection 하나가 있다고 하자
+    - Node Agent free socket: Socket A
+- 마지막 요청 이후 55초 동안 사용하지 않았다
+- Vendor Load Balancer의 idle timeout이 60초라고 하자
+- 시간이 흘러 Vendor Load Balancer가 60초 동안 아무 데이터가 없다는 걸로 판단 후 connection을 끊는다
+- 그런데 네트워크에서 connection close event가 Node까지 전달되는 과정과 Node가 새로운 요청을 받아 Agent에서 socket을 꺼내는 과정이 정확히 동시에 겹칠 수 있다
+
+```text
+시간 T
+
+Vendor
+"Socket A 종료"
+
+        ↓ FIN/RST 전송
+
+
+거의 동시에
+
+
+Node
+새 요청 발생
+
+Agent
+"어? free socket A 있네."
+
+GET 요청을 Socket A에 쓰기 시작
+```
+
+- Node 입장에서는 socket을 선택하는 바로 그 순간까지만 해도 usable하다고 생각했다
+- 하지만 실제 peer는 connection을 종료한 상태이다
+- 그래서 write를 하면 상대방이 RST를 보내고 Node에는 `ECONNRESET` 이 올라온다
+- 이것이 바로 `stale socket race` 이다
+- 핵심은 Node가 오래된 socket을 보관해서 버그가 발생했다 처럼 단순한 것이 아니라 분산 시스템이 두 endpoint가 connection 상태를 바라보는 시점이 정확히 동기화될 수 없기 때문에 생기는 race condition이다
+- 그래서 100% 완전히 제거하기 어렵고 발생 확률을 낮추고 안전하게 복구하는 방향으로 설계한다
+
+> `scheduling: 'lifo'`
+>
+> - free pool에 socket 이 세 개 있다고 하자
+> - Vendor idle timeout은 60초이다
+> - FIFO라면 가장 오래된 pool에 들어간 소켓부터 사용할 가능성이 있다
+> - LIFO라면 가장 최근에 사용된 소켓을 먼저 꺼낸다
+> - 즉 LIFO 는 단순 자료구조 선택 문제가 아니라 connection freeshness를 활용하는 전략이다
+> - 트래픽이 낮을수록 이 차이가 의미가 있다
+> - 요청이 계속 들어오는 고트래픽 환경에서는 socket들이 자주 사용되므로 free socket이 오래 묵지 않는다
+> - 하지만 간헐적인 외부 API 라면 오래된 socket을 잡을 가능성이 커진다
+
+> `Agent timeout < peer idle timeout`
+>
+> - Vendor가 예를 들어 idle connection을 60초 후 끊는다고 하자
+> - Node가 60초보다 오래 connection을 보관하면 언젠가는 이 경계에 들어간다
+> - 그러면 race가 생길 수 있다
+> - 그래서 Node가 더 먼저 포기하게 만든다
+> - 이렇게 하면 대부분의 경우 우리 쪽이 connection을 먼저 폐기하므로 Vendor가 먼저 죽인 stale socket을 잡을 가능성이 낮아진다
+> - Node 18 core `https.Agent`에서 `timeout` 이라는 옵션은 흔히 사람들이 생각하는 "free pool에 들어간 socket만 50초 뒤 삭제" 라는 아주 순순한 free socket TTL과 정확히 같지는 않다
+> - socket inactivity timeout에 가까우므로 설정 방법에 따라 실제 요청 중인 socket 동작에도 영향을 줄 수 있다
+> - 그래서 운영에서는 다음 개념을 분리해서 사고하는 것이 좋다
+>     - TCP connection을 만드는 데 기다릴 시간
+>     - HTTP 응답을 기다릴 시간
+>     - 아무 데이터가 오지 않는 socket inactivity 시간
+>     - pool에서 idle connection을 보관할 시간
+>     - Agent queue에서 socket을 기다리는 시간
+> - 사실 이것들은 전부 다른 timeout이다
+> - 하나의 `timeout: 5000`으로 다 해결하려 하면 나중에 장애 원인 분석이 굉장히 어려워진다
