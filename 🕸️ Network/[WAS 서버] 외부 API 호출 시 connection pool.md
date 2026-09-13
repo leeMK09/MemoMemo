@@ -240,3 +240,41 @@ GET 요청을 Socket A에 쓰기 시작
 >     - Agent queue에서 socket을 기다리는 시간
 > - 사실 이것들은 전부 다른 timeout이다
 > - 하나의 `timeout: 5000`으로 다 해결하려 하면 나중에 장애 원인 분석이 굉장히 어려워진다
+
+</br>
+
+## keep-alive 구조의 장점
+
+```text
+Vendor A 호출
+    |
+    v
+Vendor A 전용 Agent
+    |
+    ├─ keepAlive
+    ├─ maxSockets
+    ├─ maxFreeSockets
+    ├─ timeout policy
+    └─ LIFO
+```
+
+- 가장 눈에 띄는 점은 물론 latency 이다
+- 서울 <-> 다른 리전 호출에서 TCP + TLS 71ms가 매번 붙던 상황이라면 재사용되는 요청에서는 이 비용을 크게줄일 수 있다
+- 그런데 운영 관점에서는 latency 못지않게 중요한 장점이 하나 더 있다
+- Vendor마다 독립적인 resource budget을 갖게 된다
+
+```text
+광고 Vendor
+maxSockets 20
+
+결제 Vendor
+maxSockets 5
+```
+
+- 예를 들어 위 구조라면 광고 Vendor가 느려져도 광고 connection pool만 영향을 받는다
+- 다만 같은 Agent를 사용하는 endpoint끼리는 여전히 서로 영향을 줄 수도 있다
+- 만약 두 endpoint가 하나의 Agent를 공유한다고 가정하자
+- `/impression` 시 장애가 발생하여 모든 socket을 점유하면 두 endpoint 의 요청들은 Agent queue에서 기다리게 된다
+- 그래서 필요하다면 Vendor 별 분리를 넘어 기능별/criticality별 Agent 분리도 가능하다
+    - (= bulkhead 패턴과 비슷함)
+- 즉 한 구역의 장애가 다른 구역으로 번지지 않게 resource pool을 격리하는 것이다
