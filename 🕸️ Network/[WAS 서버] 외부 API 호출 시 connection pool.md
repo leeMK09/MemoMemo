@@ -278,3 +278,36 @@ maxSockets 5
 - 그래서 필요하다면 Vendor 별 분리를 넘어 기능별/criticality별 Agent 분리도 가능하다
     - (= bulkhead 패턴과 비슷함)
 - 즉 한 구역의 장애가 다른 구역으로 번지지 않게 resource pool을 격리하는 것이다
+
+## keep-alive 구조의 단점
+
+- 가장 큰 단점은 네트워크 connection이 이제 application state가 된다는 것이다
+- keepAlive를 안 쓸 때는 요청이 끝나면 연결도 사라진다
+- keepAlive 이후에는 request 의 lifecycle 과 connection 의 lifecycle 이 일치하지 않는다
+- 하나의 connection이 수십 개, 수백 개의 요청보다 오래 지속된다
+- 그래서 socket pool 상태 자체가 운영 상태가 된다
+- 더불어서 확인해야할 지표들도 늘어났다
+    - "현재 active socket 몇 개?"
+    - "free socket 몇 개?"
+    - "Agent queue에 요청이 몇 개?"
+    - "socket 평균 재사용 횟수는?"
+    - "ECONNRESET 중 reused socket 에서 발생한 비율은?"
+    - "Vendor latency가 늘어서 socket 반환이 늦어진건 아닌지?"
+- 즉 latency가 낮아진 대신 관리해야할 포인트가 늘어났다
+- keep-alive 의 trace-off
+
+</br>
+
+## 실제 장애발생시 connection pool 고갈이 중요하다
+
+- 평소 Vendor 응답시간이 50ms라고 가정했을때 maxSockets는 20이다
+- 정상 케이스에서는 socket이 굉장히 빨리 반납된다
+- 그래서 초당 상당히 많은 요청을 처리할 수 있다
+- 그런데 Vendor가 장애가 나서 응답시간이 갑자기 지연되었다고 가정하자 -> 5초
+- 20개 socket은 하나의 socket 당 5초를 점유하게 된다
+- 그러면 21번째 요청부터는 Vendor에 요청이 나가지 못하게 된다
+- 더불어서 Agent 내부 queue에도 같이 쌓이게 된다
+- 모니터링에서 Vendor HTTP latency 만 보게되면 5초이지만 사용자 관점에서는 10초가 된다
+    - Agent queue에서 5초 기다림 + Vendor 에서 5초 지연 = 10초
+- 따라서 connection pooling을 도입한 이후에는 HTTP 요청 latency뿐 아니라 pool wait time도 별도의 latency 로 측정해야 한다
+- DB connection pool 에서 connection acquisition time을 보는것과 비슷하다
