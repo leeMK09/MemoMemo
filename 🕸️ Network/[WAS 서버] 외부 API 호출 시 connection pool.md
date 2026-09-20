@@ -311,3 +311,155 @@ maxSockets 5
     - Agent queue에서 5초 기다림 + Vendor 에서 5초 지연 = 10초
 - 따라서 connection pooling을 도입한 이후에는 HTTP 요청 latency뿐 아니라 pool wait time도 별도의 latency 로 측정해야 한다
 - DB connection pool 에서 connection acquisition time을 보는것과 비슷하다
+
+### Agent 내부에서 장애 전파시 Bulkhead
+
+- Vendor API 에는 `/ads` 와 `/impression` 이 있다고 하자
+    - 하지만 중요도는 다를 수 있다
+- 광고 조회는 핵심 요청이고 `impression` 기록은 다소 후순위라고 해보자
+- 그러면 하나의 Agent 가 아닌 `Ads Agent`, `Impression Agent` 처럼 분리할 수 있다
+
+```text
+                Vendor
+
+          ┌──────┴───────┐
+          │              │
+
+      Ads Agent      Impression Agent
+
+      sockets 15       sockets 5
+```
+
+- `Impression API` 가 10초동안 지연되어 최대 5개 socket만 점유한다면 `Ads API` 에는 15개가 별도로 남게된다
+- 이 구조는 DB 혹은 thread pool 에도 적용된다
+- 하나의 shared pool 에 모든 종류의 작업을 넣으면 느린 작업이 pool 전체를 점유할 수 있기 때문이다
+
+### LB 와 Proxy 가 connection을 끊는 문제
+
+- 예를 들어 Vendor 서버의 keep-alive timeout 이 120초라고 가정하자
+- 그래서 애플리케이션에서 Agent connection을 100초 정도로 잡았다
+- 그런데 계속 60초쯤에서 ECONNRESET 이 발생한다
+- 이 케이스는 아래 구조에서 발생할 수 있게된다
+
+```text
+Node
+
+ ↓
+
+Vendor ALB
+idle timeout 60초
+
+ ↓
+
+Nginx
+keepalive 120초
+
+ ↓
+
+Application
+```
+
+- 즉 Vendor 호출에 사용되는 TCP connection은 실제 애플리케이션 process가 아니라 ALB 같은 Load Balancer 가 될 수 있다
+- 그러므로 네트워크 문제를 구별할때는 logical 목적지와 physical/network peer 를 구분해야 한다
+
+### 배포할 때도 keep-alive 특유의 문제 발생
+
+- 평소에는 connection 재사용이 잘 적용되어 TCP/TLS 핸드셰이크가 거의 없었다
+- 그런데 배포를 하게 되면 Process/Pod 가 재시작하게 된다
+- 기존 socket pool은 전부 사라지고 새로운 Process/Pod들이 동시에 올라온다
+- 배포 직후 트래픽이 많다면 기존에 존재하던 connection이 하나도 없으므로 대량의 TCP SYN/TLS handshake 가 동시에 발생할 수 있다
+- 즉 keep-alive 는 steady state에는 효율적이지만 restart/deploy 같은 순간에는 cold connection storm 이 생길 수 있다
+- 그래서 무중단 배포 전략 혹은 startup jitter, 점진적인 트래픽 투입이 중요하다
+
+</br>
+
+## HTTP/2는 이 문제들을 다른 방식으로 푼다
+
+- 지금까지 설명은 주로 HTTP/1.1 connection pool이다
+- HTTP/1.1에서는 동시에 여러 요청을 처리하려면 일반적으로 여러 TCP connection이 필요하다
+- 그래서 `maxSockets` 같은 개념이 굉장히 중요하다
+- HTTP/2에서는 하나의 connection 내부에 여러 logical stream을 만든다
+
+```text
+              하나의 TCP/TLS connection
+
+                         |
+          ┌──────────────┼──────────────┐
+          │              │              │
+       Stream 1        Stream 3       Stream 5
+       Request A       Request B      Request C
+```
+
+- 즉 connection 자체를 멀티플렉싱한다
+- 그래서 동일 concurrency를 처리하면서 필요한 TCP connection 수를 크게 줄일 수 있다
+- 결과적으로 "TCP handshake 횟수 감수", "TLS handshake 횟수 감수", "socket 수 감소", "TIME_WAIT 감소 가능" 같은 장점이 생긴다
+- 하지만 공짜는 아니다
+- HTTP/2 connection 하나에 많은 stream이 의존하면 해당 connection에 문제가 생겼을 때 여러 요청이 같이 영향을 받을 수 있다
+
+### HTTP/2 에서 multiplex
+
+- HTTP/1.1 의 일반적인 TCP connection
+
+```text
+GET /users
+GET /products
+GET /orders
+
+TCP connection #1
+    └─ GET /users
+
+TCP connection #2
+    └─ GET /products
+
+TCP connection #3
+    └─ GET /orders
+```
+
+- 즉 HTTP 요청이라는 논리 작업마다 TCP connection이라는 비교적 비싼 자원을 여러 개 사용하는 구조가 되기 쉽다
+- HTTP/2에서는 하나의 TCP/TLS connection 안에 `stream` 이라는 논리 채널을 여러 개 만든다
+
+```text
+                TCP connection 하나
+
+                        │
+            ┌───────────┼───────────┐
+            │           │           │
+        Stream 1    Stream 3    Stream 5
+        /users      /products    /orders
+```
+
+- 중요한 것은 이 세 요청이 단순히 순서대로만 들어가는 게 아니라 frame 단위로 서로 섞여서 전송될 수 있다는 것이다
+- 예를 들어 실제 TCP byte stream 에는 개념적으로 다음처럼 데이터가 들어갈 수 있다
+
+```text
+Stream 1 HEADERS
+Stream 1 DATA 일부
+
+Stream 3 HEADERS
+Stream 5 HEADERS
+
+Stream 3 DATA 일부
+Stream 1 DATA 일부
+Stream 5 DATA 일부
+...
+```
+
+- 각 HTTP/2 frame 에는 "이 frame은 Stream 1 것이다" 같은 식별자가 들어 있으므로 상대방이 다시 분리할 수 있다
+- 그래서 multiplex 라고 부른다
+- 여러 HTTP 논리 stream을 하나의 TCP byte stream 위에 multiplex하고, 수신 측에서 다시 demultiplex 하는 것 이다
+
+```text
+HTTP Request A ─┐
+HTTP Request B ─┼─ multiplex ─→ TCP connection
+HTTP Request C ─┘
+
+
+TCP connection
+        ↓ demultiplex
+
+Stream A
+Stream B
+Stream C
+```
+
+- 여기서 중요한 것은 동시에 여러 stream이 존재하지만 실제 아래쪽 TCP connection은 하나일 수 있다는 것이다
