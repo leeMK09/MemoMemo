@@ -151,3 +151,39 @@
   + Redis 또는 DB 기반 Redrive 멱등성
   + 하류 도메인 멱등성
 ```
+
+</br>
+
+## 장애 시나리오
+
+### Visibility Timeout보다 처리가 오래 걸림
+
+- 결과
+    - 동일 메시지를 다른 Worker가 다시 수신
+    - 외부 API 또는 처리 성공이 동시에 두 번 실행됨
+    - FIFO라면 같은 사용자의 후속 메시지가 지연될 수 있음
+- 대응
+    - 처리 중 Heartbeat 로 Visibility 연장
+    - 최종 데이터 변경에 멱등키 적용
+    - Heartbeat 실패 횟수와 메시지 재수신 횟수 모니터링
+
+### Timeout을 지나치게 길게 설정
+
+- 결과
+    - Worker가 죽어도 메시지가 오랫동안 복구되지 않음
+    - FIFO MessageGroup 전체가 사실상 멈출 수 있음
+    - 사용자는 계속 "처리 중" 인것으로 보임
+- 대응
+    - 고정 Timeout을 최악의 처리시간이 아니라 장애 복구 목표에 맞춤
+    - 정상적인 장시간 처리는 Heartbeat가 담당
+    - `ApproximateAgeOfOlestMessage`와 처리 상태 체류시간 알람 구성
+
+### 하류 외부 시스템 장애 중 자동 Redrive
+
+- 하류 시스템이 회복되지 않은 상태에서 자동 Redrive 하면 메시지를 다시 외부 API로 보내고, 외부 API에 대한 추가 부하가 발생함
+- 따라서 자동 Redrive는 단순한 주기 실행이 아니라 다음 조건을 모두 확인해야 한다
+    - 트래픽이 낮은 시간대
+    - Circuit Breaker가 OPEN이 아님
+    - 최근 일정 시간의 실제 성공률이 기준 이상
+    - 원본 큐 적재가 안전한 수준
+    - Redrive Heartbeat와 멱등성 가드가 먼저 배포됨
