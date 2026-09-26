@@ -126,7 +126,7 @@
 - [🌿 성능 테스트 실행 시 주의사항](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%BF%20%EC%8A%A4%ED%94%84%EB%A7%81/%EC%84%B1%EB%8A%A5%20%ED%85%8C%EC%8A%A4%ED%8A%B8%20%EC%8B%A4%ED%96%89%20%EC%8B%9C%20%EC%A3%BC%EC%9D%98%EC%82%AC%ED%95%AD.md)
 - [🌿 @EventListener](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%BF%20%EC%8A%A4%ED%94%84%EB%A7%81/%40EventListener.md)
 - [🌿 @TransactionalEventListener](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%BF%20%EC%8A%A4%ED%94%84%EB%A7%81/%40TransactionalEventListener.md)
-- 🌿 Hibernate ORM 8.0.0.Beta2 flush 실행 모델
+- [🌿 Hibernate ORM 8.0.0.Beta2 flush 실행 모델](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%8C%BF%20%EC%8A%A4%ED%94%84%EB%A7%81/Hibernate%20ORM%208.0.0%20flush%20%EC%8B%A4%ED%96%89%20%EB%AA%A8%EB%8D%B8.md)
 
 </br>
 </br>
