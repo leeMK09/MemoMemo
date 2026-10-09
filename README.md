@@ -24,7 +24,7 @@
 - [💾 [Redis] Cluster](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%5BRedis%5D%20Cluster.md)
 - [💾 [Valkey] Valkey 와 Reids](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%5BValkey%5D%20valkey%20%EC%99%80%20redis.md)
 - [💾 [Valkey] TTL + 객체 캐싱 + MULTI](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%5BValkey%5D%20TTL%20%2B%20%EA%B0%9D%EC%B2%B4%20%EC%BA%90%EC%8B%B1%20%2B%20MULTI.md)
-- 💾 [Valkey] 자료구조의 내부 인코딩
+- [💾 [Valkey] 자료구조의 내부 인코딩](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%5BValkey%5D%20%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0%EC%9D%98%20%EB%82%B4%EB%B6%80%20%EC%9D%B8%EC%BD%94%EB%94%A9.md)
 - [💾 READ-COMMITED를 사용하는 이유는?](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/READ-COMMITED%EB%A5%BC%20%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94%20%EC%9D%B4%EC%9C%A0%EB%8A%94%3F.md)
 - [💾 Join 의 특징 및 동작방식, 용어정리](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/Join%20%EC%9D%98%20%ED%8A%B9%EC%A7%95%20%EB%B0%8F%20%EB%8F%99%EC%9E%91%EB%B0%A9%EC%8B%9D%2C%20%EC%9A%A9%EC%96%B4%EC%A0%95%EB%A6%AC.md)
 - [💾 오브젝트 스캔](https://github.com/leeMK09/MemoMemo/blob/main/%F0%9F%92%BE%20DB/%EC%98%A4%EB%B8%8C%EC%A0%9D%ED%8A%B8%20%EC%8A%A4%EC%BA%94.md)
