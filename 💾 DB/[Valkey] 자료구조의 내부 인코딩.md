@@ -249,6 +249,68 @@ L0:  1 -> 3 -> 4 -> 5 -> 6 -> 7 -> 9
 
 </br>
 
+### 운영 시 주의할 점
+
+**O(N) 명령 하나가 서버 전체를 멈춤**
+
+- `KEYS` : 전체 키 순회
+- `HGETALL` / `SMEMBERS` : 컬렉션 전체 반환
+- `LRANGE key 0 -1` / `ZRANGE key 0 -1` : 범위 전체 반환
+- `SORT`, `FLUSHALL` (동기모드)
+- 대안 : `HSCAN` / `SSACN` / `ZSCAN` , 범위를 명시한 `LRANGE key 0 19`
+
+**SCAN 계열이 보장하는 것과 보장하지 않는 것**
+
+- 보장하는 것
+    - 순회 시작부터 끝까지 계속 존재한 요소는 전부 반환된다
+    - 그 기간에 존재하지 않았던 요소는 반환되지 않는다
+- 보장하지 않는 것
+    - 같은 요소가 여러 번 반환될 수 있다, 중복 제외 불가
+    - 순회 도중 추가되거나 삭제된 요소는 반환될 수도 안될 수도 있다
+- `COUNT` 는 기본값 10 이고 힌트일 뿐 이며 정확히 그만큼 준다는 보장은 없다
+- 컬렉션이 작아서 `listpack` / `intset` 인코딩이면 `COUNT` 를 무시하고 첫 호출에 전부 반환한다
+    - 즉 `SCAN` 으로 쪼개 읽으니 안전하다는 생각이 작은 컬렉션에서는 성립되지 않음
+- `MATCH` 는 서버가 데이터를 꺼낸 뒤에 적용된다
+    - 패턴에 맞는 키가 드물면 클라이언트는 빈 응답만 계속 받는데 서버는 계속 일하고 있다
+    - 필터링으로 서버 부하가 줄어들 거라 기대하면 안된다
+
+**big key 를 찾고 지우는 법**
+
+- 탐지, 전부 샘플링 방식이라 운영에서도 비교적 안전하지만 부하가 0은 아니다
+    - `valkey-cli --bigkeys` : 요소 개수가 많은 키를 찾음
+    - `valkey-cli --memkeys` : 메모리를 많이 쓰는 키를 찾음
+    - `valkey-cli --hotkeys` : 자주 접근되는 키를 찾음, `maxmemory-policy` 가 `lfu` 일 때만 동작
+- 개별 확인
+    - `MEMORY USAGE key` : 그 키가 실제로 차지하는 바이트
+    - `OBJECT ENCODING key` : 현재 인코딩
+- 삭제는 `DEL` 이 아니라 `UNLINK`
+    - `DEL` 은 키 제거와 메모리 해제까지 메인 스레드에서 실행한다
+    - 거대한 키면 그만큼 서버가 멈춘다
+    - `UNLINK` 는 키스페이스에서 떼어내기만 하고 실제 메모리 해제는 백그라운드 스레드로 넘긴다
+- 서버 차원에서 비동기 해제를 켜는 설정 (lazy free)
+    - `lazyfree-lazy-eviction` : maxmemory 축출로 지울 때
+    - `lazyfree-lazy-expire` : TTL 만료로 지울 때
+    - `lazyfree-lazy-server-del` : `SET` 덮어쓰기, `RENAME` 처럼 서버 내부 동작으로 지울 때
+    - `lazyfree-lazy-user-del` : 사용자가 `DEL`을 호출했을 때
+    - `lazyfree-lazy-user-flush` : `FLUSHDB` / `FLUSHALL` 을 호출했을 때
+- 참고로 Valkey 8.0 부터 `lazyfree-lazy-user-del` 의 기본값이 활성화되어 있다고 알려져 있음 -> `yes` 로 설정됨
+    - 그렇게 된다면 `DEL` 은 이미 `UNLINK` 처럼 동작하게 된다
+    - 공식 문서 내용은 아니며 쓰는 버전에서 `CONFIG GET lazyfree-lazy-user-del` 로 직접 확인해야 함
+
+**클러스터에서는 멀티키 명령이 같은 슬롯이어야 한다**
+
+- 슬롯은 클러스터가 키를 나눠 담는 단위를 말한다, 키 이름을 해시해서 슬롯 번호를 정한다
+- 여러 키를 한 번에 다루는 명령은 모든 키가 같은 슬롯에 있어야 한다
+    - `ZUNIONSTORE`, `ZINTERSTORE`, `PFMERGE`, `BITOP`, `SINTERSTORE`, `MULTI` 로 묶은 여러 키 등
+    - 아니면 `CROSSSLOT key in request don't hash to the same slot` 에러가 발생함
+- 해시태그로 묶는다
+    - 키 이름에 `{}` 를 넣으면 중괄호 안의 문자열만 슬롯 계산에 쓰인다
+    - 예시) `rank:{daily}:2026-10-16` 과 `rank:{daily}:2026-10-15` 는 같은 슬롯에 들어간다
+- big key 는 슬롯 재배치(리샤딩)도 막는다
+    - 마이그레이션이 키 단위로 일어나기 때문에 거대한 키 하나가 타임아웃을 내며 리샤딩 전체를 실패시킬 수 있다
+
+</br>
+
 ## 정리
 
 - 모든 컬렉션 타입은 2~3개의 인코딩을 가지고, 서버가 조용히 고르며, 전환은 거의 항상 단방향이다
